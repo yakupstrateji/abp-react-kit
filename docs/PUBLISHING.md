@@ -73,19 +73,17 @@ The CLI in `packages/create-abp-react` uses `degit` to clone `apps/template` fro
 
 ### 1. Push the monorepo public to GitHub
 
-The GitHub repo must be public for `degit` to work without authentication. Push `abp-react-kit` to a public repo (e.g. `github.com/OWNER/abp-react-kit`).
+The GitHub repo must be public for `degit` to work without authentication. Push `abp-react-kit` to a public repo (e.g. `github.com/yakupstrateji/abp-react-kit`).
 
-### 2. Set the OWNER in `bin/index.js`
+### 2. CLI degit path
 
-Edit `packages/create-abp-react/bin/index.js`, line 9:
+`packages/create-abp-react/bin/index.js` is already set to:
 
 ```js
-// Change this:
-const REPO = 'OWNER/abp-react-kit/apps/template'
-
-// To the real public GitHub path, e.g.:
-const REPO = 'stratejibilisim/abp-react-kit/apps/template'
+const REPO = 'yakupstrateji/abp-react-kit/apps/template'
 ```
+
+Only change this if you move the repo to a different owner/name.
 
 ### 3. Publish
 
@@ -110,5 +108,5 @@ npx create-abp-react my-app
 - [ ] `pnpm -r test` passes (core 2 + template 50)
 - [ ] `npm pack --dry-run` in `packages/core` shows expected files
 - [ ] Version bumped in `package.json` (semver)
-- [ ] For CLI: `OWNER` in `bin/index.js` points to the real public GitHub repo
+- [ ] For CLI: `REPO` in `bin/index.js` = `yakupstrateji/abp-react-kit/apps/template` (set)
 - [ ] Logged in to npm as the package owner

@@ -4,9 +4,8 @@ import { execSync } from 'node:child_process'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, basename } from 'node:path'
 
-// TODO: set OWNER to the public GitHub repo owner/org before publishing (Task 8)
-// e.g. 'stratejibilisim/abp-react-kit/apps/template'
-const REPO = 'OWNER/abp-react-kit/apps/template'
+// Public GitHub repo + subdir the template is degit'd from.
+const REPO = 'yakupstrateji/abp-react-kit/apps/template'
 
 const dir = process.argv[2]
 if (!dir) {
@@ -26,8 +25,7 @@ try {
 } catch (err) {
   console.error(`\nError: could not clone template from "${REPO}".`)
   console.error(`  ${err.message}`)
-  console.error('\nIf the GitHub repo is not yet public, this is expected.')
-  console.error('Set OWNER in bin/index.js to the real GitHub owner/org before publishing.')
+  console.error('\nMake sure you have network access and the repo is public.')
   process.exit(1)
 }
 

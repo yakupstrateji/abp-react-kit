@@ -31,10 +31,8 @@ npm run dev
 If you prefer to scaffold manually:
 
 ```bash
-npx degit OWNER/abp-react-kit/apps/template my-app
+npx degit yakupstrateji/abp-react-kit/apps/template my-app
 cd my-app
 cp .env.example .env
 npm install
 ```
-
-Replace `OWNER` with the actual GitHub owner once the repository is public.

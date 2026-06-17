@@ -81,7 +81,7 @@ cd my-app
 **Fallback (degit, equivalent to what the CLI does):**
 
 ```bash
-npx degit OWNER/abp-react-kit/apps/template my-app
+npx degit yakupstrateji/abp-react-kit/apps/template my-app
 cd my-app
 ```
 

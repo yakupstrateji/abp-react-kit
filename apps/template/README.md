@@ -4,7 +4,7 @@ The design half of abp-react-kit. Scaffold a new project with `npx create-abp-re
 
 ## Origin
 
-This template is scaffolded by `create-abp-react`. It was bootstrapped from `OWNER/abp-react-kit/apps/template` via degit and is a standalone project — it does not need to stay inside the monorepo.
+This template is scaffolded by `create-abp-react`. It was bootstrapped from `yakupstrateji/abp-react-kit/apps/template` via degit and is a standalone project — it does not need to stay inside the monorepo.
 
 ## What's in here
 
