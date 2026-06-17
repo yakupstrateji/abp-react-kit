@@ -133,6 +133,8 @@ pnpm openapi-ts
 
 Output goes to `src/api/generated/`. These files are excluded from ESLint and should be committed as-is.
 
+> Local ABP backends use a self-signed dev cert; `openapi-ts` tolerates it automatically (no `NODE_TLS_REJECT_UNAUTHORIZED` needed). Set `NODE_TLS_REJECT_UNAUTHORIZED=1` yourself to enforce strict TLS against a backend with a valid certificate.
+
 ## In-memory example features
 
 The template ships with **Students** and **Classes** feature pages that use an in-memory store — no backend required. They demonstrate the `CrudService` + `useCrud` pattern for a new entity. You have two options:

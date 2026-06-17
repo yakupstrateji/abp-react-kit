@@ -133,7 +133,7 @@ VITE_SCOPE=openid profile email roles offline_access MyApi
 npm run openapi-ts
 ```
 
-Reads your backend's Swagger (`VITE_API_URL/swagger/v1/swagger.json`) and writes typed hooks into `src/api/generated/`. Run this after changing ABP endpoints.
+Reads your backend's Swagger (`VITE_API_URL/swagger/v1/swagger.json`) and writes typed hooks into `src/api/generated/`. Run this after changing ABP endpoints. (Local self-signed dev certs are tolerated automatically; set `NODE_TLS_REJECT_UNAUTHORIZED=1` to enforce strict TLS.)
 
 ### Step 5 — Start the dev server
 
