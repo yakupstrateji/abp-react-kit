@@ -1,91 +1,135 @@
-# SchollApp SPA
+# @strateji/template
 
-A Vite + React + TypeScript single-page application that authenticates against the **Strateji.SchollApp** ABP 10.4 backend via OIDC PKCE and provides admin screens for Users, Roles + Permissions, Tenants, and Email Settings.
+The design half of abp-react-kit. Copy this app into your project and re-skin it for your brand.
 
----
+## What's in here
 
-## Prerequisites
+This app owns all styling and feature pages. Business logic (auth, OIDC, CRUD, i18n, httpClient) lives in `@strateji/abp-react-core` — a dependency you keep updated independently.
 
-1. **Backend running at `https://localhost:44334`**
-   Start the ABP Web project from `Strateji.SchollApp/src/Strateji.SchollApp.Web`:
-   ```powershell
-   $env:ASPNETCORE_ENVIRONMENT = 'Development'
-   $env:ASPNETCORE_URLS = 'https://localhost:44334'
-   dotnet run --no-launch-profile
-   ```
-   Wait until you see `Now listening on: https://localhost:44334`.
+## Re-skinning
 
-2. **Trust the dev certificate** (one-time, so the browser accepts the OIDC redirect):
-   ```powershell
-   dotnet dev-certs https --trust
-   ```
+### CSS tokens (`src/index.css`)
 
-3. **Redis is NOT required** — the backend uses in-memory caching in Development mode.
+Every color, radius, and sidebar dimension is a CSS custom property. Edit the `:root` block to re-skin with zero Tailwind config changes:
 
----
+```css
+:root {
+  /* Brand color — any hsl triple */
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
 
-## Environment variables
+  /* Sidebar */
+  --sidebar-bg: 222.2 47.4% 11.2%;
+  --sidebar-fg: 215 20.2% 65.1%;
+  --sidebar-active-bg: 217.2 91.2% 59.8%;
+  --sidebar-active-fg: 210 40% 98%;
+  --sidebar-hover-bg: 217.2 32.6% 17.5%;
 
-Copy `.env.example` to `.env` (already present in the repo) and adjust if needed:
-
+  /* Surface / border / radius */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --border: 214.3 31.8% 91.4%;
+  --radius: 0.5rem;
+  /* ... more tokens in the file */
+}
 ```
-VITE_API_URL=https://localhost:44334
-VITE_CLIENT_ID=SchollApp_React
+
+Dark mode overrides go in `.dark { ... }` in the same file.
+
+### Tailwind preset (`tailwind-preset.js`)
+
+The project-root `tailwind-preset.js` maps every CSS token to a Tailwind utility so you can write `bg-primary`, `text-sidebar-fg`, etc. Add new tokens in `index.css` and the corresponding mapping in the preset to extend the design system.
+
+## Branding config (`src/app/branding.ts`)
+
+```ts
+import type { BrandingConfig } from '@strateji/abp-react-core'
+
+export const branding: BrandingConfig = {
+  appName: 'My App',          // shown in sidebar header and page title
+  logoUrl: '/logo.svg',       // optional; falls back to text-only
+  toasterTheme: 'system',     // Sonner theme: 'light' | 'dark' | 'system'
+}
+```
+
+## Navigation config (`src/app/navigation.ts`)
+
+Define all routes and the sidebar menu in one array. Both the TanStack Router route tree and the sidebar are generated from this config:
+
+```ts
+import type { NavEntry } from '@strateji/abp-react-core'
+import { LayoutDashboard, Users } from 'lucide-react'
+
+export const navigation: NavEntry[] = [
+  { key: 'dashboard', label: 'Dashboard', path: '/', icon: LayoutDashboard },
+  {
+    key: 'admin', label: 'Administration', icon: Users,
+    children: [
+      {
+        key: 'users', label: 'Users', path: '/admin/users',
+        permission: 'AbpIdentity.Users',  // hides the item if not granted
+      },
+    ],
+  },
+]
+```
+
+`permission` is optional. When set, the sidebar item is hidden for users who lack that ABP permission string.
+
+## Backend wiring
+
+### Environment variables
+
+Create `.env.local` (git-ignored) or populate `public/dynamic-env.json` for runtime injection:
+
+```env
+VITE_AUTHORITY=https://localhost:44334
+VITE_CLIENT_ID=YourApp_React
+VITE_API_BASE_URL=https://localhost:44334
 VITE_REDIRECT_URI=http://localhost:5173/auth/callback
-VITE_SILENT_REDIRECT_URI=http://localhost:5173/auth/silent-renew
-VITE_POST_LOGOUT_URI=http://localhost:5173
-VITE_SCOPE=openid profile email roles offline_access SchollApp
+VITE_POST_LOGOUT_REDIRECT_URI=http://localhost:5173/
+VITE_SCOPE=openid profile email roles YourApi
 ```
 
----
+`dynamic-env.json` values override `.env` at runtime, which is useful for Docker deployments where you can mount the file without rebuilding.
 
-## Development
+### Regenerate the API client
+
+After changing your ABP backend, regenerate typed API hooks:
 
 ```bash
-pnpm install
-pnpm dev          # starts Vite dev server at http://localhost:5173
+pnpm openapi-ts
 ```
 
-Open `http://localhost:5173`. You will be redirected to the ABP login page. Sign in with:
+Output goes to `src/api/generated/`. These files are excluded from ESLint and should be committed as-is.
 
-| Username | Password  |
-|----------|-----------|
-| `admin`  | `1q2w3E*` |
+## Core dependency
 
----
-
-## Regenerate the typed API client
-
-The generated client in `src/api/generated/` is produced from the backend's OpenAPI document. To regenerate after the backend changes:
-
-1. Ensure the backend is running at `https://localhost:44334`.
-2. Run:
-   ```bash
-   pnpm openapi-ts
-   ```
-   > **Do not hand-edit** `src/api/generated/` — changes will be overwritten on the next run.
-
----
-
-## Tests
+`@strateji/abp-react-core` is listed in `package.json` as a regular dependency. Update it independently of your UI changes:
 
 ```bash
-pnpm vitest run          # run all tests once
-pnpm vitest              # interactive watch mode
+pnpm update @strateji/abp-react-core
 ```
 
-Tests use [Vitest](https://vitest.dev/) + [React Testing Library](https://testing-library.com/) + [MSW](https://mswjs.io/) for integration tests. No backend connection is needed for tests.
+Core exports: `AuthProvider`, `useAuth`, `AppConfigProvider`, `usePermission`, `httpClient`, `useCrud`, `CrudService`, `LocalizationProvider`, `useL`, `env`.
 
----
-
-## Build
+## Commands
 
 ```bash
-pnpm build               # type-check + Vite production build → dist/
+pnpm dev          # Vite dev server at http://localhost:5173
+pnpm build        # type-check + production build -> dist/
+pnpm test         # run all 50 tests (Vitest + Testing Library + MSW)
+pnpm lint         # ESLint (generated files excluded)
+pnpm openapi-ts   # regenerate src/api/generated/ from backend Swagger
 ```
 
----
+## Manual verification
 
-## Architecture
+The full app requires a running ABP backend. Start it at https://localhost:44334, then:
 
-This is a static browser SPA with no server-side rendering. Authentication is handled by [`oidc-client-ts`](https://github.com/authts/oidc-client-ts) using the **Authorization Code + PKCE** flow against the ABP OpenIddict server — tokens are stored in `localStorage` and silently renewed. After login, the SPA fetches ABP's `/api/abp/application-configuration` endpoint to obtain the current user, granted policies, and localization data; this drives all permission-aware UI (create/edit/delete buttons are shown or hidden based on `grantedPolicies`). Server state is managed by [TanStack Query](https://tanstack.com/query) against a typed API client generated by [@hey-api/openapi-ts](https://heyapi.dev/) from the backend's Swagger document. Forms use [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) for validation, and [Tailwind CSS](https://tailwindcss.com/) for styling.
+```bash
+pnpm dev
+```
+
+Open http://localhost:5173, log in as `admin` / `1q2w3E*`, and exercise the admin CRUD pages. Trust the dev cert first if needed: `dotnet dev-certs https --trust`.
