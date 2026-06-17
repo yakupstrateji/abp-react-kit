@@ -1,29 +1,44 @@
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts'
-import { env } from '../config/env'
+import { getConfig } from '../config/env'
 
-export const userManager = new UserManager({
-  authority: env.apiUrl,
-  client_id: env.clientId,
-  redirect_uri: env.redirectUri,
-  silent_redirect_uri: env.silentRedirectUri,
-  post_logout_redirect_uri: env.postLogoutUri,
-  response_type: 'code',
-  scope: env.scope,
-  automaticSilentRenew: true,
-  userStore: new WebStorageStateStore({ store: window.localStorage }),
-})
+let _userManager: UserManager | null = null
 
-export const getAccessToken = async () => (await userManager.getUser())?.access_token ?? null
+/** Lazily create the OIDC UserManager on first use (after configureClient()). */
+export function getUserManager(): UserManager {
+  if (!_userManager) {
+    const c = getConfig()
+    _userManager = new UserManager({
+      authority: c.apiUrl,
+      client_id: c.clientId,
+      redirect_uri: c.redirectUri,
+      silent_redirect_uri: c.silentRedirectUri,
+      post_logout_redirect_uri: c.postLogoutUri,
+      response_type: 'code',
+      scope: c.scope,
+      automaticSilentRenew: true,
+      userStore: new WebStorageStateStore({ store: window.localStorage }),
+    })
+  }
+  return _userManager
+}
 
-// Synchronous logout guard. signoutRedirect() internally removes the local user
-// (firing UserUnloaded -> isAuthenticated=false) BEFORE it navigates to the ABP
-// end-session endpoint. Without this flag, ProtectedRoute's effect reacts to the
-// anonymous state by calling signinRedirect(), which races with / preempts the
-// sign-out navigation and silently re-logs-in against the still-valid ABP cookie.
+/**
+ * FOR TESTING ONLY: inject a mock UserManager instance (or pass null to reset
+ * so the next getUserManager() call creates a fresh instance via the constructor).
+ * Not exported from the package barrel (index.ts).
+ */
+export function _setUserManagerForTests(instance: UserManager | null): void {
+  _userManager = instance
+}
+
+export const getAccessToken = async () => (await getUserManager().getUser())?.access_token ?? null
+
+// Synchronous logout guard (see original rationale): prevents ProtectedRoute from
+// re-logging-in during the sign-out navigation.
 let _signingOut = false
 export const isSigningOut = () => _signingOut
 
 export async function signOut(): Promise<void> {
   _signingOut = true
-  await userManager.signoutRedirect()
+  await getUserManager().signoutRedirect()
 }

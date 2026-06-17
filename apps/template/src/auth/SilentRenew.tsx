@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { userManager } from '@yakupsogut/abp-react-core'
+import { getUserManager } from '@yakupsogut/abp-react-core'
 export function SilentRenew() {
-  useEffect(() => { userManager.signinSilentCallback().catch(() => {}) }, [])
+  useEffect(() => { getUserManager().signinSilentCallback().catch(() => {}) }, [])
   return null
 }

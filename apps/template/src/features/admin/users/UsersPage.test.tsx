@@ -4,20 +4,11 @@ import { describe, it, expect, vi } from 'vitest'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppConfigContext } from '@yakupsogut/abp-react-core'
 
-// Mock userManager so getAccessToken returns a token (httpClient needs this)
+// Mock getAccessToken so httpClient attaches a token on requests
 vi.mock('@yakupsogut/abp-react-core', async (importActual) => {
   const actual = await importActual<typeof import('@yakupsogut/abp-react-core')>()
   return {
     ...actual,
-    userManager: {
-      getUser: vi.fn().mockResolvedValue(null),
-      events: {
-        addUserLoaded: vi.fn(),
-        addUserUnloaded: vi.fn(),
-        removeUserLoaded: vi.fn(),
-        removeUserUnloaded: vi.fn(),
-      },
-    },
     getAccessToken: vi.fn().mockResolvedValue('test-token'),
   }
 })

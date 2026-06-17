@@ -1,19 +1,18 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
-import { env } from '../config/env'
-import { getAccessToken, userManager } from '../auth/userManager'
+import { getConfig } from '../config/env'
+import { getAccessToken, getUserManager } from '../auth/userManager'
 import { parseAbpError } from './abpError'
 import { getCurrentCulture } from '../i18n/culture'
 
-/** Shared axios instance with baseURL pointing to the ABP backend. */
-export const axiosInstance = axios.create({
-  baseURL: env.apiUrl,
-})
+/** Shared axios instance with baseURL set lazily in the request interceptor. */
+export const axiosInstance = axios.create({})
 
 type RetryConfig = InternalAxiosRequestConfig & { __isRetry?: boolean }
 
 // Request interceptor: attach Bearer token + Accept-Language on every request.
 // Lives on the INSTANCE so both http() and the generated SDK client get it.
 axiosInstance.interceptors.request.use(async (config) => {
+  config.baseURL = getConfig().apiUrl
   const token = await getAccessToken()
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
@@ -43,11 +42,11 @@ axiosInstance.interceptors.response.use(
     if (status === 401 && config && !config.__isRetry) {
       config.__isRetry = true
       try {
-        await userManager.signinSilent()
+        await getUserManager().signinSilent()
         // Re-run the request; the request interceptor attaches the fresh token.
         return await axiosInstance.request(config)
       } catch {
-        await userManager.signinRedirect()
+        await getUserManager().signinRedirect()
         return Promise.reject(parseAbpError(401, null))
       }
     }

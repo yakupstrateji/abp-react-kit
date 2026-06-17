@@ -1,13 +1,15 @@
 import { render, screen, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { AuthProvider, useAuth, userManager } from '@yakupsogut/abp-react-core'
+import { UserManager } from 'oidc-client-ts'
+import { AuthProvider, useAuth } from '@yakupsogut/abp-react-core'
+// Direct internal import to inject the mock instance via _setUserManagerForTests
+import { _setUserManagerForTests } from '../../../../packages/core/src/auth/userManager'
 
-// Mock oidc-client-ts at the lowest level so the AuthProvider (in core) picks
-// up the fake userManager instance. vi.mock('@yakupsogut/abp-react-core') would
-// only replace the re-export; AuthProvider's internal relative import of
-// ./userManager would still point to the real module. Mocking oidc-client-ts
-// intercepts the UserManager constructor itself, which is what userManager.ts
-// in core instantiates.
+// Mock oidc-client-ts at the lowest level so that new UserManager(...)
+// returns a controlled mock object. getUserManager() in core calls this
+// constructor lazily; _setUserManagerForTests() ensures the mock is in
+// place before AuthProvider mounts so both the event subscriptions and
+// getUser() return mock-controlled values.
 vi.mock('oidc-client-ts', () => {
   const mockEvents = {
     addUserLoaded: vi.fn(),
@@ -21,11 +23,16 @@ vi.mock('oidc-client-ts', () => {
     signoutRedirect: vi.fn(),
     events: mockEvents,
   }
-  // Must be a real class / function so `new UserManager(...)` works
+  // Must be a real class / function so `new UserManager(...)` works.
+  // Always returns the same mockInstance — every caller (getUserManager()
+  // in core, the test) shares one object so spies stay in sync.
   function UserManager() { return mockInstance }
   function WebStorageStateStore() {}
   return { UserManager, WebStorageStateStore }
 })
+
+// Obtain the shared mockInstance by calling the mocked constructor.
+const mockUserManager = new (UserManager as any)()
 
 function Probe() {
   const { isAuthenticated, isLoading } = useAuth()
@@ -33,38 +40,46 @@ function Probe() {
 }
 
 describe('AuthProvider', () => {
-  beforeEach(() => vi.clearAllMocks())
+  beforeEach(() => {
+    // Reset all mock implementations and call history for a clean slate.
+    vi.resetAllMocks()
+    // Inject the mock instance so getUserManager() returns it immediately
+    // (avoids triggering the real UserManager constructor on first use).
+    _setUserManagerForTests(mockUserManager as unknown as UserManager)
+  })
+
   it('reports anonymous when no user', async () => {
-    ;(userManager.getUser as ReturnType<typeof vi.fn>).mockResolvedValue(null)
+    mockUserManager.getUser.mockResolvedValue(null)
     render(<AuthProvider><Probe /></AuthProvider>)
     await waitFor(() => expect(screen.getByText('out')).toBeInTheDocument())
   })
+
   it('reports authenticated when a user exists', async () => {
-    ;(userManager.getUser as ReturnType<typeof vi.fn>).mockResolvedValue({ access_token: 't', profile: { sub: '1' }, expired: false })
+    mockUserManager.getUser.mockResolvedValue({ access_token: 't', profile: { sub: '1' }, expired: false })
     render(<AuthProvider><Probe /></AuthProvider>)
     await waitFor(() => expect(screen.getByText('in')).toBeInTheDocument())
   })
 
   it('transitions out→in when userLoaded event fires', async () => {
     // Initial getUser returns null → Probe shows "out"
-    ;(userManager.getUser as ReturnType<typeof vi.fn>).mockResolvedValue(null)
+    mockUserManager.getUser.mockResolvedValue(null)
     render(<AuthProvider><Probe /></AuthProvider>)
     await waitFor(() => expect(screen.getByText('out')).toBeInTheDocument())
 
     // Retrieve the callback registered with addUserLoaded and invoke it
-    const onLoaded = (userManager.events.addUserLoaded as ReturnType<typeof vi.fn>).mock.calls[0][0]
+    const onLoaded = mockUserManager.events.addUserLoaded.mock.calls[0][0]
     act(() => onLoaded({ access_token: 't', profile: { sub: '1' }, expired: false }))
     await waitFor(() => expect(screen.getByText('in')).toBeInTheDocument())
   })
 
   it('transitions in→out when userUnloaded event fires', async () => {
     // Initial getUser returns a user → Probe shows "in"
-    ;(userManager.getUser as ReturnType<typeof vi.fn>).mockResolvedValue({ access_token: 't', profile: { sub: '1' }, expired: false })
+    mockUserManager.getUser.mockResolvedValue({ access_token: 't', profile: { sub: '1' }, expired: false })
     render(<AuthProvider><Probe /></AuthProvider>)
     await waitFor(() => expect(screen.getByText('in')).toBeInTheDocument())
 
     // Retrieve the callback registered with addUserUnloaded and invoke it
-    const onUnloaded = (userManager.events.addUserUnloaded as ReturnType<typeof vi.fn>).mock.calls[0][0]
+    const onUnloaded = mockUserManager.events.addUserUnloaded.mock.calls[0][0]
     act(() => onUnloaded())
     await waitFor(() => expect(screen.getByText('out')).toBeInTheDocument())
   })

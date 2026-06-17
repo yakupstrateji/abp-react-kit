@@ -1,4 +1,15 @@
 import '@testing-library/jest-dom'
+import { configureClient } from '@yakupsogut/abp-react-core'
+
+configureClient({
+  apiUrl: 'https://test.local',
+  clientId: 'test-client',
+  redirectUri: 'http://localhost:5173/auth/callback',
+  silentRedirectUri: 'http://localhost:5173/auth/silent-renew',
+  postLogoutUri: 'http://localhost:5173',
+  scope: 'openid profile',
+})
+
 import { server } from './msw/server'
 
 // jsdom polyfills required by Radix UI / shadcn components

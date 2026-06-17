@@ -9,15 +9,6 @@ vi.mock('@yakupsogut/abp-react-core', async (importActual) => {
   const actual = await importActual<typeof import('@yakupsogut/abp-react-core')>()
   return {
     ...actual,
-    userManager: {
-      getUser: vi.fn().mockResolvedValue(null),
-      events: {
-        addUserLoaded: vi.fn(),
-        addUserUnloaded: vi.fn(),
-        removeUserLoaded: vi.fn(),
-        removeUserUnloaded: vi.fn(),
-      },
-    },
     getAccessToken: vi.fn().mockResolvedValue('test-token'),
   }
 })

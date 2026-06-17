@@ -1,10 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { http, axiosInstance, userManager, AbpError } from '@yakupsogut/abp-react-core'
+import { http, axiosInstance, getUserManager, AbpError } from '@yakupsogut/abp-react-core'
 
-// userManager is a singleton instance exported by core. httpClient (now inside
-// core) imports that same instance from its core-internal path. Spying on the
-// singleton's methods here affects exactly the instance httpClient uses — no
-// module mock needed.
+// getUserManager() returns the lazy singleton created after configureClient() was
+// called in test/setup.ts. The interceptors inside httpClient use the same
+// singleton (via their own getUserManager() calls), so spying here affects exactly
+// the instance the interceptor uses — no module mock needed.
+const userManager = getUserManager()
 vi.spyOn(userManager, 'signinSilent')
 vi.spyOn(userManager, 'signinRedirect')
 

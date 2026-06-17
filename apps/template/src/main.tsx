@@ -1,10 +1,10 @@
-import { loadRuntimeConfig } from '@yakupsogut/abp-react-core'
+import { configureClient } from '@yakupsogut/abp-react-core'
+import { loadRuntimeConfig } from '@/lib/env'
 
-// Load runtime config from /dynamic-env.json BEFORE importing bootstrap.
-// The dynamic import guarantees that userManager.ts (and any other module
-// that reads `env` at module-initialisation time) is evaluated AFTER
-// Object.assign has patched the env object with runtime values.
-loadRuntimeConfig().then(async () => {
+// Load runtime config, hand it to core via configureClient, THEN import bootstrap
+// (which pulls core auth/api). configureClient must run before any auth/API use.
+loadRuntimeConfig().then(async (config) => {
+  configureClient(config)
   const { mount } = await import('./bootstrap')
   mount()
 })

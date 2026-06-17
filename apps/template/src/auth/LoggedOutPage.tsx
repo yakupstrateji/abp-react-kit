@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { userManager } from '@yakupsogut/abp-react-core'
+import { getUserManager } from '@yakupsogut/abp-react-core'
 import { useL } from '@yakupsogut/abp-react-core'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/Button'
@@ -12,7 +12,7 @@ export function LoggedOutPage() {
   // Process the end-session response (clears any leftover sign-out state in storage).
   // The local user was already removed during signOut(); this is just cleanup.
   useEffect(() => {
-    userManager.signoutRedirectCallback().catch(() => {})
+    getUserManager().signoutRedirectCallback().catch(() => {})
   }, [])
 
   return (
@@ -31,4 +31,3 @@ export function LoggedOutPage() {
     </div>
   )
 }
-

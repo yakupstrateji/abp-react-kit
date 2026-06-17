@@ -1,6 +1,6 @@
 import { createContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { User } from 'oidc-client-ts'
-import { userManager, signOut } from './userManager'
+import { getUserManager, signOut } from './userManager'
 
 export interface AuthContextValue {
   user: User | null
@@ -17,6 +17,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    const userManager = getUserManager()
     userManager.getUser().then((u) => { setUser(u && !u.expired ? u : null); setIsLoading(false) })
     const onLoaded = (u: User) => setUser(u)
     const onUnloaded = () => setUser(null)
@@ -31,9 +32,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isLoading,
     loginToTenant: (tenantId?: string) =>
       tenantId
-        ? userManager.signinRedirect({ extraQueryParams: { __tenant: tenantId } })
-        : userManager.signinRedirect(),
-    login: () => userManager.signinRedirect(),
+        ? getUserManager().signinRedirect({ extraQueryParams: { __tenant: tenantId } })
+        : getUserManager().signinRedirect(),
+    login: () => getUserManager().signinRedirect(),
     logout: () => signOut(),
   }), [user, isLoading])
 

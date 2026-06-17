@@ -17,6 +17,11 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.VITE_POST_LOGOUT_URI': JSON.stringify(env.VITE_POST_LOGOUT_URI ?? 'http://localhost:5173'),
       'import.meta.env.VITE_SCOPE': JSON.stringify(env.VITE_SCOPE ?? 'openid profile email roles offline_access SchollApp'),
     },
-    test: { environment: 'jsdom', globals: true, setupFiles: './src/test/setup.ts' },
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: './src/test/setup.ts',
+      server: { deps: { inline: ['oidc-client-ts'] } },
+    },
   }
 })
