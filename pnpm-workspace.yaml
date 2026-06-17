@@ -1,5 +1,7 @@
 packages:
   - 'packages/*'
   - 'apps/*'
+linkWorkspacePackages: true
 onlyBuiltDependencies:
   - msw
+preferWorkspacePackages: true
