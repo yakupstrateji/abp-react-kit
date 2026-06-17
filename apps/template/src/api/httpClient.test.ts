@@ -2,13 +2,17 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { http, axiosInstance } from './httpClient'
 import { AbpError } from '@strateji/abp-react-core'
 
-vi.mock('@/auth/userManager', () => ({
-  getAccessToken: vi.fn().mockResolvedValue('tok'),
-  userManager: { signinSilent: vi.fn(), signinRedirect: vi.fn() },
-}))
+vi.mock('@strateji/abp-react-core', async (importActual) => {
+  const actual = await importActual<typeof import('@strateji/abp-react-core')>()
+  return {
+    ...actual,
+    getAccessToken: vi.fn().mockResolvedValue('tok'),
+    userManager: { signinSilent: vi.fn(), signinRedirect: vi.fn() },
+  }
+})
 
 // Import the mocked module so we can access and configure the mock fns
-import * as userManagerModule from '@/auth/userManager'
+import * as userManagerModule from '@strateji/abp-react-core'
 
 // Helper to build an Axios-like error that axios.isAxiosError() recognises
 function makeAxiosError(status: number, data: unknown, config?: unknown) {

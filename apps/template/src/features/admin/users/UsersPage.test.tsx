@@ -5,18 +5,22 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppConfigContext } from '@/app-config/AppConfigProvider'
 
 // Mock userManager so getAccessToken returns a token (httpClient needs this)
-vi.mock('@/auth/userManager', () => ({
-  userManager: {
-    getUser: vi.fn().mockResolvedValue(null),
-    events: {
-      addUserLoaded: vi.fn(),
-      addUserUnloaded: vi.fn(),
-      removeUserLoaded: vi.fn(),
-      removeUserUnloaded: vi.fn(),
+vi.mock('@strateji/abp-react-core', async (importActual) => {
+  const actual = await importActual<typeof import('@strateji/abp-react-core')>()
+  return {
+    ...actual,
+    userManager: {
+      getUser: vi.fn().mockResolvedValue(null),
+      events: {
+        addUserLoaded: vi.fn(),
+        addUserUnloaded: vi.fn(),
+        removeUserLoaded: vi.fn(),
+        removeUserUnloaded: vi.fn(),
+      },
     },
-  },
-  getAccessToken: vi.fn().mockResolvedValue('test-token'),
-}))
+    getAccessToken: vi.fn().mockResolvedValue('test-token'),
+  }
+})
 
 // Dynamic import to avoid top-level import issues with the mock
 import { UsersPage } from './UsersPage'

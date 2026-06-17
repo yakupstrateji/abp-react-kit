@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { fetchAppConfig } from './appConfig'
 import type { AppConfig } from './appConfig'
-import { useAuth } from '@/auth/useAuth'
+import { useAuth } from '@strateji/abp-react-core'
 import { Spinner } from '@/components/ui/Spinner'
 
 interface AppConfigCtx {

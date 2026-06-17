@@ -9,10 +9,13 @@ import {
   Outlet,
 } from '@tanstack/react-router'
 import { ProtectedRoute } from './ProtectedRoute'
-import * as useAuthMod from './useAuth'
-import { isSigningOut } from './userManager'
+import * as useAuthMod from '@strateji/abp-react-core'
+import { isSigningOut } from '@strateji/abp-react-core'
 
-vi.mock('./userManager', () => ({ isSigningOut: vi.fn(() => false) }))
+vi.mock('@strateji/abp-react-core', async (importActual) => {
+  const actual = await importActual<typeof import('@strateji/abp-react-core')>()
+  return { ...actual, isSigningOut: vi.fn(() => false) }
+})
 
 function buildRouter(initialPath: string, authState: ReturnType<typeof useAuthMod.useAuth>) {
   vi.spyOn(useAuthMod, 'useAuth').mockReturnValue(authState)

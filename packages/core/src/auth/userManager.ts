@@ -1,5 +1,5 @@
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts'
-import { env } from '@strateji/abp-react-core'
+import { env } from '../config/env'
 
 export const userManager = new UserManager({
   authority: env.apiUrl,

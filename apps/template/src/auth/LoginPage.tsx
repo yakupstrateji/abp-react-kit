@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAuth } from './useAuth'
+import { useAuth } from '@strateji/abp-react-core'
 import { useL } from '@/i18n/i18n'
 import { axiosInstance } from '@/api/httpClient'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
