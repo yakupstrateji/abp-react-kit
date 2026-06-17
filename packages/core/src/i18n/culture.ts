@@ -1,8 +1,8 @@
 // Culture store — persists the user's selected UI culture to localStorage.
-// Key: schollapp.culture. Falls back to browser language (first segment) or 'tr'.
+// Key: abp-react-core.culture. Falls back to browser language (first segment) or 'tr'.
 // getCurrentCulture() is synchronous so it can be called from httpClient.ts without React.
 
-const STORAGE_KEY = 'schollapp.culture'
+const STORAGE_KEY = 'abp-react-core.culture'
 
 let _current: string = (() => {
   try {
