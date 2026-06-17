@@ -77,7 +77,7 @@ The GitHub repo must be public for `degit` to work without authentication. Push 
 
 ### 2. CLI degit path
 
-`packages/create-abp-react/bin/index.js` is already set to:
+`packages/create-abp-react/bin/create-abp-react.js` is already set to:
 
 ```js
 const REPO = 'yakupstrateji/abp-react-kit/apps/template'
@@ -97,7 +97,7 @@ npm publish
 After publishing, users can scaffold with:
 
 ```bash
-npx create-abp-react my-app
+npx @yakupsogut/create-abp-react my-app
 ```
 
 ---
@@ -108,5 +108,5 @@ npx create-abp-react my-app
 - [ ] `pnpm -r test` passes (core 2 + template 50)
 - [ ] `npm pack --dry-run` in `packages/core` shows expected files
 - [ ] Version bumped in `package.json` (semver)
-- [ ] For CLI: `REPO` in `bin/index.js` = `yakupstrateji/abp-react-kit/apps/template` (set)
+- [ ] For CLI: `REPO` in `bin/create-abp-react.js` = `yakupstrateji/abp-react-kit/apps/template` (set)
 - [ ] Logged in to npm as the package owner

@@ -25,7 +25,7 @@ abp-react-kit/
         i18n/              LocalizationProvider, useL, culture (localStorage)
         config/            configureClient, getConfig, AbpReactConfig type
         index.ts           public barrel
-    create-abp-react/      npx create-abp-react scaffolding CLI
+    create-abp-react/      npx @yakupsogut/create-abp-react scaffolding CLI
   apps/
     template/              @strateji/template  (design + features — copy this for your project)
       tailwind-preset.js   Tailwind preset that maps CSS tokens to utility classes
@@ -74,7 +74,7 @@ abp-react-kit/
 **Recommended:** use the CLI (requires the public GitHub repo to be live):
 
 ```bash
-npx create-abp-react my-app
+npx @yakupsogut/create-abp-react my-app
 cd my-app
 ```
 

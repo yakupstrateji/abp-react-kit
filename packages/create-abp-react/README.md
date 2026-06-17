@@ -1,13 +1,13 @@
-# create-abp-react
+# @yakupsogut/create-abp-react
 
 Scaffold a new ABP + React (Vite/TypeScript) project in seconds.
 
 ## Usage
 
 ```bash
-npm create abp-react my-app
+npm create @yakupsogut/abp-react my-app
 # or
-npx create-abp-react my-app
+npx @yakupsogut/create-abp-react my-app
 ```
 
 This will:

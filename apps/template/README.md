@@ -1,6 +1,6 @@
 # @strateji/template
 
-The design half of abp-react-kit. Scaffold a new project with `npx create-abp-react my-app`, or copy this folder directly, then re-skin and wire it to your ABP backend.
+The design half of abp-react-kit. Scaffold a new project with `npx @yakupsogut/create-abp-react my-app`, or copy this folder directly, then re-skin and wire it to your ABP backend.
 
 ## Origin
 
