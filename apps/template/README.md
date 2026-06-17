@@ -103,7 +103,7 @@ VITE_API_URL=https://localhost:44334
 VITE_CLIENT_ID=YourApp_React
 VITE_REDIRECT_URI=http://localhost:5173/auth/callback
 VITE_SILENT_REDIRECT_URI=http://localhost:5173/auth/silent-renew
-VITE_POST_LOGOUT_URI=http://localhost:5173
+VITE_POST_LOGOUT_URI=http://localhost:5173/auth/logged-out
 VITE_SCOPE=openid profile email roles offline_access YourApi
 ```
 
@@ -115,7 +115,7 @@ VITE_SCOPE=openid profile email roles offline_access YourApi
   "clientId": "YourApp_React",
   "redirectUri": "http://localhost:5173/auth/callback",
   "silentRedirectUri": "http://localhost:5173/auth/silent-renew",
-  "postLogoutUri": "http://localhost:5173",
+  "postLogoutUri": "http://localhost:5173/auth/logged-out",
   "scope": "openid profile email roles offline_access YourApi"
 }
 ```
@@ -134,13 +134,17 @@ Output goes to `src/api/generated/`. These files are excluded from ESLint and sh
 
 ## Core dependency
 
-`@strateji/abp-react-core` is listed in `package.json` as a regular dependency. Update it independently of your UI changes:
+`@strateji/abp-react-core` is consumed via a **workspace dependency** (`workspace:*`) — the template and core live together inside the abp-react-kit monorepo. Logic updates (auth, CRUD, i18n) flow in by pulling the monorepo and re-running `pnpm install`:
 
 ```bash
-pnpm update @strateji/abp-react-core
+git pull            # pick up upstream core changes
+pnpm install        # re-link workspace packages
+pnpm -r build       # verify everything still builds
 ```
 
-Core exports: `AuthProvider`, `useAuth`, `AppConfigProvider`, `usePermission`, `httpClient`, `useCrud`, `CrudService`, `LocalizationProvider`, `useL`, `env`.
+> **Note:** Publishing `@strateji/abp-react-core` to npm as a standalone versioned package is a deliberate follow-up task (out of current scope). Until then, keep the template and core together in the monorepo — `pnpm update @strateji/abp-react-core` against a published tarball will not work because the current package exports raw TypeScript source.
+
+Core exports: `AuthProvider`, `useAuth`, `AppConfigProvider`, `usePermission`, `axiosInstance`, `http`, `useCrud`, `CrudService`, `LocalizationProvider`, `useL`, `env`, `loadRuntimeConfig`.
 
 ## Commands
 

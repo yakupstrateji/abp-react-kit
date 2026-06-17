@@ -20,24 +20,24 @@ abp-react-kit/
       src/
         auth/              OIDC PKCE, AuthProvider, useAuth
         app-config/        ABP /api/abp/application-configuration, usePermission
-        http/              httpClient (Axios), 401 silent-renew-retry interceptor
+        api/               httpClient (Axios), 401 silent-renew-retry interceptor, AbpError
         crud/              useCrud headless hook, CrudService, CrudMessages
-        i18n/              LocalizationProvider, useL
-        env/               runtime env (dynamic-env.json + .env fallback)
+        i18n/              LocalizationProvider, useL, culture (localStorage)
+        config/            runtime env (dynamic-env.json + .env fallback)
         index.ts           public barrel
   apps/
     template/              @strateji/template  (design + features)
+      tailwind-preset.js   Tailwind preset that maps CSS tokens to utility classes
       src/
         app/
           branding.ts      App name, optional logo (ReactNode), toaster theme
           navigation.ts    All routes + sidebar menu in one place
         components/ui/     shadcn components (Button, Dialog, Table…)
-        layout/            AppShell, Header, Sidebar
+        layout/            AdminLayout, Header, Sidebar
         features/          admin CRUD (users, roles, tenants, settings, features)
                            plus students + classes examples
         api/generated/     openapi-ts output — regenerate from your backend
         index.css          CSS custom-property tokens (--primary, --sidebar-*, …)
-        tailwind-preset.js Tailwind preset that maps tokens to utility classes
 ```
 
 ## Core vs Template — what lives where
@@ -52,7 +52,7 @@ abp-react-kit/
 | Runtime env (VITE_* + dynamic-env.json) | `@strateji/abp-react-core` |
 | Design tokens, CSS, Tailwind | `apps/template` |
 | shadcn component library | `apps/template` |
-| App shell, sidebar, header | `apps/template` |
+| Admin layout, sidebar, header | `apps/template` |
 | ABP admin CRUD feature pages | `apps/template` |
 | Backend-specific generated API client | `apps/template` |
 | Branding config (name, logo) | `apps/template` |
@@ -128,7 +128,7 @@ Routes and sidebar are both generated from this array. No separate router file t
    VITE_CLIENT_ID=MyApp_React
    VITE_REDIRECT_URI=http://localhost:5173/auth/callback
    VITE_SILENT_REDIRECT_URI=http://localhost:5173/auth/silent-renew
-   VITE_POST_LOGOUT_URI=http://localhost:5173
+   VITE_POST_LOGOUT_URI=http://localhost:5173/auth/logged-out
    VITE_SCOPE=openid profile email roles offline_access MyApi
    ```
 
@@ -140,7 +140,7 @@ Routes and sidebar are both generated from this array. No separate router file t
      "clientId": "MyApp_React",
      "redirectUri": "http://localhost:5173/auth/callback",
      "silentRedirectUri": "http://localhost:5173/auth/silent-renew",
-     "postLogoutUri": "http://localhost:5173",
+     "postLogoutUri": "http://localhost:5173/auth/logged-out",
      "scope": "openid profile email roles offline_access MyApi"
    }
    ```
@@ -157,13 +157,17 @@ The generated files go into `src/api/generated/` and are committed. They are exc
 
 ### Step 5 — Keep core updated
 
-`@strateji/abp-react-core` stays as a regular npm dependency in your copied template. Logic fixes (auth, CRUD, i18n) flow in by bumping the version:
+`@strateji/abp-react-core` is consumed as a **workspace dependency** (`workspace:*`) — the template and core live together inside this monorepo. Logic fixes (auth, CRUD, i18n) flow in by pulling the monorepo and re-running `pnpm install`:
 
 ```bash
-pnpm update @strateji/abp-react-core
+git pull            # pick up upstream core changes
+pnpm install        # re-link workspace packages
+pnpm -r build       # verify everything still builds
 ```
 
-You own the template folder outright — UI changes never break your core updates.
+You own the template folder outright — UI changes you make locally are never overwritten by core updates.
+
+> **Note:** Publishing `@strateji/abp-react-core` to npm as a standalone versioned package (with a real `tsc` emit into `dist/` and standard `main`/`exports` pointing at compiled JS) is a deliberate follow-up task and is currently out of scope. Until then, keep the template and core together in the monorepo — the current `package.json` exports point at raw `src/index.ts` and rely on Vite's workspace resolution, so an external `pnpm update @strateji/abp-react-core` against a published tarball would pull un-compiled, Vite-coupled TypeScript and will not work.
 
 ## Commands
 
@@ -223,6 +227,10 @@ Generated files in `src/api/generated/` are excluded from ESLint (added to `glob
 ### Data-driven routes and path-type inference
 
 Routes are driven by `app/navigation.ts` at runtime. This trades TanStack Router's static path-type inference for config-driven extensibility. One `as string` cast exists in `Header.tsx` as a result — this is intentional and documented.
+
+### Culture localStorage key
+
+Core persists the selected UI culture under the `abp-react-core.culture` localStorage key (renamed from the source app's brand-specific key during de-branding).
 
 ### Windows CRLF git warnings
 
