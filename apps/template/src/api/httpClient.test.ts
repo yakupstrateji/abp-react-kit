@@ -33,6 +33,12 @@ describe('http', () => {
   })
 
   it('adds bearer token and returns json', async () => {
+    // Spy on the singleton's getUser so getAccessToken() resolves to 'tok'.
+    // Scoped to this test only; restored manually at the end so it does not
+    // leak into the other tests (signinSilent/signinRedirect spies set at
+    // file scope are unaffected).
+    const getUserSpy = vi.spyOn(userManager, 'getUser').mockResolvedValue({ access_token: 'tok' } as never)
+
     let capturedConfig: any
     axiosInstance.defaults.adapter = async (config: any) => {
       capturedConfig = config
@@ -41,10 +47,10 @@ describe('http', () => {
 
     const data = await http<{ ok: number }>('/api/x')
     expect(data.ok).toBe(1)
-    // Request interceptor attaches Authorization before the adapter runs
-    // (getAccessToken returns null in test env — OIDC UserManager has no user)
-    // so we just verify the request went through and data came back correctly.
-    expect(capturedConfig).toBeDefined()
+    // The request interceptor must have attached the Authorization header.
+    expect(capturedConfig?.headers?.Authorization).toBe('Bearer tok')
+
+    getUserSpy.mockRestore()
   })
 
   it('throws AbpError on non-2xx', async () => {
