@@ -29,7 +29,7 @@ abp-react-kit/
     template/              @strateji/template  (design + features)
       src/
         app/
-          branding.ts      App name, logo URL, toaster theme
+          branding.ts      App name, optional logo (ReactNode), toaster theme
           navigation.ts    All routes + sidebar menu in one place
         components/ui/     shadcn components (Button, Dialog, Table…)
         layout/            AppShell, Header, Sidebar
@@ -83,31 +83,35 @@ Edit `src/index.css`. Every color, radius, and sidebar measurement is a CSS cust
 }
 ```
 
-The `tailwind-preset.js` at the project root maps these tokens to Tailwind utility classes — no Tailwind config changes needed for a re-skin.
+The `tailwind-preset.js` at `apps/template/tailwind-preset.js` maps these tokens to Tailwind utility classes — no Tailwind config changes needed for a re-skin.
 
 ### Step 3 — Configure branding and navigation
 
-`src/app/branding.ts` — set your app name, optional logo URL, and Sonner toaster theme:
+`src/app/branding.ts` — set your app name and Sonner toaster theme. The file exports a `branding` object typed by the local `Branding` interface (`{ appName: string; logo?: ReactNode; toasterTheme: 'light' | 'dark' | 'system' }`):
 
 ```ts
-export const branding = {
+// src/app/branding.ts  (types defined here — NOT imported from core)
+import type { Branding } from './branding'   // local interface in same file
+
+export const branding: Branding = {
   appName: 'My ABP App',
-  logoUrl: '/logo.svg',      // optional; falls back to text
   toasterTheme: 'light',     // 'light' | 'dark' | 'system'
-} satisfies BrandingConfig
+  // logo is an optional ReactNode; to pass JSX, rename branding.ts → branding.tsx
+  // logo: React.createElement('img', { src: '/logo.svg', alt: 'My ABP App' }),
+}
 ```
 
-`src/app/navigation.ts` — define every route and sidebar menu entry in one place:
+`src/app/navigation.ts` — define every route and sidebar menu entry in one place. `NavEntry` is defined in this file, NOT in core. The real shape is:
 
 ```ts
+// src/app/navigation.ts
+import type { NavEntry } from './navigation'  // local type in same file
+import type { ComponentType } from 'react'
+import { DashboardPage } from '@/features/dashboard/DashboardPage'
+
 export const navigation: NavEntry[] = [
-  { key: 'dashboard', label: 'Dashboard', path: '/', icon: LayoutDashboard },
-  {
-    key: 'admin', label: 'Administration', icon: Settings,
-    children: [
-      { key: 'users', label: 'Users', path: '/admin/users', permission: 'AbpIdentity.Users' },
-    ],
-  },
+  { path: '/', labelKey: 'App::Menu:Dashboard', fallbackLabel: 'Dashboard', component: DashboardPage, exact: true },
+  { path: '/admin/users', labelKey: 'App::Menu:Users', fallbackLabel: 'Users', permission: 'AbpIdentity.Users', component: UsersPage },
 ]
 ```
 
@@ -115,14 +119,33 @@ Routes and sidebar are both generated from this array. No separate router file t
 
 ### Step 4 — Wire up your ABP backend
 
-1. Set environment variables (`.env.local` or `public/dynamic-env.json` for runtime injection):
+1. Set environment variables. There are **two separate mechanisms with different key schemas**:
 
-```env
-VITE_AUTHORITY=https://localhost:44334
-VITE_CLIENT_ID=MyApp_React
-VITE_API_BASE_URL=https://localhost:44334
-VITE_REDIRECT_URI=http://localhost:5173/auth/callback
-```
+   **Build-time** — `.env.local` (git-ignored), uses `VITE_*` names from `vite.config.ts`:
+
+   ```env
+   VITE_API_URL=https://localhost:44334
+   VITE_CLIENT_ID=MyApp_React
+   VITE_REDIRECT_URI=http://localhost:5173/auth/callback
+   VITE_SILENT_REDIRECT_URI=http://localhost:5173/auth/silent-renew
+   VITE_POST_LOGOUT_URI=http://localhost:5173
+   VITE_SCOPE=openid profile email roles offline_access MyApi
+   ```
+
+   **Runtime override** — `public/dynamic-env.json` (camelCase keys, read at startup without a rebuild):
+
+   ```json
+   {
+     "apiUrl": "https://localhost:44334",
+     "clientId": "MyApp_React",
+     "redirectUri": "http://localhost:5173/auth/callback",
+     "silentRedirectUri": "http://localhost:5173/auth/silent-renew",
+     "postLogoutUri": "http://localhost:5173",
+     "scope": "openid profile email roles offline_access MyApi"
+   }
+   ```
+
+   `dynamic-env.json` values override `.env` at runtime — useful for Docker deployments where you can mount the file without rebuilding.
 
 2. Regenerate the API client from your backend's Swagger:
 

@@ -39,39 +39,52 @@ Dark mode overrides go in `.dark { ... }` in the same file.
 
 ### Tailwind preset (`tailwind-preset.js`)
 
-The project-root `tailwind-preset.js` maps every CSS token to a Tailwind utility so you can write `bg-primary`, `text-sidebar-fg`, etc. Add new tokens in `index.css` and the corresponding mapping in the preset to extend the design system.
+`apps/template/tailwind-preset.js` maps every CSS token to a Tailwind utility so you can write `bg-primary`, `text-sidebar-fg`, etc. Add new tokens in `index.css` and the corresponding mapping in the preset to extend the design system.
 
 ## Branding config (`src/app/branding.ts`)
 
-```ts
-import type { BrandingConfig } from '@strateji/abp-react-core'
+`BrandingConfig` / `NavEntry` are NOT exported from `@strateji/abp-react-core`. The `Branding` interface and `NavEntry` type are defined locally in `src/app/branding.ts` and `src/app/navigation.ts` respectively — you own and edit them directly.
 
-export const branding: BrandingConfig = {
+```ts
+// src/app/branding.ts — edit this file directly
+// Branding interface is defined here: { appName: string; logo?: ReactNode; toasterTheme: 'light' | 'dark' | 'system' }
+import type { ReactNode } from 'react'
+
+export interface Branding {
+  appName: string
+  logo?: ReactNode
+  toasterTheme: 'light' | 'dark' | 'system'
+}
+
+export const branding: Branding = {
   appName: 'My App',          // shown in sidebar header and page title
-  logoUrl: '/logo.svg',       // optional; falls back to text-only
   toasterTheme: 'system',     // Sonner theme: 'light' | 'dark' | 'system'
+  // logo is an optional ReactNode; to pass JSX, rename branding.ts → branding.tsx
+  // logo: React.createElement('img', { src: '/logo.svg', alt: 'My App' }),
 }
 ```
 
 ## Navigation config (`src/app/navigation.ts`)
 
-Define all routes and the sidebar menu in one array. Both the TanStack Router route tree and the sidebar are generated from this config:
+Define all routes and the sidebar menu in one array. Both the route tree and the sidebar are generated from this config. `NavEntry` is defined locally in `src/app/navigation.ts` — it is NOT exported from `@strateji/abp-react-core`:
 
 ```ts
-import type { NavEntry } from '@strateji/abp-react-core'
-import { LayoutDashboard, Users } from 'lucide-react'
+// src/app/navigation.ts — edit this file directly
+import type { ComponentType } from 'react'
+
+export interface NavEntry {
+  path: string
+  labelKey: string          // i18n key e.g. 'App::Menu:Dashboard'
+  fallbackLabel: string     // shown when i18n key is not yet loaded
+  permission?: string       // optional ABP permission string
+  component: ComponentType
+  showInMenu?: boolean      // defaults to true
+  exact?: boolean
+}
 
 export const navigation: NavEntry[] = [
-  { key: 'dashboard', label: 'Dashboard', path: '/', icon: LayoutDashboard },
-  {
-    key: 'admin', label: 'Administration', icon: Users,
-    children: [
-      {
-        key: 'users', label: 'Users', path: '/admin/users',
-        permission: 'AbpIdentity.Users',  // hides the item if not granted
-      },
-    ],
-  },
+  { path: '/', labelKey: 'App::Menu:Dashboard', fallbackLabel: 'Dashboard', component: DashboardPage, exact: true },
+  { path: '/admin/users', labelKey: 'App::Menu:Users', fallbackLabel: 'Users', permission: 'AbpIdentity.Users', component: UsersPage },
 ]
 ```
 
@@ -81,18 +94,33 @@ export const navigation: NavEntry[] = [
 
 ### Environment variables
 
-Create `.env.local` (git-ignored) or populate `public/dynamic-env.json` for runtime injection:
+There are **two separate mechanisms with different key schemas**:
+
+**Build-time** — `.env.local` (git-ignored), uses `VITE_*` names exactly as defined in `vite.config.ts`:
 
 ```env
-VITE_AUTHORITY=https://localhost:44334
+VITE_API_URL=https://localhost:44334
 VITE_CLIENT_ID=YourApp_React
-VITE_API_BASE_URL=https://localhost:44334
 VITE_REDIRECT_URI=http://localhost:5173/auth/callback
-VITE_POST_LOGOUT_REDIRECT_URI=http://localhost:5173/
-VITE_SCOPE=openid profile email roles YourApi
+VITE_SILENT_REDIRECT_URI=http://localhost:5173/auth/silent-renew
+VITE_POST_LOGOUT_URI=http://localhost:5173
+VITE_SCOPE=openid profile email roles offline_access YourApi
 ```
 
-`dynamic-env.json` values override `.env` at runtime, which is useful for Docker deployments where you can mount the file without rebuilding.
+**Runtime override** — `public/dynamic-env.json` (camelCase keys, read at startup without a rebuild):
+
+```json
+{
+  "apiUrl": "https://localhost:44334",
+  "clientId": "YourApp_React",
+  "redirectUri": "http://localhost:5173/auth/callback",
+  "silentRedirectUri": "http://localhost:5173/auth/silent-renew",
+  "postLogoutUri": "http://localhost:5173",
+  "scope": "openid profile email roles offline_access YourApi"
+}
+```
+
+`dynamic-env.json` values override `.env` at runtime — useful for Docker deployments where you can mount the file without rebuilding.
 
 ### Regenerate the API client
 
@@ -133,3 +161,5 @@ pnpm dev
 ```
 
 Open http://localhost:5173, log in as `admin` / `1q2w3E*`, and exercise the admin CRUD pages. Trust the dev cert first if needed: `dotnet dev-certs https --trust`.
+
+Note: live re-skin (editing `--primary` in `src/index.css` and confirming colors update) was not CI-verified — it requires the dev server running and a browser.
