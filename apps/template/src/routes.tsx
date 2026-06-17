@@ -7,18 +7,7 @@ import { LoginPage } from '@/auth/LoginPage'
 import { AdminLayout } from '@/layout/AdminLayout'
 import { RequirePermission } from '@/auth/RequirePermission'
 import { NotFoundPage } from '@/components/NotFoundPage'
-import { DashboardPage } from '@/features/dashboard/DashboardPage'
-import { UsersPage } from '@/features/admin/users/UsersPage'
-import { RolesPage } from '@/features/admin/roles/RolesPage'
-import { TenantsPage } from '@/features/admin/tenants/TenantsPage'
-import { SettingsPage } from '@/features/admin/settings/SettingsPage'
-import { ProfilePage } from '@/features/account/ProfilePage'
-import { StudentsPage } from '@/features/students/StudentsPage'
-import { ClassesPage } from '@/features/classes/ClassesPage'
-
-// Pages are eagerly imported (no per-route lazy/Suspense). The admin page
-// chunks are tiny, so code-splitting them added a "Yükleniyor…" flash on every
-// navigation for negligible bundle savings — eager loading makes navigation instant.
+import { navigation } from '@/app/navigation'
 
 // Root route — renders all children directly
 const rootRoute = createRootRoute({
@@ -65,84 +54,21 @@ const adminLayoutRoute = createRoute({
   component: AdminLayout,
 })
 
-// Dashboard
-const dashboardRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/',
-  component: DashboardPage,
-})
-
-// Users — permission guard as component wrapper
-const usersRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/admin/users',
-  component: () => (
-    <RequirePermission policy="AbpIdentity.Users">
-      <UsersPage />
-    </RequirePermission>
-  ),
-})
-
-// Roles
-const rolesRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/admin/roles',
-  component: () => (
-    <RequirePermission policy="AbpIdentity.Roles">
-      <RolesPage />
-    </RequirePermission>
-  ),
-})
-
-// Tenants
-const tenantsRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/admin/tenants',
-  component: () => (
-    <RequirePermission policy="AbpTenantManagement.Tenants">
-      <TenantsPage />
-    </RequirePermission>
-  ),
-})
-
-// Settings
-const settingsRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/admin/settings',
-  component: () => (
-    <RequirePermission policy="SettingManagement.Emailing">
-      <SettingsPage />
-    </RequirePermission>
-  ),
-})
-
-// Students
-const studentsRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/students',
-  component: () => (
-    <RequirePermission policy="SchollApp.Students">
-      <StudentsPage />
-    </RequirePermission>
-  ),
-})
-
-// Classes
-const classesRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/classes',
-  component: () => (
-    <RequirePermission policy="SchollApp.Classes">
-      <ClassesPage />
-    </RequirePermission>
-  ),
-})
-
-// Profile
-const profileRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/profile',
-  component: ProfilePage,
+// Admin child routes derived from navigation config
+const featureRoutes = navigation.map((entry) => {
+  const Component = entry.component
+  const permission = entry.permission // const → TS narrows to string inside closure, no ! needed
+  return createRoute({
+    getParentRoute: () => adminLayoutRoute,
+    path: entry.path,
+    component: permission
+      ? () => (
+          <RequirePermission policy={permission}>
+            <Component />
+          </RequirePermission>
+        )
+      : () => <Component />,
+  })
 })
 
 // Build route tree
@@ -152,16 +78,7 @@ const routeTree = rootRoute.addChildren([
   silentRenewRoute,
   loggedOutRoute,
   protectedRoute.addChildren([
-    adminLayoutRoute.addChildren([
-      dashboardRoute,
-      usersRoute,
-      rolesRoute,
-      tenantsRoute,
-      settingsRoute,
-      studentsRoute,
-      classesRoute,
-      profileRoute,
-    ]),
+    adminLayoutRoute.addChildren(featureRoutes),
   ]),
 ])
 

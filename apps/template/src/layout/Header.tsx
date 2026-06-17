@@ -44,7 +44,7 @@ export function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onSelect={() => void navigate({ to: '/profile' })}>
+              <DropdownMenuItem onSelect={() => void navigate({ to: '/profile' as string })}>
                 {L('SchollApp::MyProfile', 'Profil')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
