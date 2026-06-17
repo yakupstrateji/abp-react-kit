@@ -5,7 +5,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 export function AdminLayout() {
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-gray-50">
+    <div className="flex h-screen flex-col overflow-hidden bg-muted/40">
       <Header />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />

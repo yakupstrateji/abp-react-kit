@@ -30,7 +30,7 @@ export function CrudPage<T extends Record<string, unknown>>({
     <div className="flex flex-col gap-4 p-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-gray-800">{title}</h1>
+        <h1 className="text-xl font-semibold text-foreground">{title}</h1>
         <div className="flex items-center gap-2">
           {toolbar}
           {onCreate && (

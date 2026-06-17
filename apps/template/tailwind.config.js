@@ -38,6 +38,15 @@ export default {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
         },
+        sidebar: {
+          DEFAULT: 'hsl(var(--sidebar-bg))',
+          foreground: 'hsl(var(--sidebar-fg))',
+          border: 'hsl(var(--sidebar-border))',
+          active: 'hsl(var(--sidebar-active-bg))',
+          'active-foreground': 'hsl(var(--sidebar-active-fg))',
+          hover: 'hsl(var(--sidebar-hover-bg))',
+          'muted-foreground': 'hsl(var(--sidebar-muted-fg))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',

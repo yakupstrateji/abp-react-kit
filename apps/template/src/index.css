@@ -33,6 +33,14 @@
     --popover-foreground: 222.2 47.4% 11.2%;
 
     --radius: 0.375rem;
+
+    --sidebar-bg: 0 0% 100%;
+    --sidebar-fg: 215 19% 35%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-active-bg: 226 100% 97%;
+    --sidebar-active-fg: 243 75% 47%;
+    --sidebar-hover-bg: 210 40% 96%;
+    --sidebar-muted-fg: 215 16% 65%;
   }
 
   .dark {
@@ -63,6 +71,14 @@
 
     --popover: 224 71% 4%;
     --popover-foreground: 213 31% 91%;
+
+    --sidebar-bg: 224 71% 4%;
+    --sidebar-fg: 213 31% 80%;
+    --sidebar-border: 216 34% 17%;
+    --sidebar-active-bg: 216 34% 17%;
+    --sidebar-active-fg: 210 40% 98%;
+    --sidebar-hover-bg: 223 47% 11%;
+    --sidebar-muted-fg: 215 16% 50%;
   }
 }
 
