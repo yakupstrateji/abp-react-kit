@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { http } from '@/api/httpClient'
+import { http } from '@strateji/abp-react-core'
 import { useCurrentUser } from '@/app-config/usePermission'
 import { Spinner } from '@/components/ui/Spinner'
 import { useL } from '@/i18n/i18n'

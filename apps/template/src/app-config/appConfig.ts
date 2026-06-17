@@ -1,4 +1,4 @@
-import { http } from '@/api/httpClient'
+import { http } from '@strateji/abp-react-core'
 
 export interface AppConfig {
   currentUser: { id: string | null; userName: string | null; isAuthenticated: boolean; name?: string | null }

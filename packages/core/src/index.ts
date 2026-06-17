@@ -6,3 +6,4 @@ export { userManager, getAccessToken, isSigningOut, signOut } from './auth/userM
 export { AuthProvider, AuthContext } from './auth/AuthProvider'
 export type { AuthContextValue } from './auth/AuthProvider'
 export { useAuth } from './auth/useAuth'
+export { axiosInstance, http } from './api/httpClient'
