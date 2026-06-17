@@ -6,14 +6,14 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/input'
 import type { Column } from '@/components/ui/Table'
 import { usePermission } from '@yakupsogut/abp-react-core'
-import type { StratejiSchollAppStudentsStudentDto } from '@/api/generated/types.gen'
+import type { Student } from './student'
 import { useStudents } from './useStudents'
 import { StudentForm } from './StudentForm'
 import type { StudentFormInput } from './studentSchema'
 import { useL } from '@yakupsogut/abp-react-core'
 import { useClassOptions } from '@/features/classes/useClasses'
 
-type StudentRow = StratejiSchollAppStudentsStudentDto & Record<string, unknown>
+type StudentRow = Student & Record<string, unknown>
 
 const PAGE_SIZE = 10
 
@@ -23,8 +23,8 @@ export function StudentsPage() {
   const [filter, setFilter] = useState('')
   const [filterInput, setFilterInput] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
-  const [editTarget, setEditTarget] = useState<StratejiSchollAppStudentsStudentDto | null>(null)
-  const [deleteTarget, setDeleteTarget] = useState<StratejiSchollAppStudentsStudentDto | null>(null)
+  const [editTarget, setEditTarget] = useState<Student | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Student | null>(null)
 
   const canCreate = usePermission('SchollApp.Students.Create')
   const canEdit = usePermission('SchollApp.Students.Edit')
@@ -83,7 +83,7 @@ export function StudentsPage() {
             <Button
               variant="ghost"
               onClick={() => {
-                setEditTarget(row as StratejiSchollAppStudentsStudentDto)
+                setEditTarget(row as Student)
                 setModalOpen(true)
               }}
             >
@@ -93,7 +93,7 @@ export function StudentsPage() {
           {canDelete && (
             <Button
               variant="danger"
-              onClick={() => setDeleteTarget(row as StratejiSchollAppStudentsStudentDto)}
+              onClick={() => setDeleteTarget(row as Student)}
             >
               {L('AbpUi::Delete', 'Sil')}
             </Button>

@@ -1,55 +1,48 @@
-import {
-  getApiAppStudent,
-  postApiAppStudent,
-  putApiAppStudentById,
-  deleteApiAppStudentById,
-} from '@/api/generated/sdk.gen'
 import type { CrudService } from '@/lib/crud'
 import { useCrud } from '@/lib/crud'
-import type {
-  StratejiSchollAppStudentsStudentDto,
-  StratejiSchollAppStudentsCreateUpdateStudentDto,
-} from '@/api/generated/types.gen'
+import { createInMemoryStore } from '@/features/_mock/inMemoryStore'
+import type { Student, StudentInput } from './student'
 
-export const studentService: CrudService<
-  StratejiSchollAppStudentsStudentDto,
-  StratejiSchollAppStudentsCreateUpdateStudentDto,
-  StratejiSchollAppStudentsCreateUpdateStudentDto
-> = {
-  async getList({ skip, take, filter }) {
-    const res = await getApiAppStudent({
-      query: {
-        SkipCount: skip,
-        MaxResultCount: take,
-        ...(filter ? { Filter: filter } : {}),
-      },
-      throwOnError: true,
-    })
-    return {
-      items: res.data.items ?? [],
-      totalCount: res.data.totalCount ?? 0,
-    }
-  },
-
-  async create(input) {
-    const res = await postApiAppStudent({ body: input, throwOnError: true })
-    return res.data
-  },
-
-  async update(id, input) {
-    const res = await putApiAppStudentById({ path: { id }, body: input, throwOnError: true })
-    return res.data
-  },
-
-  async remove(id) {
-    await deleteApiAppStudentById({ path: { id }, throwOnError: true })
-  },
-}
+// EXAMPLE feature backed by an in-memory mock (works with no backend).
+// For production: swap this for a backend-wired CrudService (see admin/users/useUsers.ts).
+// To remove: delete this feature folder + its entry in the app's navigation.ts.
+export const studentService: CrudService<Student, StudentInput, StudentInput> =
+  createInMemoryStore<Student>([
+    {
+      id: '1',
+      studentNumber: '1001',
+      name: 'Ada',
+      surname: 'Yılmaz',
+      classroom: '5-A',
+      classId: '1',
+      email: 'ada@example.com',
+      dateOfBirth: '2014-03-01',
+      isActive: true,
+    },
+    {
+      id: '2',
+      studentNumber: '1002',
+      name: 'Mert',
+      surname: 'Demir',
+      classroom: '5-A',
+      classId: '1',
+      email: null,
+      dateOfBirth: null,
+      isActive: true,
+    },
+    {
+      id: '3',
+      studentNumber: '1003',
+      name: 'Elif',
+      surname: 'Kaya',
+      classroom: '6-B',
+      classId: '2',
+      email: null,
+      dateOfBirth: null,
+      isActive: false,
+    },
+  ])
 
 export function useStudents(params: { skip: number; take: number; filter?: string }) {
-  return useCrud<
-    StratejiSchollAppStudentsStudentDto,
-    StratejiSchollAppStudentsCreateUpdateStudentDto,
-    StratejiSchollAppStudentsCreateUpdateStudentDto
-  >('students', studentService, params)
+  return useCrud<Student, StudentInput, StudentInput>('students', studentService, params)
 }

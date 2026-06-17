@@ -14,11 +14,11 @@ import {
 } from '@/components/ui/select'
 import { studentSchema, type StudentFormInput } from './studentSchema'
 import { useL } from '@yakupsogut/abp-react-core'
-import type { StratejiSchollAppStudentsStudentDto } from '@/api/generated/types.gen'
+import type { Student } from './student'
 import { useClassOptions } from '@/features/classes/useClasses'
 
 interface StudentFormProps {
-  initialValues?: Partial<StratejiSchollAppStudentsStudentDto>
+  initialValues?: Partial<Student>
   onSubmit: (data: StudentFormInput) => void | Promise<void>
   loading?: boolean
 }
