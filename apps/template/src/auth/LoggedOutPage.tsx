@@ -1,4 +1,4 @@
-﻿import { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { userManager } from '@strateji/abp-react-core'
 import { useL } from '@strateji/abp-react-core'

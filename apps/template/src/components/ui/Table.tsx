@@ -1,4 +1,4 @@
-﻿// shadcn/ui Table primitives + generic DataTable<T> wrapper
+// shadcn/ui Table primitives + generic DataTable<T> wrapper
 // Consumers import: Column, DataTable (legacy API kept intact)
 // Shadcn primitives are also exported for direct composition
 import * as React from "react"

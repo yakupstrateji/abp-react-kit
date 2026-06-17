@@ -1,4 +1,4 @@
-﻿import { useNavigate } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { useAuth } from '@strateji/abp-react-core'
 import { useCurrentUser, useCurrentTenant } from '@strateji/abp-react-core'
 import { LanguageSwitcher } from '@/i18n/LanguageSwitcher'

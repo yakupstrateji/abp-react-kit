@@ -1,4 +1,4 @@
-﻿import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { http } from '@strateji/abp-react-core'
 import { useCurrentUser } from '@strateji/abp-react-core'
 import { Spinner } from '@/components/ui/Spinner'

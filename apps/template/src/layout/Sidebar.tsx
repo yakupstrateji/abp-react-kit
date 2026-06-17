@@ -1,4 +1,4 @@
-﻿import { Link } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { usePermission } from '@strateji/abp-react-core'
 import { useL } from '@strateji/abp-react-core'
 
