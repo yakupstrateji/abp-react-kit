@@ -51,6 +51,7 @@ export function TenantsPage() {
   // Populate input when connection string data loads
   useEffect(() => {
     if (connStrQuery.data !== undefined) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setConnStrValue(connStrQuery.data ?? '')
     }
   }, [connStrQuery.data])
@@ -58,6 +59,7 @@ export function TenantsPage() {
   // Reset input when opening a new tenant
   useEffect(() => {
     if (!connStrTarget) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setConnStrValue('')
     }
   }, [connStrTarget])

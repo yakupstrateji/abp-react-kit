@@ -34,6 +34,7 @@ export function PermissionEditor({ groups, onSave, loading }: PermissionEditorPr
   // Re-initialize when groups prop changes
   useEffect(() => {
     const map = buildGrantsMap(groups)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOriginal(map)
     setCurrent(new Map(map))
   }, [groups])

@@ -336,6 +336,7 @@ function TimezoneTab() {
   })
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (current) setSelected(current)
   }, [current])
 

@@ -167,6 +167,7 @@ function FeatureEditorInner({ groups, tenantId, onClose }: FeatureEditorInnerPro
 
   useEffect(() => {
     const map = buildValuesMap(groups)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOriginal(map)
     setCurrent(new Map(map))
   }, [groups])

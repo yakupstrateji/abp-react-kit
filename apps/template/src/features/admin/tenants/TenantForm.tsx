@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import type { Resolver } from 'react-hook-form'
+import type { Resolver, FieldErrors } from 'react-hook-form'
 import { FormField } from '@/components/ui/FormField'
 import { Button } from '@/components/ui/Button'
 import {
@@ -58,7 +58,7 @@ export function TenantForm({ initialValues, onSubmit, loading }: TenantFormProps
           <FormField
             label={L('SchollApp::AdminEmail', 'Yönetici E-postası')}
             registration={register('adminEmailAddress' as keyof CreateTenantInput)}
-            error={(errors as Record<string, any>).adminEmailAddress}
+            error={(errors as FieldErrors<CreateTenantInput>).adminEmailAddress}
             type="email"
             autoComplete="email"
           />
@@ -66,7 +66,7 @@ export function TenantForm({ initialValues, onSubmit, loading }: TenantFormProps
           <FormField
             label={L('SchollApp::AdminPassword', 'Yönetici Şifresi')}
             registration={register('adminPassword' as keyof CreateTenantInput)}
-            error={(errors as Record<string, any>).adminPassword}
+            error={(errors as FieldErrors<CreateTenantInput>).adminPassword}
             type="password"
             autoComplete="new-password"
           />
