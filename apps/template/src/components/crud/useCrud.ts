@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { AbpError } from '@/api/abpError'
+import { AbpError } from '@strateji/abp-react-core'
 import { useL } from '@/i18n/i18n'
 
 export interface CrudService<TItem, TCreate, TUpdate> {

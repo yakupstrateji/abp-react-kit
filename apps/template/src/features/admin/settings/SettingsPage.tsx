@@ -11,7 +11,7 @@ import {
   postApiSettingManagementEmailing,
   postApiSettingManagementEmailingSendTestEmail,
 } from '@/api/generated/sdk.gen'
-import { AbpError } from '@/api/abpError'
+import { AbpError } from '@strateji/abp-react-core'
 import { usePermission } from '@/app-config/usePermission'
 import { FormField } from '@/components/ui/FormField'
 import { Button } from '@/components/ui/Button'

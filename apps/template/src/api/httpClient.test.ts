@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { http, axiosInstance } from './httpClient'
-import { AbpError } from './abpError'
+import { AbpError } from '@strateji/abp-react-core'
 
 vi.mock('@/auth/userManager', () => ({
   getAccessToken: vi.fn().mockResolvedValue('tok'),

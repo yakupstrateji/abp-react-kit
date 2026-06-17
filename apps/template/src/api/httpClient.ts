@@ -1,9 +1,6 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
-import { env } from '@/lib/env'
+import { env, parseAbpError, getCurrentCulture } from '@strateji/abp-react-core'
 import { getAccessToken, userManager } from '@/auth/userManager'
-import { parseAbpError } from './abpError'
-// Synchronous culture getter — does NOT import React; reads a module-level variable.
-import { getCurrentCulture } from '@/i18n/culture'
 
 /** Shared axios instance with baseURL pointing to the ABP backend. */
 export const axiosInstance = axios.create({

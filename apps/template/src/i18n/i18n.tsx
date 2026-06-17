@@ -4,7 +4,7 @@ import { I18nextProvider, useTranslation, initReactI18next } from 'react-i18next
 import { useQueryClient } from '@tanstack/react-query'
 import { AppConfigContext } from '@/app-config/AppConfigProvider'
 import type { AppConfig } from '@/app-config/appConfig'
-import { setCurrentCulture, getCurrentCulture } from './culture'
+import { setCurrentCulture, getCurrentCulture } from '@strateji/abp-react-core'
 
 type LocalizationData = AppConfig['localization']
 

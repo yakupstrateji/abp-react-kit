@@ -147,7 +147,7 @@ describe('useCrud', () => {
 
   it('toasts an AbpError message on create error', async () => {
     const { toast } = await import('sonner')
-    const { AbpError } = await import('@/api/abpError')
+    const { AbpError } = await import('@strateji/abp-react-core')
 
     const abpErr = new AbpError(422, 'Geçersiz giriş')
     const service = makeFakeService({
