@@ -1,0 +1,11 @@
+{
+  "name": "abp-react-kit",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "dev": "pnpm --filter @strateji/template dev"
+  }
+}
