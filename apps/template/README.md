@@ -1,10 +1,32 @@
 # @strateji/template
 
-The design half of abp-react-kit. Copy this app into your project and re-skin it for your brand.
+The design half of abp-react-kit. Scaffold a new project with `npx create-abp-react my-app`, or copy this folder directly, then re-skin and wire it to your ABP backend.
+
+## Origin
+
+This template is scaffolded by `create-abp-react`. It was bootstrapped from `OWNER/abp-react-kit/apps/template` via degit and is a standalone project — it does not need to stay inside the monorepo.
 
 ## What's in here
 
-This app owns all styling and feature pages. Business logic (auth, OIDC, CRUD, i18n, httpClient) lives in `@yakupsogut/abp-react-core` — a dependency you keep updated independently.
+This app owns all styling and feature pages. Business logic (auth, OIDC, CRUD, i18n, httpClient) lives in `@yakupsogut/abp-react-core` — a **published npm package** (`^1.x`) you update independently.
+
+## How env + core are wired
+
+`src/lib/env.ts` reads VITE_* build-time vars (and optionally `public/dynamic-env.json` at runtime) and assembles an `AbpReactConfig` object. `src/main.tsx` calls `configureClient(config)` from core before anything else, then dynamically imports and mounts the app:
+
+```ts
+// src/main.tsx
+import { configureClient } from '@yakupsogut/abp-react-core'
+import { loadRuntimeConfig } from '@/lib/env'
+
+loadRuntimeConfig().then(async (config) => {
+  configureClient(config)
+  const { mount } = await import('./bootstrap')
+  mount()
+})
+```
+
+`configureClient` must run before any auth or API call. Never import `bootstrap` (or anything that touches auth/httpClient) at the top level of `main.tsx`.
 
 ## Re-skinning
 
@@ -39,49 +61,26 @@ Dark mode overrides go in `.dark { ... }` in the same file.
 
 ### Tailwind preset (`tailwind-preset.js`)
 
-`apps/template/tailwind-preset.js` maps every CSS token to a Tailwind utility so you can write `bg-primary`, `text-sidebar-fg`, etc. Add new tokens in `index.css` and the corresponding mapping in the preset to extend the design system.
+`tailwind-preset.js` maps every CSS token to a Tailwind utility so you can write `bg-primary`, `text-sidebar-fg`, etc. Add new tokens in `index.css` and the corresponding mapping in the preset to extend the design system.
 
 ## Branding config (`src/app/branding.ts`)
 
-`BrandingConfig` / `NavEntry` are NOT exported from `@yakupsogut/abp-react-core`. The `Branding` interface and `NavEntry` type are defined locally in `src/app/branding.ts` and `src/app/navigation.ts` respectively — you own and edit them directly.
+`Branding` / `NavEntry` are NOT exported from `@yakupsogut/abp-react-core`. The `Branding` interface and `NavEntry` type are defined locally in `src/app/branding.ts` and `src/app/navigation.ts` respectively — you own and edit them directly.
 
 ```ts
 // src/app/branding.ts — edit this file directly
-// Branding interface is defined here: { appName: string; logo?: ReactNode; toasterTheme: 'light' | 'dark' | 'system' }
-import type { ReactNode } from 'react'
-
-export interface Branding {
-  appName: string
-  logo?: ReactNode
-  toasterTheme: 'light' | 'dark' | 'system'
-}
-
 export const branding: Branding = {
   appName: 'My App',          // shown in sidebar header and page title
   toasterTheme: 'system',     // Sonner theme: 'light' | 'dark' | 'system'
-  // logo is an optional ReactNode; to pass JSX, rename branding.ts → branding.tsx
-  // logo: React.createElement('img', { src: '/logo.svg', alt: 'My App' }),
+  // logo is an optional ReactNode; to pass JSX, rename branding.ts -> branding.tsx
 }
 ```
 
 ## Navigation config (`src/app/navigation.ts`)
 
-Define all routes and the sidebar menu in one array. Both the route tree and the sidebar are generated from this config. `NavEntry` is defined locally in `src/app/navigation.ts` — it is NOT exported from `@yakupsogut/abp-react-core`:
+Define all routes and the sidebar menu in one array. Both the route tree and the sidebar are generated from this config. `NavEntry` is defined locally — it is NOT exported from `@yakupsogut/abp-react-core`:
 
 ```ts
-// src/app/navigation.ts — edit this file directly
-import type { ComponentType } from 'react'
-
-export interface NavEntry {
-  path: string
-  labelKey: string          // i18n key e.g. 'App::Menu:Dashboard'
-  fallbackLabel: string     // shown when i18n key is not yet loaded
-  permission?: string       // optional ABP permission string
-  component: ComponentType
-  showInMenu?: boolean      // defaults to true
-  exact?: boolean
-}
-
 export const navigation: NavEntry[] = [
   { path: '/', labelKey: 'App::Menu:Dashboard', fallbackLabel: 'Dashboard', component: DashboardPage, exact: true },
   { path: '/admin/users', labelKey: 'App::Menu:Users', fallbackLabel: 'Users', permission: 'AbpIdentity.Users', component: UsersPage },
@@ -127,33 +126,48 @@ VITE_SCOPE=openid profile email roles offline_access YourApi
 After changing your ABP backend, regenerate typed API hooks:
 
 ```bash
+npm run openapi-ts
+# or, inside the monorepo:
 pnpm openapi-ts
 ```
 
 Output goes to `src/api/generated/`. These files are excluded from ESLint and should be committed as-is.
 
+## In-memory example features
+
+The template ships with **Students** and **Classes** feature pages that use an in-memory store — no backend required. They demonstrate the `CrudService` + `useCrud` pattern for a new entity. You have two options:
+
+**Replace with a real backend-wired service** (follow `features/admin/users`):
+1. Create a service using `CrudService` + `http` from core.
+2. Update `useStudents` / `useClasses` to call the real service.
+3. Add the generated API types from `src/api/generated/`.
+
+**Delete them** if you do not need example entities:
+1. Delete `src/features/students/` and `src/features/classes/`.
+2. Remove their entries from `src/app/navigation.ts`.
+
 ## Core dependency
 
-`@yakupsogut/abp-react-core` is consumed via a **workspace dependency** (`workspace:*`) — the template and core live together inside the abp-react-kit monorepo. Logic updates (auth, CRUD, i18n) flow in by pulling the monorepo and re-running `pnpm install`:
+`@yakupsogut/abp-react-core` is consumed as a **versioned npm dependency** (`^1.0.0` in `package.json`). To update to the latest minor/patch:
 
 ```bash
-git pull            # pick up upstream core changes
-pnpm install        # re-link workspace packages
-pnpm -r build       # verify everything still builds
+npm update @yakupsogut/abp-react-core
 ```
 
-> **Note:** Publishing `@yakupsogut/abp-react-core` to npm as a standalone versioned package is a deliberate follow-up task (out of current scope). Until then, keep the template and core together in the monorepo — `pnpm update @yakupsogut/abp-react-core` against a published tarball will not work because the current package exports raw TypeScript source.
+For a MAJOR version bump: edit the version range in `package.json`, run `npm install`, and follow the changelog for any breaking API changes.
 
-Core exports: `AuthProvider`, `useAuth`, `AppConfigProvider`, `usePermission`, `axiosInstance`, `http`, `useCrud`, `CrudService`, `LocalizationProvider`, `useL`, `env`, `loadRuntimeConfig`.
+Inside the monorepo, pnpm resolves core from the local `packages/core` workspace — `npm update` is not needed during monorepo development.
+
+Core exports: `AuthProvider`, `useAuth`, `AppConfigProvider`, `usePermission`, `axiosInstance`, `http`, `useCrud`, `CrudService`, `LocalizationProvider`, `useL`, `configureClient`, `getConfig`, `AbpReactConfig`.
 
 ## Commands
 
 ```bash
-pnpm dev          # Vite dev server at http://localhost:5173
-pnpm build        # type-check + production build -> dist/
-pnpm test         # run all 50 tests (Vitest + Testing Library + MSW)
-pnpm lint         # ESLint (generated files excluded)
-pnpm openapi-ts   # regenerate src/api/generated/ from backend Swagger
+npm run dev          # Vite dev server at http://localhost:5173
+npm run build        # type-check + production build -> dist/
+npm run test         # run all 50 tests (Vitest + Testing Library + MSW)
+npm run lint         # ESLint (generated files excluded)
+npm run openapi-ts   # regenerate src/api/generated/ from backend Swagger
 ```
 
 ## Manual verification
@@ -161,9 +175,11 @@ pnpm openapi-ts   # regenerate src/api/generated/ from backend Swagger
 The full app requires a running ABP backend. Start it at https://localhost:44334, then:
 
 ```bash
-pnpm dev
+npm run dev
 ```
 
 Open http://localhost:5173, log in as `admin` / `1q2w3E*`, and exercise the admin CRUD pages. Trust the dev cert first if needed: `dotnet dev-certs https --trust`.
 
-Note: live re-skin (editing `--primary` in `src/index.css` and confirming colors update) was not CI-verified — it requires the dev server running and a browser.
+The Students and Classes pages work immediately with no backend — they use an in-memory store.
+
+Note: the kit was previously runtime-verified (OIDC login, Users CRUD, re-skin); the controller re-runs this verification after the distribution tasks are complete.
