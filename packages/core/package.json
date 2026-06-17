@@ -12,8 +12,8 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist"],
-  "sideEffects": false,
+  "files": ["dist", "src"],
+  "sideEffects": true,
   "publishConfig": { "access": "public" },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
