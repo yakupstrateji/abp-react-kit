@@ -5,7 +5,6 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/input'
 import type { Column } from '@/components/ui/Table'
-import { usePermission } from '@yakupsogut/abp-react-core'
 import type { Student } from './student'
 import { useStudents } from './useStudents'
 import { StudentForm } from './StudentForm'
@@ -26,9 +25,10 @@ export function StudentsPage() {
   const [editTarget, setEditTarget] = useState<Student | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Student | null>(null)
 
-  const canCreate = usePermission('SchollApp.Students.Create')
-  const canEdit = usePermission('SchollApp.Students.Edit')
-  const canDelete = usePermission('SchollApp.Students.Delete')
+  // EXAMPLE: actions ungated. For a real feature, gate on your backend's permissions via usePermission(...)
+  const canCreate = true
+  const canEdit = true
+  const canDelete = true
 
   const { list, create, update, remove } = useStudents({ skip, take: PAGE_SIZE, filter })
   const classOptions = useClassOptions()

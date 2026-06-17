@@ -20,8 +20,8 @@ export interface NavEntry {
 
 export const navigation: NavEntry[] = [
   { path: '/', labelKey: 'SchollApp::Menu:Dashboard', fallbackLabel: 'Dashboard', component: DashboardPage, exact: true },
-  { path: '/students', labelKey: 'SchollApp::Menu:Students', fallbackLabel: 'Öğrenciler', permission: 'SchollApp.Students', component: StudentsPage },
-  { path: '/classes', labelKey: 'SchollApp::Menu:Classes', fallbackLabel: 'Sınıflar', permission: 'SchollApp.Classes', component: ClassesPage },
+  { path: '/students', labelKey: 'SchollApp::Menu:Students', fallbackLabel: 'Öğrenciler', component: StudentsPage },
+  { path: '/classes', labelKey: 'SchollApp::Menu:Classes', fallbackLabel: 'Sınıflar', component: ClassesPage },
   { path: '/admin/users', labelKey: 'SchollApp::Menu:Users', fallbackLabel: 'Kullanıcılar', permission: 'AbpIdentity.Users', component: UsersPage },
   { path: '/admin/roles', labelKey: 'SchollApp::Menu:Roles', fallbackLabel: 'Roller', permission: 'AbpIdentity.Roles', component: RolesPage },
   { path: '/admin/tenants', labelKey: 'SchollApp::Menu:Tenants', fallbackLabel: 'Kiracılar', permission: 'AbpTenantManagement.Tenants', component: TenantsPage },

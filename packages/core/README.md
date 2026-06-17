@@ -46,9 +46,9 @@ Call `configureClient` once at application startup (e.g. in `main.tsx`) before r
 | `usePermission(name)` | Returns `true` if the current user has the named permission |
 | `useCurrentUser()` | Returns the current ABP user info from app-config |
 | `LocalizationProvider` | Wires up i18next from ABP localization resources |
-| `useL(key, group?)` | Localization hook — returns translated string |
+| `useL()` | Returns a localizer function `L(key, fallback?)` that resolves ABP-namespaced keys (e.g. `'AbpUi::Save'`) |
 | `useLanguages()` | Returns available ABP language list |
-| `useCrud(service, messages?)` | Headless CRUD hook (list, create, update, delete) |
+| `useCrud(key, service, params, options?)` | Headless CRUD hook (list, create, update, delete); `options` is `{ notify?, messages? }` |
 | `axiosInstance` | Shared axios instance (Bearer + Accept-Language + 401-retry) |
 | `http<T>(path, init?)` | Typed wrapper over `axiosInstance` |
 | `getUserManager()` | Returns the `oidc-client-ts` UserManager |
