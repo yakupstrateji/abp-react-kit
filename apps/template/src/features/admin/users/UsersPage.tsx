@@ -8,14 +8,14 @@ import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { Input } from '@/components/ui/input'
 import type { Column } from '@/components/ui/Table'
-import { usePermission } from '@strateji/abp-react-core'
+import { usePermission } from '@yakupsogut/abp-react-core'
 import type { VoloAbpIdentityIdentityUserDto } from '@/api/generated/types.gen'
 import { useUsers, getAssignableRoles, getUserRoles } from './useUsers'
 import { UserForm } from './UserForm'
 import type { CreateUserInput, UpdateUserInput } from './userSchema'
 import { PermissionEditor } from '@/features/admin/roles/PermissionEditor'
 import { getPermissions, updatePermissions } from '@/features/admin/roles/permissionService'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 
 type UserRow = VoloAbpIdentityIdentityUserDto & Record<string, unknown>
 

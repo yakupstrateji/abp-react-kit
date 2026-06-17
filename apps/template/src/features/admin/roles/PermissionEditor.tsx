@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/Button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import type { VoloAbpPermissionManagementPermissionGroupDto } from '@/api/generated/types.gen'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 
 export interface PermissionEditorProps {
   groups: VoloAbpPermissionManagementPermissionGroupDto[]

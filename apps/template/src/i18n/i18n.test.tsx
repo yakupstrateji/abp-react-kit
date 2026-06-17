@@ -2,8 +2,8 @@ import { renderHook } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import type { ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { AppConfigContext } from '@strateji/abp-react-core'
-import { LocalizationProvider, useL } from '@strateji/abp-react-core'
+import { AppConfigContext } from '@yakupsogut/abp-react-core'
+import { LocalizationProvider, useL } from '@yakupsogut/abp-react-core'
 
 function makeWrapper(localization?: any) {
   const fakeAppConfig = localization

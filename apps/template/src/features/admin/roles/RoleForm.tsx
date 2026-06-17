@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { roleSchema, type RoleInput } from './roleSchema'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 
 interface RoleFormProps {
   initialValues?: Partial<RoleInput>

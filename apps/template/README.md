@@ -4,7 +4,7 @@ The design half of abp-react-kit. Copy this app into your project and re-skin it
 
 ## What's in here
 
-This app owns all styling and feature pages. Business logic (auth, OIDC, CRUD, i18n, httpClient) lives in `@strateji/abp-react-core` — a dependency you keep updated independently.
+This app owns all styling and feature pages. Business logic (auth, OIDC, CRUD, i18n, httpClient) lives in `@yakupsogut/abp-react-core` — a dependency you keep updated independently.
 
 ## Re-skinning
 
@@ -43,7 +43,7 @@ Dark mode overrides go in `.dark { ... }` in the same file.
 
 ## Branding config (`src/app/branding.ts`)
 
-`BrandingConfig` / `NavEntry` are NOT exported from `@strateji/abp-react-core`. The `Branding` interface and `NavEntry` type are defined locally in `src/app/branding.ts` and `src/app/navigation.ts` respectively — you own and edit them directly.
+`BrandingConfig` / `NavEntry` are NOT exported from `@yakupsogut/abp-react-core`. The `Branding` interface and `NavEntry` type are defined locally in `src/app/branding.ts` and `src/app/navigation.ts` respectively — you own and edit them directly.
 
 ```ts
 // src/app/branding.ts — edit this file directly
@@ -66,7 +66,7 @@ export const branding: Branding = {
 
 ## Navigation config (`src/app/navigation.ts`)
 
-Define all routes and the sidebar menu in one array. Both the route tree and the sidebar are generated from this config. `NavEntry` is defined locally in `src/app/navigation.ts` — it is NOT exported from `@strateji/abp-react-core`:
+Define all routes and the sidebar menu in one array. Both the route tree and the sidebar are generated from this config. `NavEntry` is defined locally in `src/app/navigation.ts` — it is NOT exported from `@yakupsogut/abp-react-core`:
 
 ```ts
 // src/app/navigation.ts — edit this file directly
@@ -134,7 +134,7 @@ Output goes to `src/api/generated/`. These files are excluded from ESLint and sh
 
 ## Core dependency
 
-`@strateji/abp-react-core` is consumed via a **workspace dependency** (`workspace:*`) — the template and core live together inside the abp-react-kit monorepo. Logic updates (auth, CRUD, i18n) flow in by pulling the monorepo and re-running `pnpm install`:
+`@yakupsogut/abp-react-core` is consumed via a **workspace dependency** (`workspace:*`) — the template and core live together inside the abp-react-kit monorepo. Logic updates (auth, CRUD, i18n) flow in by pulling the monorepo and re-running `pnpm install`:
 
 ```bash
 git pull            # pick up upstream core changes
@@ -142,7 +142,7 @@ pnpm install        # re-link workspace packages
 pnpm -r build       # verify everything still builds
 ```
 
-> **Note:** Publishing `@strateji/abp-react-core` to npm as a standalone versioned package is a deliberate follow-up task (out of current scope). Until then, keep the template and core together in the monorepo — `pnpm update @strateji/abp-react-core` against a published tarball will not work because the current package exports raw TypeScript source.
+> **Note:** Publishing `@yakupsogut/abp-react-core` to npm as a standalone versioned package is a deliberate follow-up task (out of current scope). Until then, keep the template and core together in the monorepo — `pnpm update @yakupsogut/abp-react-core` against a published tarball will not work because the current package exports raw TypeScript source.
 
 Core exports: `AuthProvider`, `useAuth`, `AppConfigProvider`, `usePermission`, `axiosInstance`, `http`, `useCrud`, `CrudService`, `LocalizationProvider`, `useL`, `env`, `loadRuntimeConfig`.
 

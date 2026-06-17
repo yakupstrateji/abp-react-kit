@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 
 export function ForbiddenPage() {
   const L = useL()

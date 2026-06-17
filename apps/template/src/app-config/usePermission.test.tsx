@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import { AppConfigContext } from '@strateji/abp-react-core'
-import { usePermission } from '@strateji/abp-react-core'
+import { AppConfigContext } from '@yakupsogut/abp-react-core'
+import { usePermission } from '@yakupsogut/abp-react-core'
 
 const wrapper = (granted: Record<string, boolean>) => ({ children }: any) =>
   <AppConfigContext.Provider value={{ currentUser: { id: '1', userName: 'admin' } as any, grantedPolicies: granted, isLoading: false }}>{children}</AppConfigContext.Provider>

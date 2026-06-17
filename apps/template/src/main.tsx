@@ -1,4 +1,4 @@
-import { loadRuntimeConfig } from '@strateji/abp-react-core'
+import { loadRuntimeConfig } from '@yakupsogut/abp-react-core'
 
 // Load runtime config from /dynamic-env.json BEFORE importing bootstrap.
 // The dynamic import guarantees that userManager.ts (and any other module

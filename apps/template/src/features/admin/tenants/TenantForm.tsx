@@ -9,7 +9,7 @@ import {
   type CreateTenantInput,
   type UpdateTenantInput,
 } from './tenantSchema'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 
 interface TenantFormProps {
   initialValues?: Partial<UpdateTenantInput & { id: string }>

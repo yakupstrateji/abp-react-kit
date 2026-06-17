@@ -5,12 +5,12 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/input'
 import type { Column } from '@/components/ui/Table'
-import { usePermission } from '@strateji/abp-react-core'
+import { usePermission } from '@yakupsogut/abp-react-core'
 import type { StratejiSchollAppClassesClassDto } from '@/api/generated/types.gen'
 import { useClasses } from './useClasses'
 import { ClassForm } from './ClassForm'
 import type { ClassFormInput } from './classSchema'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 
 type ClassRow = StratejiSchollAppClassesClassDto & Record<string, unknown>
 

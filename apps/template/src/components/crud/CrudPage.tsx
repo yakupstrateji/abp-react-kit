@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Button } from '@/components/ui/Button'
 import { DataTable, type Column } from '@/components/ui/Table'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 
 interface CrudPageProps<T extends Record<string, unknown>> {
   title: string

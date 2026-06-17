@@ -1,4 +1,4 @@
-import { usePermission } from '@strateji/abp-react-core'
+import { usePermission } from '@yakupsogut/abp-react-core'
 import { ForbiddenPage } from '@/components/ForbiddenPage'
 
 export function RequirePermission({ policy, children }: { policy: string; children?: React.ReactNode }) {

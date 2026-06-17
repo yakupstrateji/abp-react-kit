@@ -1,4 +1,4 @@
-import { useCrud as useCoreCrud, useL, type CrudService } from '@strateji/abp-react-core'
+import { useCrud as useCoreCrud, useL, type CrudService } from '@yakupsogut/abp-react-core'
 import { toast } from 'sonner'
 
 export type { CrudService }

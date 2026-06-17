@@ -1,6 +1,6 @@
 /**
  * Wires the generated @hey-api/client-axios client to share the one axios
- * instance from @strateji/abp-react-core (which already carries bearer-token,
+ * instance from @yakupsogut/abp-react-core (which already carries bearer-token,
  * Accept-Language, ABP-error-parsing and 401-retry interceptors).
  *
  * Import this module once at app bootstrap (bootstrap.tsx: `import '@/api'`).
@@ -9,7 +9,7 @@
  *   $env:NODE_TLS_REJECT_UNAUTHORIZED='0'; pnpm openapi-ts
  */
 import { client } from './generated/client.gen'
-import { axiosInstance } from '@strateji/abp-react-core'
+import { axiosInstance } from '@yakupsogut/abp-react-core'
 
 // Point the generated SDK at the shared axios instance that already has all
 // interceptors (bearer token, Accept-Language, ABP error, 401 retry).

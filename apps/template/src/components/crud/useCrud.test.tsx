@@ -14,8 +14,8 @@ vi.mock('sonner', () => ({
 }))
 
 // Mock useL from core — keep all other core exports intact via importOriginal
-vi.mock('@strateji/abp-react-core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@strateji/abp-react-core')>()
+vi.mock('@yakupsogut/abp-react-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@yakupsogut/abp-react-core')>()
   return {
     ...actual,
     useL: () => (key: string, fallback?: string) => fallback ?? key,
@@ -168,7 +168,7 @@ describe('useCrud', () => {
 
   it('toasts an AbpError message on create error', async () => {
     const { toast } = await import('sonner')
-    const { AbpError } = await import('@strateji/abp-react-core')
+    const { AbpError } = await import('@yakupsogut/abp-react-core')
 
     const abpErr = new AbpError(422, 'Geçersiz giriş')
     const service = makeFakeService({

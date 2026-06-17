@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { studentSchema, type StudentFormInput } from './studentSchema'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 import type { StratejiSchollAppStudentsStudentDto } from '@/api/generated/types.gen'
 import { useClassOptions } from '@/features/classes/useClasses'
 

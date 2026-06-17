@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { userManager } from '@strateji/abp-react-core'
-import { useL } from '@strateji/abp-react-core'
+import { userManager } from '@yakupsogut/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/Button'
 

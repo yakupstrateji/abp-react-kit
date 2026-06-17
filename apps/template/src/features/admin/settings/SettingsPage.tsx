@@ -11,8 +11,8 @@ import {
   postApiSettingManagementEmailing,
   postApiSettingManagementEmailingSendTestEmail,
 } from '@/api/generated/sdk.gen'
-import { AbpError } from '@strateji/abp-react-core'
-import { usePermission } from '@strateji/abp-react-core'
+import { AbpError } from '@yakupsogut/abp-react-core'
+import { usePermission } from '@yakupsogut/abp-react-core'
 import { FormField } from '@/components/ui/FormField'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
@@ -33,7 +33,7 @@ import type {
 } from '@/api/generated/types.gen'
 import { emailSettingsSchema, type EmailSettingsInput } from './emailSchema'
 import { getTimezone, getTimezones, setTimezone } from './timezoneService'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 
 // ── Emailing API ────────────────────────────────────────────────────────────
 

@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from '@tanstack/react-router'
-import { useAuth, isSigningOut } from '@strateji/abp-react-core'
+import { useAuth, isSigningOut } from '@yakupsogut/abp-react-core'
 import { Spinner } from '@/components/ui/Spinner'
 
 export function ProtectedRoute() {

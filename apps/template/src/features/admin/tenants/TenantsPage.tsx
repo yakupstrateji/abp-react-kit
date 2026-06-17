@@ -8,13 +8,13 @@ import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { Input } from '@/components/ui/input'
 import type { Column } from '@/components/ui/Table'
-import { usePermission } from '@strateji/abp-react-core'
+import { usePermission } from '@yakupsogut/abp-react-core'
 import type { VoloAbpTenantManagementTenantDto } from '@/api/generated/types.gen'
 import { useTenants, getConnectionString, setConnectionString, deleteConnectionString } from './useTenants'
 import { TenantForm } from './TenantForm'
 import type { CreateTenantInput, UpdateTenantInput } from './tenantSchema'
 import { FeatureEditor } from '@/features/admin/features/FeatureEditor'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 
 type TenantRow = VoloAbpTenantManagementTenantDto & Record<string, unknown>
 

@@ -1,4 +1,4 @@
-import { useLanguages } from '@strateji/abp-react-core'
+import { useLanguages } from '@yakupsogut/abp-react-core'
 import {
   Select,
   SelectContent,

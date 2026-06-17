@@ -1,9 +1,9 @@
 import { render, screen, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { AuthProvider, useAuth, userManager } from '@strateji/abp-react-core'
+import { AuthProvider, useAuth, userManager } from '@yakupsogut/abp-react-core'
 
 // Mock oidc-client-ts at the lowest level so the AuthProvider (in core) picks
-// up the fake userManager instance. vi.mock('@strateji/abp-react-core') would
+// up the fake userManager instance. vi.mock('@yakupsogut/abp-react-core') would
 // only replace the re-export; AuthProvider's internal relative import of
 // ./userManager would still point to the real module. Mocking oidc-client-ts
 // intercepts the UserManager constructor itself, which is what userManager.ts

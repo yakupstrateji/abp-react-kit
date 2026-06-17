@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { classSchema, type ClassFormInput } from './classSchema'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 import type { StratejiSchollAppClassesClassDto } from '@/api/generated/types.gen'
 
 interface ClassFormProps {

@@ -19,7 +19,7 @@ import type {
   VoloAbpFeatureManagementFeatureGroupDto,
 } from '@/api/generated/types.gen'
 import { getFeatures, updateFeatures } from './featureService'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 
 // ---------------------------------------------------------------------------
 // Types helpers — the generated IStringValueType uses { properties: unknown }

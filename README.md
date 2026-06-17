@@ -6,7 +6,7 @@ A pnpm monorepo that turns a React SPA into a reusable kit for ABP Framework bac
 
 abp-react-kit gives you two things:
 
-- **`packages/core` — `@strateji/abp-react-core`**: Style-free, brand-free, backend-free React logic. Covers OIDC PKCE auth, ABP app-config + `usePermission`, `httpClient` with 401-silent-renew-retry, headless `useCrud`, i18n `useL`, and runtime env injection.
+- **`packages/core` — `@yakupsogut/abp-react-core`**: Style-free, brand-free, backend-free React logic. Covers OIDC PKCE auth, ABP app-config + `usePermission`, `httpClient` with 401-silent-renew-retry, headless `useCrud`, i18n `useL`, and runtime env injection.
 - **`apps/template` — `@strateji/template`**: Owns all design. Contains shadcn `components/ui`, tokenized `index.css` + `tailwind-preset.js`, `layout/`, `features/` (admin CRUD, students, classes examples), the backend-specific `src/api/generated`, and the two configuration files `app/branding.ts` and `app/navigation.ts`.
 
 The template depends on core via `workspace:*` — template and core live together in this monorepo, so core logic updates flow in by pulling the repo and re-running `pnpm install`. (Standalone npm publishing of core is a documented follow-up — see "Consuming core updates" below.)
@@ -16,7 +16,7 @@ The template depends on core via `workspace:*` — template and core live togeth
 ```
 abp-react-kit/
   packages/
-    core/                  @strateji/abp-react-core  (logic, no styles)
+    core/                  @yakupsogut/abp-react-core  (logic, no styles)
       src/
         auth/              OIDC PKCE, AuthProvider, useAuth
         app-config/        ABP /api/abp/application-configuration, usePermission
@@ -44,12 +44,12 @@ abp-react-kit/
 
 | Concern | lives in |
 |---|---|
-| OIDC login / logout / silent renew | `@strateji/abp-react-core` |
-| ABP app-config fetch + permission check | `@strateji/abp-react-core` |
-| Axios client + 401 auto-retry | `@strateji/abp-react-core` |
-| Generic headless CRUD hook | `@strateji/abp-react-core` |
-| i18n setup + `useL` | `@strateji/abp-react-core` |
-| Runtime env (VITE_* + dynamic-env.json) | `@strateji/abp-react-core` |
+| OIDC login / logout / silent renew | `@yakupsogut/abp-react-core` |
+| ABP app-config fetch + permission check | `@yakupsogut/abp-react-core` |
+| Axios client + 401 auto-retry | `@yakupsogut/abp-react-core` |
+| Generic headless CRUD hook | `@yakupsogut/abp-react-core` |
+| i18n setup + `useL` | `@yakupsogut/abp-react-core` |
+| Runtime env (VITE_* + dynamic-env.json) | `@yakupsogut/abp-react-core` |
 | Design tokens, CSS, Tailwind | `apps/template` |
 | shadcn component library | `apps/template` |
 | Admin layout, sidebar, header | `apps/template` |
@@ -157,7 +157,7 @@ The generated files go into `src/api/generated/` and are committed. They are exc
 
 ### Step 5 — Keep core updated
 
-`@strateji/abp-react-core` is consumed as a **workspace dependency** (`workspace:*`) — the template and core live together inside this monorepo. Logic fixes (auth, CRUD, i18n) flow in by pulling the monorepo and re-running `pnpm install`:
+`@yakupsogut/abp-react-core` is consumed as a **workspace dependency** (`workspace:*`) — the template and core live together inside this monorepo. Logic fixes (auth, CRUD, i18n) flow in by pulling the monorepo and re-running `pnpm install`:
 
 ```bash
 git pull            # pick up upstream core changes
@@ -167,7 +167,7 @@ pnpm -r build       # verify everything still builds
 
 You own the template folder outright — UI changes you make locally are never overwritten by core updates.
 
-> **Note:** Publishing `@strateji/abp-react-core` to npm as a standalone versioned package (with a real `tsc` emit into `dist/` and standard `main`/`exports` pointing at compiled JS) is a deliberate follow-up task and is currently out of scope. Until then, keep the template and core together in the monorepo — the current `package.json` exports point at raw `src/index.ts` and rely on Vite's workspace resolution, so an external `pnpm update @strateji/abp-react-core` against a published tarball would pull un-compiled, Vite-coupled TypeScript and will not work.
+> **Note:** Publishing `@yakupsogut/abp-react-core` to npm as a standalone versioned package (with a real `tsc` emit into `dist/` and standard `main`/`exports` pointing at compiled JS) is a deliberate follow-up task and is currently out of scope. Until then, keep the template and core together in the monorepo — the current `package.json` exports point at raw `src/index.ts` and rely on Vite's workspace resolution, so an external `pnpm update @yakupsogut/abp-react-core` against a published tarball would pull un-compiled, Vite-coupled TypeScript and will not work.
 
 ## Commands
 

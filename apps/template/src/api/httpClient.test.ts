@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { http, axiosInstance, userManager, AbpError } from '@strateji/abp-react-core'
+import { http, axiosInstance, userManager, AbpError } from '@yakupsogut/abp-react-core'
 
 // userManager is a singleton instance exported by core. httpClient (now inside
 // core) imports that same instance from its core-internal path. Spying on the

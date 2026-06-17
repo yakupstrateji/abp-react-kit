@@ -9,11 +9,11 @@ import {
   Outlet,
 } from '@tanstack/react-router'
 import { ProtectedRoute } from './ProtectedRoute'
-import * as useAuthMod from '@strateji/abp-react-core'
-import { isSigningOut } from '@strateji/abp-react-core'
+import * as useAuthMod from '@yakupsogut/abp-react-core'
+import { isSigningOut } from '@yakupsogut/abp-react-core'
 
-vi.mock('@strateji/abp-react-core', async (importActual) => {
-  const actual = await importActual<typeof import('@strateji/abp-react-core')>()
+vi.mock('@yakupsogut/abp-react-core', async (importActual) => {
+  const actual = await importActual<typeof import('@yakupsogut/abp-react-core')>()
   return { ...actual, isSigningOut: vi.fn(() => false) }
 })
 

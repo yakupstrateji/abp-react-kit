@@ -12,7 +12,7 @@ import {
   type CreateUserInput,
   type UpdateUserInput,
 } from './userSchema'
-import { useL } from '@strateji/abp-react-core'
+import { useL } from '@yakupsogut/abp-react-core'
 
 interface UserFormProps {
   initialValues?: Partial<UpdateUserInput & { id: string }>

@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { usePermission, useL } from '@strateji/abp-react-core'
+import { usePermission, useL } from '@yakupsogut/abp-react-core'
 import { navigation, type NavEntry } from '@/app/navigation'
 
 function SidebarLink({ to, label, exact }: { to: string; label: string; exact?: boolean }) {
