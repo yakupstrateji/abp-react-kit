@@ -57,6 +57,7 @@ describe('ProtectedRoute', () => {
 
   it('renders children when authenticated', async () => {
     const router = buildRouter('/secret', {
+      user: null,
       isAuthenticated: true,
       isLoading: false,
       login: vi.fn(),
@@ -71,6 +72,7 @@ describe('ProtectedRoute', () => {
 
   it('redirects to /login when anonymous', async () => {
     const router = buildRouter('/secret', {
+      user: null,
       isAuthenticated: false,
       isLoading: false,
       login: vi.fn(),
@@ -85,6 +87,7 @@ describe('ProtectedRoute', () => {
   it('does NOT navigate while signing out (prevents logout re-login race)', async () => {
     ;(isSigningOut as ReturnType<typeof vi.fn>).mockReturnValue(true)
     const router = buildRouter('/secret', {
+      user: null,
       isAuthenticated: false,
       isLoading: false,
       login: vi.fn(),

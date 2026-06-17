@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { AuthProvider, useAuth, userManager } from '@strateji/abp-react-core'
 
@@ -43,5 +43,29 @@ describe('AuthProvider', () => {
     ;(userManager.getUser as ReturnType<typeof vi.fn>).mockResolvedValue({ access_token: 't', profile: { sub: '1' }, expired: false })
     render(<AuthProvider><Probe /></AuthProvider>)
     await waitFor(() => expect(screen.getByText('in')).toBeInTheDocument())
+  })
+
+  it('transitions out→in when userLoaded event fires', async () => {
+    // Initial getUser returns null → Probe shows "out"
+    ;(userManager.getUser as ReturnType<typeof vi.fn>).mockResolvedValue(null)
+    render(<AuthProvider><Probe /></AuthProvider>)
+    await waitFor(() => expect(screen.getByText('out')).toBeInTheDocument())
+
+    // Retrieve the callback registered with addUserLoaded and invoke it
+    const onLoaded = (userManager.events.addUserLoaded as ReturnType<typeof vi.fn>).mock.calls[0][0]
+    act(() => onLoaded({ access_token: 't', profile: { sub: '1' }, expired: false }))
+    await waitFor(() => expect(screen.getByText('in')).toBeInTheDocument())
+  })
+
+  it('transitions in→out when userUnloaded event fires', async () => {
+    // Initial getUser returns a user → Probe shows "in"
+    ;(userManager.getUser as ReturnType<typeof vi.fn>).mockResolvedValue({ access_token: 't', profile: { sub: '1' }, expired: false })
+    render(<AuthProvider><Probe /></AuthProvider>)
+    await waitFor(() => expect(screen.getByText('in')).toBeInTheDocument())
+
+    // Retrieve the callback registered with addUserUnloaded and invoke it
+    const onUnloaded = (userManager.events.addUserUnloaded as ReturnType<typeof vi.fn>).mock.calls[0][0]
+    act(() => onUnloaded())
+    await waitFor(() => expect(screen.getByText('out')).toBeInTheDocument())
   })
 })
