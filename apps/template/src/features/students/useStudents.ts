@@ -4,8 +4,8 @@ import {
   putApiAppStudentById,
   deleteApiAppStudentById,
 } from '@/api/generated/sdk.gen'
-import type { CrudService } from '@/components/crud/useCrud'
-import { useCrud } from '@/components/crud/useCrud'
+import type { CrudService } from '@/lib/crud'
+import { useCrud } from '@/lib/crud'
 import type {
   StratejiSchollAppStudentsStudentDto,
   StratejiSchollAppStudentsCreateUpdateStudentDto,

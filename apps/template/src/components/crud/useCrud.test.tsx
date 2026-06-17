@@ -2,8 +2,8 @@ import { renderHook, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
-import { useCrud } from './useCrud'
-import type { CrudService } from './useCrud'
+import { useCrud } from '@/lib/crud'
+import type { CrudService } from '@/lib/crud'
 
 // Prevent sonner from erroring in jsdom
 vi.mock('sonner', () => ({
@@ -12,6 +12,15 @@ vi.mock('sonner', () => ({
     error: vi.fn(),
   },
 }))
+
+// Mock useL from core — keep all other core exports intact via importOriginal
+vi.mock('@strateji/abp-react-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@strateji/abp-react-core')>()
+  return {
+    ...actual,
+    useL: () => (key: string, fallback?: string) => fallback ?? key,
+  }
+})
 
 // Types for the fake items used in tests
 interface FakeItem {
@@ -105,6 +114,10 @@ describe('useCrud', () => {
     await waitFor(() =>
       expect((service.getList as ReturnType<typeof vi.fn>).mock.calls.length).toBeGreaterThan(callsBefore)
     )
+
+    // toast.success should have been called with the localised "created" message (fallback)
+    const { toast } = await import('sonner')
+    expect(toast.success).toHaveBeenCalledWith('Eklendi')
   })
 
   it('calls service.update when update.mutate is called', async () => {
@@ -124,6 +137,10 @@ describe('useCrud', () => {
 
     await waitFor(() => expect(result.current.update.isSuccess).toBe(true))
     expect(service.update).toHaveBeenCalledWith('1', { name: 'Updated' })
+
+    // toast.success should have been called with the localised "updated" message (fallback)
+    const { toast } = await import('sonner')
+    expect(toast.success).toHaveBeenCalledWith('Güncellendi')
   })
 
   it('calls service.remove when remove.mutate is called', async () => {
@@ -143,6 +160,10 @@ describe('useCrud', () => {
 
     await waitFor(() => expect(result.current.remove.isSuccess).toBe(true))
     expect(service.remove).toHaveBeenCalledWith('1', expect.any(Object))
+
+    // toast.success should have been called with the localised "deleted" message (fallback)
+    const { toast } = await import('sonner')
+    expect(toast.success).toHaveBeenCalledWith('Silindi')
   })
 
   it('toasts an AbpError message on create error', async () => {
