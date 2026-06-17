@@ -2,6 +2,8 @@
 
 A pnpm monorepo that turns a React SPA into a reusable kit for ABP Framework backends.
 
+> 🇹🇷 **Ekip arkadaşların için Türkçe kullanım rehberi:** [`docs/EKIP-REHBERI.md`](./docs/EKIP-REHBERI.md) — yeni proje oluşturma, CLI/template kullanımı, özelleştirme, sorun giderme.
+
 ## What is this?
 
 abp-react-kit gives you two things:
