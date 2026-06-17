@@ -9,7 +9,7 @@ abp-react-kit gives you two things:
 - **`packages/core` — `@strateji/abp-react-core`**: Style-free, brand-free, backend-free React logic. Covers OIDC PKCE auth, ABP app-config + `usePermission`, `httpClient` with 401-silent-renew-retry, headless `useCrud`, i18n `useL`, and runtime env injection.
 - **`apps/template` — `@strateji/template`**: Owns all design. Contains shadcn `components/ui`, tokenized `index.css` + `tailwind-preset.js`, `layout/`, `features/` (admin CRUD, students, classes examples), the backend-specific `src/api/generated`, and the two configuration files `app/branding.ts` and `app/navigation.ts`.
 
-The template depends on core via `workspace:*`. A consuming project copies the template once and keeps updating `@strateji/abp-react-core` as a versioned dependency.
+The template depends on core via `workspace:*` — template and core live together in this monorepo, so core logic updates flow in by pulling the repo and re-running `pnpm install`. (Standalone npm publishing of core is a documented follow-up — see "Consuming core updates" below.)
 
 ## Monorepo layout
 
