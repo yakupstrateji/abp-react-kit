@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
+﻿import { useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { userManager } from '@strateji/abp-react-core'
 import { Spinner } from '@/components/ui/Spinner'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 
 export function CallbackPage() {
   const navigate = useNavigate()

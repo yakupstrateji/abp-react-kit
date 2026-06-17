@@ -1,6 +1,6 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useAuth } from '@strateji/abp-react-core'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 import { axiosInstance } from '@strateji/abp-react-core'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/Button'

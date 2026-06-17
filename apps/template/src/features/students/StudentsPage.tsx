@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { CrudPage } from '@/components/crud/CrudPage'
 import { Modal } from '@/components/ui/Modal'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
@@ -10,7 +10,7 @@ import type { StratejiSchollAppStudentsStudentDto } from '@/api/generated/types.
 import { useStudents } from './useStudents'
 import { StudentForm } from './StudentForm'
 import type { StudentFormInput } from './studentSchema'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 import { useClassOptions } from '@/features/classes/useClasses'
 
 type StudentRow = StratejiSchollAppStudentsStudentDto & Record<string, unknown>

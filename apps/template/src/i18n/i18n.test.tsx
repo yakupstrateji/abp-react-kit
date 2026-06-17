@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { createContext, useContext } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppConfigContext } from '@strateji/abp-react-core'
-import { LocalizationProvider, useL } from './i18n'
+import { LocalizationProvider, useL } from '@strateji/abp-react-core'
 
 function makeWrapper(localization?: any) {
   const fakeAppConfig = localization

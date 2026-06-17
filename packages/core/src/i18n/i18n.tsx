@@ -2,9 +2,9 @@ import { useEffect, useContext, type ReactNode } from 'react'
 import i18next from 'i18next'
 import { I18nextProvider, useTranslation, initReactI18next } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
-import { AppConfigContext } from '@strateji/abp-react-core'
-import type { AppConfig } from '@strateji/abp-react-core'
-import { setCurrentCulture, getCurrentCulture } from '@strateji/abp-react-core'
+import { AppConfigContext } from '../app-config/AppConfigProvider'
+import type { AppConfig } from '../app-config/appConfig'
+import { setCurrentCulture, getCurrentCulture } from './culture'
 
 type LocalizationData = AppConfig['localization']
 
@@ -26,7 +26,7 @@ i18nInstance
     fallbackLng: getCurrentCulture(),
     // ABP resource separator: 'AbpUi::Save' → ns=AbpUi, key=Save
     nsSeparator: '::',
-    defaultNS: 'SchollApp',
+    defaultNS: 'Default',
     // Disable dot-notation key nesting so 'Menu:Users' is a literal key.
     keySeparator: false,
     returnNull: false,
@@ -37,16 +37,26 @@ i18nInstance
     initAsync: false,
   })
 
-export function LocalizationProvider({ children }: { children: ReactNode }) {
+export function LocalizationProvider({
+  children,
+  defaultResourceName = 'Default',
+}: {
+  children: ReactNode
+  defaultResourceName?: string
+}) {
   const appConfig = useContext(AppConfigContext)
   const loc = appConfig?.localization
 
   const value: LocalizationData = loc ?? {
-    defaultResourceName: 'SchollApp',
+    defaultResourceName,
     currentCulture: { name: 'tr', cultureName: 'tr', displayName: 'Türkçe', twoLetterIsoLanguageName: 'tr' },
     languages: [],
     values: {},
   }
+
+  useEffect(() => {
+    i18nInstance.setDefaultNamespace(value.defaultResourceName || defaultResourceName)
+  }, [value.defaultResourceName, defaultResourceName])
 
   // Load resource bundles from app-config localization values into i18next.
   useEffect(() => {
@@ -82,8 +92,8 @@ export function LocalizationProvider({ children }: { children: ReactNode }) {
  *
  * Key format accepted:
  *   'AbpUi::Save'          → namespace AbpUi,  i18next key Save
- *   'Dashboard'            → namespace SchollApp (defaultNS), i18next key Dashboard
- *   'SchollApp::Dashboard' → namespace SchollApp, i18next key Dashboard
+ *   'Dashboard'            → namespace Default (defaultNS), i18next key Dashboard
+ *   'MyApp::Dashboard'     → namespace MyApp, i18next key Dashboard
  *
  * Provider-safe: when no resources are loaded for the key, returns fallback ?? key,
  * so test assertions on Turkish fallback strings continue to pass.

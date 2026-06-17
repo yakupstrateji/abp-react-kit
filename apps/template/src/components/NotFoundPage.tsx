@@ -1,5 +1,5 @@
-import { Link } from '@tanstack/react-router'
-import { useL } from '@/i18n/i18n'
+﻿import { Link } from '@tanstack/react-router'
+import { useL } from '@strateji/abp-react-core'
 
 export function NotFoundPage() {
   const L = useL()

@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from 'react'
+﻿import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import type { VoloAbpPermissionManagementPermissionGroupDto } from '@/api/generated/types.gen'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 
 export interface PermissionEditorProps {
   groups: VoloAbpPermissionManagementPermissionGroupDto[]

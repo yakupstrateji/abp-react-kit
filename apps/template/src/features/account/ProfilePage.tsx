@@ -1,4 +1,4 @@
-// src/features/account/ProfilePage.tsx
+﻿// src/features/account/ProfilePage.tsx
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,7 +9,7 @@ import { AbpError } from '@strateji/abp-react-core'
 import { FormField } from '@/components/ui/FormField'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 import { getMyProfile, updateMyProfile, changePassword } from './myProfileService'
 import { profileSchema, changePasswordSchema } from './profileSchema'
 import type { ProfileInput, ChangePasswordInput } from './profileSchema'

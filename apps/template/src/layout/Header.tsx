@@ -1,8 +1,8 @@
-import { useNavigate } from '@tanstack/react-router'
+﻿import { useNavigate } from '@tanstack/react-router'
 import { useAuth } from '@strateji/abp-react-core'
 import { useCurrentUser, useCurrentTenant } from '@strateji/abp-react-core'
 import { LanguageSwitcher } from '@/i18n/LanguageSwitcher'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 import {
   DropdownMenu,
   DropdownMenuContent,

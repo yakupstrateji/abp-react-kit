@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form'
+﻿import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Resolver } from 'react-hook-form'
 import { FormField } from '@/components/ui/FormField'
@@ -9,7 +9,7 @@ import {
   type CreateTenantInput,
   type UpdateTenantInput,
 } from './tenantSchema'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 
 interface TenantFormProps {
   initialValues?: Partial<UpdateTenantInput & { id: string }>

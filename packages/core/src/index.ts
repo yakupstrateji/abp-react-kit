@@ -11,3 +11,4 @@ export { AppConfigProvider, AppConfigContext, useCurrentTenant } from './app-con
 export { fetchAppConfig } from './app-config/appConfig'
 export type { AppConfig } from './app-config/appConfig'
 export { usePermission, useCurrentUser } from './app-config/usePermission'
+export { LocalizationProvider, useL, useLanguages } from './i18n/i18n'

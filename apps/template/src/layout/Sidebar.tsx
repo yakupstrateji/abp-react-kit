@@ -1,6 +1,6 @@
-import { Link } from '@tanstack/react-router'
+﻿import { Link } from '@tanstack/react-router'
 import { usePermission } from '@strateji/abp-react-core'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 
 interface NavItem {
   to: string

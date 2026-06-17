@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { CrudPage } from '@/components/crud/CrudPage'
@@ -15,7 +15,7 @@ import { UserForm } from './UserForm'
 import type { CreateUserInput, UpdateUserInput } from './userSchema'
 import { PermissionEditor } from '@/features/admin/roles/PermissionEditor'
 import { getPermissions, updatePermissions } from '@/features/admin/roles/permissionService'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 
 type UserRow = VoloAbpIdentityIdentityUserDto & Record<string, unknown>
 

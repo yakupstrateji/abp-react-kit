@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { CrudPage } from '@/components/crud/CrudPage'
@@ -14,7 +14,7 @@ import { useTenants, getConnectionString, setConnectionString, deleteConnectionS
 import { TenantForm } from './TenantForm'
 import type { CreateTenantInput, UpdateTenantInput } from './tenantSchema'
 import { FeatureEditor } from '@/features/admin/features/FeatureEditor'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 
 type TenantRow = VoloAbpTenantManagementTenantDto & Record<string, unknown>
 

@@ -1,4 +1,4 @@
-import { useLanguages } from './i18n'
+import { useLanguages } from '@strateji/abp-react-core'
 import {
   Select,
   SelectContent,

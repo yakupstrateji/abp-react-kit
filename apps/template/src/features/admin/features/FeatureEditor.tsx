@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+﻿import { useState, useEffect, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Modal } from '@/components/ui/Modal'
@@ -19,7 +19,7 @@ import type {
   VoloAbpFeatureManagementFeatureGroupDto,
 } from '@/api/generated/types.gen'
 import { getFeatures, updateFeatures } from './featureService'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 
 // ---------------------------------------------------------------------------
 // Types helpers — the generated IStringValueType uses { properties: unknown }

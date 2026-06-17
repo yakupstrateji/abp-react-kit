@@ -1,4 +1,4 @@
-import { useForm, Controller } from 'react-hook-form'
+﻿import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Resolver } from 'react-hook-form'
 import { FormField } from '@/components/ui/FormField'
@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { roleSchema, type RoleInput } from './roleSchema'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 
 interface RoleFormProps {
   initialValues?: Partial<RoleInput>

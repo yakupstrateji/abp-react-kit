@@ -1,4 +1,4 @@
-import { useForm, Controller } from 'react-hook-form'
+﻿import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { FieldError, FieldErrors, Resolver } from 'react-hook-form'
 import { FormField } from '@/components/ui/FormField'
@@ -12,7 +12,7 @@ import {
   type CreateUserInput,
   type UpdateUserInput,
 } from './userSchema'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 
 interface UserFormProps {
   initialValues?: Partial<UpdateUserInput & { id: string }>

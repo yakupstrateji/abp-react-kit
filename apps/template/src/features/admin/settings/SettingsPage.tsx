@@ -1,4 +1,4 @@
-// src/features/admin/settings/SettingsPage.tsx
+﻿// src/features/admin/settings/SettingsPage.tsx
 import { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -33,7 +33,7 @@ import type {
 } from '@/api/generated/types.gen'
 import { emailSettingsSchema, type EmailSettingsInput } from './emailSchema'
 import { getTimezone, getTimezones, setTimezone } from './timezoneService'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 
 // ── Emailing API ────────────────────────────────────────────────────────────
 

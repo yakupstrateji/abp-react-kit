@@ -1,4 +1,4 @@
-import { useForm, Controller } from 'react-hook-form'
+﻿import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Resolver } from 'react-hook-form'
 import { FormField } from '@/components/ui/FormField'
@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { studentSchema, type StudentFormInput } from './studentSchema'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 import type { StratejiSchollAppStudentsStudentDto } from '@/api/generated/types.gen'
 import { useClassOptions } from '@/features/classes/useClasses'
 

@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
+﻿import { useQuery } from '@tanstack/react-query'
 import { http } from '@strateji/abp-react-core'
 import { useCurrentUser } from '@strateji/abp-react-core'
 import { Spinner } from '@/components/ui/Spinner'
-import { useL } from '@/i18n/i18n'
+import { useL } from '@strateji/abp-react-core'
 
 export function DashboardPage() {
   const L = useL()

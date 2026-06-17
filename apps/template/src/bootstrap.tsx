@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { AuthProvider, AppConfigProvider } from '@strateji/abp-react-core'
 import { Spinner } from '@/components/ui/Spinner'
 import { toast } from 'sonner'
-import { LocalizationProvider } from '@/i18n/i18n'
+import { LocalizationProvider } from '@strateji/abp-react-core'
 import { router } from '@/routes'
 import './index.css'
 import '@/api' // applies client base config
@@ -31,7 +31,7 @@ export function mount(): void {
             fallback={<Spinner label="Yükleniyor…" />}
             onError={() => toast.error('Uygulama yapılandırması yüklenemedi')}
           >
-            <LocalizationProvider>
+            <LocalizationProvider defaultResourceName="SchollApp">
               <RouterProvider router={router} />
               <Toaster richColors position="top-right" theme="light" />
             </LocalizationProvider>
