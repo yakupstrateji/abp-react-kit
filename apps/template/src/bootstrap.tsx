@@ -4,6 +4,7 @@ import { RouterProvider } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from '@/components/ui/sonner'
 import { AuthProvider, AppConfigProvider } from '@strateji/abp-react-core'
+import { branding } from '@/app/branding'
 import { Spinner } from '@/components/ui/Spinner'
 import { toast } from 'sonner'
 import { LocalizationProvider } from '@strateji/abp-react-core'
@@ -33,7 +34,7 @@ export function mount(): void {
           >
             <LocalizationProvider defaultResourceName="SchollApp">
               <RouterProvider router={router} />
-              <Toaster richColors position="top-right" theme="light" />
+              <Toaster richColors position="top-right" theme={branding.toasterTheme} />
             </LocalizationProvider>
           </AppConfigProvider>
         </AuthProvider>

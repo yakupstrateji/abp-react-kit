@@ -3,6 +3,7 @@ import { useAuth } from '@strateji/abp-react-core'
 import { useCurrentUser, useCurrentTenant } from '@strateji/abp-react-core'
 import { LanguageSwitcher } from '@/i18n/LanguageSwitcher'
 import { useL } from '@strateji/abp-react-core'
+import { branding } from '@/app/branding'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +28,9 @@ export function Header() {
 
   return (
     <header className="flex h-14 items-center justify-between border-b border-border bg-background px-6 shadow-sm">
-      <span className="text-lg font-semibold text-foreground">SchollApp</span>
+      {branding.logo ?? (
+        <span className="text-lg font-semibold text-foreground">{branding.appName}</span>
+      )}
       <div className="flex items-center gap-4">
         {/* Language switcher */}
         <LanguageSwitcher />
