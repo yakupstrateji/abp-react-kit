@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { AppConfigContext } from '@/app-config/AppConfigProvider'
+import { AppConfigContext } from '@strateji/abp-react-core'
 
 vi.mock('@strateji/abp-react-core', async (importActual) => {
   const actual = await importActual<typeof import('@strateji/abp-react-core')>()

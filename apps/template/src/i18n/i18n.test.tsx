@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 import type { ReactNode } from 'react'
 import { createContext, useContext } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { AppConfigContext } from '@/app-config/AppConfigProvider'
+import { AppConfigContext } from '@strateji/abp-react-core'
 import { LocalizationProvider, useL } from './i18n'
 
 function makeWrapper(localization?: any) {

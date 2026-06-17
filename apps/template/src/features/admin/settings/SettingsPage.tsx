@@ -12,7 +12,7 @@ import {
   postApiSettingManagementEmailingSendTestEmail,
 } from '@/api/generated/sdk.gen'
 import { AbpError } from '@strateji/abp-react-core'
-import { usePermission } from '@/app-config/usePermission'
+import { usePermission } from '@strateji/abp-react-core'
 import { FormField } from '@/components/ui/FormField'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'

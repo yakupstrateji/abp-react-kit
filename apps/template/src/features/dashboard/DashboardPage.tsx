@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { http } from '@strateji/abp-react-core'
-import { useCurrentUser } from '@/app-config/usePermission'
+import { useCurrentUser } from '@strateji/abp-react-core'
 import { Spinner } from '@/components/ui/Spinner'
 import { useL } from '@/i18n/i18n'
 

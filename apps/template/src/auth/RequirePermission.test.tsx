@@ -9,11 +9,15 @@ import {
   Outlet,
 } from '@tanstack/react-router'
 import { RequirePermission } from './RequirePermission'
-import * as usePermissionMod from '@/app-config/usePermission'
+import * as usePermissionMod from '@strateji/abp-react-core'
 
-vi.mock('@/app-config/usePermission', () => ({
-  usePermission: vi.fn(),
-}))
+vi.mock('@strateji/abp-react-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@strateji/abp-react-core')>()
+  return {
+    ...actual,
+    usePermission: vi.fn(),
+  }
+})
 
 function buildRouter(granted: boolean) {
   vi.mocked(usePermissionMod.usePermission).mockReturnValue(granted)

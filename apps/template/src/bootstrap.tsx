@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom/client'
 import { RouterProvider } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from '@/components/ui/sonner'
-import { AuthProvider } from '@strateji/abp-react-core'
-import { AppConfigProvider } from '@/app-config/AppConfigProvider'
+import { AuthProvider, AppConfigProvider } from '@strateji/abp-react-core'
+import { Spinner } from '@/components/ui/Spinner'
+import { toast } from 'sonner'
 import { LocalizationProvider } from '@/i18n/i18n'
 import { router } from '@/routes'
 import './index.css'
@@ -26,7 +27,10 @@ export function mount(): void {
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <AppConfigProvider>
+          <AppConfigProvider
+            fallback={<Spinner label="Yükleniyor…" />}
+            onError={() => toast.error('Uygulama yapılandırması yüklenemedi')}
+          >
             <LocalizationProvider>
               <RouterProvider router={router} />
               <Toaster richColors position="top-right" theme="light" />

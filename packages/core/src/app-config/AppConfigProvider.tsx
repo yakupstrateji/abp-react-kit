@@ -1,10 +1,8 @@
 import { createContext, useContext, useEffect, type ReactNode } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { toast } from 'sonner'
 import { fetchAppConfig } from './appConfig'
 import type { AppConfig } from './appConfig'
-import { useAuth } from '@strateji/abp-react-core'
-import { Spinner } from '@/components/ui/Spinner'
+import { useAuth } from '../auth/useAuth'
 
 interface AppConfigCtx {
   currentUser: AppConfig['currentUser'] | undefined
@@ -15,13 +13,25 @@ interface AppConfigCtx {
 }
 export const AppConfigContext = createContext<AppConfigCtx | null>(null)
 
-export function AppConfigProvider({ children }: { children: ReactNode }) {
+export function AppConfigProvider({
+  children,
+  fallback = null,
+  onError,
+}: {
+  children: ReactNode
+  fallback?: ReactNode
+  onError?: () => void
+}) {
   const { isAuthenticated } = useAuth()
-  const { data, isLoading, isError } = useQuery({ queryKey: ['app-config'], queryFn: fetchAppConfig, enabled: isAuthenticated })
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['app-config'],
+    queryFn: fetchAppConfig,
+    enabled: isAuthenticated,
+  })
   useEffect(() => {
-    if (isError) toast.error('Uygulama yapılandırması yüklenemedi')
-  }, [isError])
-  if (isAuthenticated && isLoading) return <Spinner label="Yükleniyor…" /* Loading — before i18n is available */ />
+    if (isError) onError?.()
+  }, [isError, onError])
+  if (isAuthenticated && isLoading) return <>{fallback}</>
   return (
     <AppConfigContext.Provider
       value={{
