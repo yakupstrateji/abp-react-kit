@@ -1,0 +1,10 @@
+{
+  "name": "create-abp-react",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": { "create-abp-react": "./bin/index.js" },
+  "files": ["bin"],
+  "publishConfig": { "access": "public" },
+  "dependencies": { "degit": "^2.8.4" },
+  "engines": { "node": ">=18" }
+}
