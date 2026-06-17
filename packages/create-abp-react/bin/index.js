@@ -2,7 +2,7 @@
 import degit from 'degit'
 import { execSync } from 'node:child_process'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, basename } from 'node:path'
 
 // TODO: set OWNER to the public GitHub repo owner/org before publishing (Task 8)
 // e.g. 'stratejibilisim/abp-react-kit/apps/template'
@@ -33,8 +33,12 @@ try {
 
 // set package name
 const pkgPath = join(dir, 'package.json')
+if (!existsSync(pkgPath)) {
+  console.error('Template package.json not found — the clone may be incomplete.')
+  process.exit(1)
+}
 const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'))
-pkg.name = dir.replace(/[^a-z0-9-]/gi, '-').toLowerCase()
+pkg.name = basename(dir).replace(/[^a-z0-9-]/gi, '-').toLowerCase()
 writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n')
 
 // .env from example
@@ -51,8 +55,8 @@ try {
 console.log(`
 Done. Next steps:
   cd ${dir}
-  # edit .env  (VITE_API_URL, VITE_CLIENT_ID, redirect URIs -> your ABP backend)
   npm install
-  pnpm openapi-ts        # regenerate the API client against your backend (with backend running)
+  # edit .env  (VITE_API_URL, VITE_CLIENT_ID, redirect URIs -> your ABP backend)
+  npm run openapi-ts     # regenerate the API client against your backend (with backend running)
   npm run dev
 `)
