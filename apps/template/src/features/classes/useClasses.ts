@@ -1,58 +1,22 @@
-import {
-  getApiAppClass,
-  postApiAppClass,
-  putApiAppClassById,
-  deleteApiAppClassById,
-} from '@/api/generated/sdk.gen'
+// EXAMPLE — replace with real service or delete
+// Classes feature backed by an in-memory mock (works with no backend).
+// For production: swap classService for a backend-wired CrudService (see admin/users/useUsers.ts).
+// To remove: delete this feature folder + its entry in the app's navigation.ts.
 import type { CrudService } from '@/lib/crud'
 import { useCrud } from '@/lib/crud'
 import { useLookupOptions } from '@/components/crud/useLookupOptions'
-import type {
-  StratejiSchollAppClassesClassDto,
-  StratejiSchollAppClassesCreateUpdateClassDto,
-} from '@/api/generated/types.gen'
+import { createInMemoryStore } from '@/features/_mock/inMemoryStore'
+import type { SchoolClass, ClassInput } from './class'
 
-export const classService: CrudService<
-  StratejiSchollAppClassesClassDto,
-  StratejiSchollAppClassesCreateUpdateClassDto,
-  StratejiSchollAppClassesCreateUpdateClassDto
-> = {
-  async getList({ skip, take, filter }) {
-    const res = await getApiAppClass({
-      query: {
-        SkipCount: skip,
-        MaxResultCount: take,
-        ...(filter ? { Filter: filter } : {}),
-      },
-      throwOnError: true,
-    })
-    return {
-      items: res.data.items ?? [],
-      totalCount: res.data.totalCount ?? 0,
-    }
-  },
-
-  async create(input) {
-    const res = await postApiAppClass({ body: input, throwOnError: true })
-    return res.data
-  },
-
-  async update(id, input) {
-    const res = await putApiAppClassById({ path: { id }, body: input, throwOnError: true })
-    return res.data
-  },
-
-  async remove(id) {
-    await deleteApiAppClassById({ path: { id }, throwOnError: true })
-  },
-}
+export const classService: CrudService<SchoolClass, ClassInput, ClassInput> =
+  createInMemoryStore<SchoolClass>([
+    { id: '1', name: '5-A', level: '5', isActive: true },
+    { id: '2', name: '6-B', level: '6', isActive: true },
+    { id: '3', name: '7-C', level: '7', isActive: true },
+  ])
 
 export function useClasses(params: { skip: number; take: number; filter?: string }) {
-  return useCrud<
-    StratejiSchollAppClassesClassDto,
-    StratejiSchollAppClassesCreateUpdateClassDto,
-    StratejiSchollAppClassesCreateUpdateClassDto
-  >('classes', classService, params)
+  return useCrud<SchoolClass, ClassInput, ClassInput>('classes', classService, params)
 }
 
 /**
@@ -64,13 +28,7 @@ export function useClasses(params: { skip: number; take: number; filter?: string
  */
 export function useClassOptions() {
   return useLookupOptions('classes', async () => {
-    const res = await getApiAppClass({
-      query: { MaxResultCount: 1000 },
-      throwOnError: true,
-    })
-    return (res.data.items ?? []).map((c) => ({
-      id: c.id ?? '',
-      name: c.name ?? '',
-    }))
+    const { items } = await classService.getList({ skip: 0, take: 100 })
+    return items.map((c) => ({ id: c.id as string, name: c.name }))
   })
 }

@@ -6,13 +6,13 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/input'
 import type { Column } from '@/components/ui/Table'
 import { usePermission } from '@yakupsogut/abp-react-core'
-import type { StratejiSchollAppClassesClassDto } from '@/api/generated/types.gen'
+import type { SchoolClass } from './class'
 import { useClasses } from './useClasses'
 import { ClassForm } from './ClassForm'
 import type { ClassFormInput } from './classSchema'
 import { useL } from '@yakupsogut/abp-react-core'
 
-type ClassRow = StratejiSchollAppClassesClassDto & Record<string, unknown>
+type ClassRow = SchoolClass & Record<string, unknown>
 
 const PAGE_SIZE = 10
 
@@ -22,8 +22,8 @@ export function ClassesPage() {
   const [filter, setFilter] = useState('')
   const [filterInput, setFilterInput] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
-  const [editTarget, setEditTarget] = useState<StratejiSchollAppClassesClassDto | null>(null)
-  const [deleteTarget, setDeleteTarget] = useState<StratejiSchollAppClassesClassDto | null>(null)
+  const [editTarget, setEditTarget] = useState<SchoolClass | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<SchoolClass | null>(null)
 
   const canCreate = usePermission('SchollApp.Classes.Create')
   const canEdit = usePermission('SchollApp.Classes.Edit')
@@ -64,7 +64,7 @@ export function ClassesPage() {
             <Button
               variant="ghost"
               onClick={() => {
-                setEditTarget(row as StratejiSchollAppClassesClassDto)
+                setEditTarget(row as SchoolClass)
                 setModalOpen(true)
               }}
             >
@@ -74,7 +74,7 @@ export function ClassesPage() {
           {canDelete && (
             <Button
               variant="danger"
-              onClick={() => setDeleteTarget(row as StratejiSchollAppClassesClassDto)}
+              onClick={() => setDeleteTarget(row as SchoolClass)}
             >
               {L('AbpUi::Delete', 'Sil')}
             </Button>

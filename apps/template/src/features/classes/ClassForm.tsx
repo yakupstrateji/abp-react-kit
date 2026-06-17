@@ -7,10 +7,10 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { classSchema, type ClassFormInput } from './classSchema'
 import { useL } from '@yakupsogut/abp-react-core'
-import type { StratejiSchollAppClassesClassDto } from '@/api/generated/types.gen'
+import type { SchoolClass } from './class'
 
 interface ClassFormProps {
-  initialValues?: Partial<StratejiSchollAppClassesClassDto>
+  initialValues?: Partial<SchoolClass>
   onSubmit: (data: ClassFormInput) => void | Promise<void>
   loading?: boolean
 }
