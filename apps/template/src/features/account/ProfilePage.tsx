@@ -64,6 +64,8 @@ export function ProfilePage() {
       name: values.name || null,
       surname: values.surname || null,
       phoneNumber: values.phoneNumber || null,
+      // Forward the optimistic-concurrency stamp like the other admin forms do.
+      concurrencyStamp: data?.concurrencyStamp ?? undefined,
     })
   }
 

@@ -128,7 +128,7 @@ After changing your ABP backend, regenerate typed API hooks:
 ```bash
 npm run openapi-ts
 # or, inside the monorepo:
-pnpm openapi-ts
+pnpm --filter @strateji/template openapi-ts
 ```
 
 Output goes to `src/api/generated/`. These files are excluded from ESLint and should be committed as-is.
@@ -167,7 +167,7 @@ Core exports: `AuthProvider`, `useAuth`, `AppConfigProvider`, `usePermission`, `
 ```bash
 npm run dev          # Vite dev server at http://localhost:5173
 npm run build        # type-check + production build -> dist/
-npm run test         # run all 50 tests (Vitest + Testing Library + MSW)
+npm run test         # run the test suite (Vitest + Testing Library + MSW)
 npm run lint         # ESLint (generated files excluded)
 npm run openapi-ts   # regenerate src/api/generated/ from backend Swagger
 ```
