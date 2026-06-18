@@ -54,7 +54,8 @@ npm run dev
 - **Çalışan bir ABP backend** ve üzerinde:
   - Bir **OpenIddict/IdentityServer public client** (Authorization Code + PKCE)
     - `redirect_uri` = `http://localhost:5173/auth/callback`
-    - `post_logout_redirect_uri` ve silent-renew için `http://localhost:5173/auth/silent-renew`
+    - `silent_redirect_uri` = `http://localhost:5173/auth/silent-renew`
+    - `post_logout_redirect_uri` = `http://localhost:5173/auth/logged-out`
   - **CORS** origin'i: `http://localhost:5173`
 - Backend HTTPS (dev'de self-signed sertifika sorun değil — kit otomatik tolere eder)
 
@@ -82,6 +83,13 @@ VITE_SCOPE=openid profile email roles offline_access BenimApi
 - `VITE_API_URL` → ABP backend'inin kök URL'i
 - `VITE_CLIENT_ID` → backend'de tanımladığın public client'ın id'si
 - `VITE_SCOPE` → `openid profile email roles offline_access` + senin API scope'un
+
+> **Login modu (opsiyonel):** `VITE_AUTH_MODE` ile login UX'i seçilir:
+> - `redirect` (varsayılan) → ABP'nin login sayfasına yönlendirir (Auth Code + PKCE).
+> - `password` → login **SPA içindeki kendi formunla** yapılır (kullanıcı adı/şifre, ROPC).
+>   Bunun için backend client'ına `Password` grant'ı eklenmeli (bkz. `BACKEND-KURULUM.md`).
+>   ROPC OAuth 2.1'de önerilmez ve 2FA / harici login / e-posta doğrulama akışlarını getirmez;
+>   yalnız güvenilir birinci-taraf projeler için.
 
 ### Config katman önceliği (ÖNEMLİ — okuma sırası)
 

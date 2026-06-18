@@ -22,7 +22,7 @@ This will:
 cd my-app
 # Edit .env — set VITE_API_URL, VITE_CLIENT_ID, and redirect URIs to match your ABP backend
 npm install
-pnpm openapi-ts        # regenerate the API client (requires your ABP backend running)
+npm run openapi-ts     # regenerate the API client (requires your ABP backend running)
 npm run dev
 ```
 

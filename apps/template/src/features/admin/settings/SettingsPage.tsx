@@ -388,9 +388,12 @@ function TimezoneTab() {
 
 export function SettingsPage() {
   const L = useL()
-  const canManage = usePermission('SettingManagement.Emailing')
+  // Each tab is gated on its own ABP permission so a user who can manage only
+  // the timezone is not blocked by the (separate) Emailing permission.
+  const canEmailing = usePermission('SettingManagement.Emailing')
+  const canTimezone = usePermission('SettingManagement.TimeZone')
 
-  if (!canManage) {
+  if (!canEmailing && !canTimezone) {
     return (
       <div className="p-6">
         <h1 className="text-xl font-semibold text-foreground mb-4">
@@ -403,27 +406,37 @@ export function SettingsPage() {
     )
   }
 
+  const defaultTab = canEmailing ? 'emailing' : 'timezone'
+
   return (
     <div className="p-6 max-w-2xl">
       <h1 className="text-xl font-semibold text-foreground mb-6">
         {L('Settings', 'Ayarlar')}
       </h1>
 
-      <Tabs defaultValue="emailing">
+      <Tabs defaultValue={defaultTab}>
         <TabsList className="mb-6">
-          <TabsTrigger value="emailing">
-            {L('Tab:Emailing', 'E-posta')}
-          </TabsTrigger>
-          <TabsTrigger value="timezone">
-            {L('Tab:Timezone', 'Zaman Dilimi')}
-          </TabsTrigger>
+          {canEmailing && (
+            <TabsTrigger value="emailing">
+              {L('Tab:Emailing', 'E-posta')}
+            </TabsTrigger>
+          )}
+          {canTimezone && (
+            <TabsTrigger value="timezone">
+              {L('Tab:Timezone', 'Zaman Dilimi')}
+            </TabsTrigger>
+          )}
         </TabsList>
-        <TabsContent value="emailing">
-          <EmailingTab />
-        </TabsContent>
-        <TabsContent value="timezone">
-          <TimezoneTab />
-        </TabsContent>
+        {canEmailing && (
+          <TabsContent value="emailing">
+            <EmailingTab />
+          </TabsContent>
+        )}
+        {canTimezone && (
+          <TabsContent value="timezone">
+            <TimezoneTab />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   )

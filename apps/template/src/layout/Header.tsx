@@ -49,7 +49,12 @@ export function Header() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onSelect={() => void logout()}
+                onSelect={() => {
+                  // Don't leak the previous user's tenant into the next login on
+                  // a shared machine; the login form reads this key on mount.
+                  localStorage.removeItem('abp-react.tenant')
+                  void logout()
+                }}
                 className="text-destructive focus:text-destructive"
               >
                 {L('Logout', 'Çıkış')}

@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query'
 import { AbpError } from '../api/abpError'
 
 export interface CrudService<TItem, TCreate, TUpdate> {
@@ -34,7 +34,13 @@ export function useCrud<TItem, TCreate, TUpdate>(
   const invalidate = () => qc.invalidateQueries({ queryKey: [key] })
   const onError = (e: unknown) => notify.error(e instanceof AbpError ? e.message : messages.failed)
 
-  const list = useQuery({ queryKey: [key, params], queryFn: () => service.getList(params) })
+  // keepPreviousData keeps the current page's rows + totalCount visible while the
+  // next page/filter loads, so pagination controls don't flicker out on change.
+  const list = useQuery({
+    queryKey: [key, params],
+    queryFn: () => service.getList(params),
+    placeholderData: keepPreviousData,
+  })
   const create = useMutation({
     mutationFn: service.create,
     onSuccess: () => { invalidate(); notify.success(messages.created) },

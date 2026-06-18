@@ -105,7 +105,7 @@ npx @yakupsogut/create-abp-react my-app
 ## Checklist before any publish
 
 - [ ] `pnpm -r build` passes with no errors
-- [ ] `pnpm -r test` passes (core 2 + template 50)
+- [ ] `pnpm -r test` passes (all core + template tests green)
 - [ ] `npm pack --dry-run` in `packages/core` shows expected files
 - [ ] Version bumped in `package.json` (semver)
 - [ ] For CLI: `REPO` in `bin/create-abp-react.js` = `yakupstrateji/abp-react-kit/apps/template` (set)

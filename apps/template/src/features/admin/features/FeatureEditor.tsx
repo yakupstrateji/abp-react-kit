@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
@@ -161,6 +161,7 @@ interface FeatureEditorInnerProps {
 
 function FeatureEditorInner({ groups, tenantId, onClose }: FeatureEditorInnerProps) {
   const L = useL()
+  const qc = useQueryClient()
   const [original, setOriginal] = useState<Map<string, string>>(() => buildValuesMap(groups))
   const [current, setCurrent] = useState<Map<string, string>>(() => buildValuesMap(groups))
   const [saving, setSaving] = useState(false)
@@ -194,6 +195,9 @@ function FeatureEditorInner({ groups, tenantId, onClose }: FeatureEditorInnerPro
       toast.success(L('FeaturesUpdated', 'Özellikler güncellendi'))
       // Refresh original to current after successful save
       setOriginal(new Map(current))
+      // Invalidate the cached feature values so re-opening the editor refetches
+      // instead of showing stale pre-save values within the cache window.
+      void qc.invalidateQueries({ queryKey: ['tenant-features', tenantId] })
       onClose()
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : L('FeaturesSaveFailed', 'Özellikler kaydedilemedi')
@@ -201,7 +205,7 @@ function FeatureEditorInner({ groups, tenantId, onClose }: FeatureEditorInnerPro
     } finally {
       setSaving(false)
     }
-  }, [L, current, original, tenantId, onClose])
+  }, [L, current, original, tenantId, onClose, qc])
 
   return (
     <div className="flex flex-col gap-6 max-h-[70vh] overflow-y-auto pr-1">

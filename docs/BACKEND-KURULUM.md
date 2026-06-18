@@ -4,7 +4,7 @@ Bu kit bir **React (Vite) frontend'idir**; çalışması için bir **ABP backend
 Bu rehber, kendi ABP backend'inde React SPA'in **login + API** çağrılarının çalışması için
 yapman gereken backend tarafı ayarları kopyala-yapıştır örneklerle anlatır.
 
-> **Bağlam:** React `http://localhost:5173`'te, backend `https://localhost:44360` gibi ayrı
+> **Bağlam:** React `http://localhost:5173`'te, backend `https://localhost:44334` gibi ayrı
 > bir origin'de çalışır. Bu **cross-origin + OIDC PKCE** senaryosudur. Frontend ayarları için:
 > [`EKIP-REHBERI.md`](./EKIP-REHBERI.md). Bu doküman **backend** tarafıdır.
 >
@@ -63,6 +63,24 @@ if (!reactClientId.IsNullOrWhiteSpace())
     );
 }
 ```
+
+> **İsteğe bağlı — SPA-içi şifre formu (`authMode: 'password'`):** Login'i ABP arayüzüne
+> yönlendirmek yerine SPA içinde kullanıcı adı/şifre formuyla yapmak istersen, bu client'ın
+> grant listesine `OpenIddictConstants.GrantTypes.Password` ekle (ROPC):
+>
+> ```csharp
+> grantTypes: new List<string>
+> {
+>     OpenIddictConstants.GrantTypes.AuthorizationCode,
+>     OpenIddictConstants.GrantTypes.RefreshToken,
+>     OpenIddictConstants.GrantTypes.Password   // <-- yalnız password modu için
+> },
+> ```
+>
+> Sonra frontend'de `VITE_AUTH_MODE=password` ver. **Uyarı:** ROPC OAuth 2.1'de önerilmez ve
+> 2FA / harici login / e-posta doğrulama / lockout UX akışlarını **getirmez** (bunlar ABP MVC
+> login sayfasında yaşar). Yalnızca güvenilir, birinci-taraf projeler için kullan; varsayılan
+> ve internete açık senaryolar için `redirect` (Auth Code + PKCE) modunda kal.
 
 > **Çoklu redirect URI (önemli):** React hem `/auth/callback` (login dönüşü) hem
 > `/auth/silent-renew` (sessiz token yenileme) kullanır. ABP şablonunun `CreateApplicationAsync`
@@ -154,7 +172,7 @@ Web `appsettings.json`:
 
 ```json
 "App": {
-  "SelfUrl": "https://localhost:44360",
+  "SelfUrl": "https://localhost:44334",
   "CorsOrigins": "http://localhost:5173"
 }
 ```
@@ -182,7 +200,7 @@ frontend .env:      VITE_SCOPE=openid profile email roles offline_access AbpDemo
 
 ## 4. (f) HTTPS dev sertifikası güveni
 
-React → `https://localhost:44360` isteklerinde tarayıcı sertifika hatası verirse:
+React → `https://localhost:44334` isteklerinde tarayıcı sertifika hatası verirse:
 
 ```bash
 dotnet dev-certs https --trust      # macOS keychain / Windows cert store parolası sorabilir
@@ -199,10 +217,10 @@ dotnet dev-certs https --check --trust
 
 ```bash
 # 1) Discovery erişilebilir mi?
-curl -sk https://localhost:44360/.well-known/openid-configuration
+curl -sk https://localhost:44334/.well-known/openid-configuration
 
 # 2) CORS preflight → 204 + access-control-allow-origin: http://localhost:5173 beklenir
-curl -sk -i -X OPTIONS https://localhost:44360/connect/token \
+curl -sk -i -X OPTIONS https://localhost:44334/connect/token \
   -H "Origin: http://localhost:5173" \
   -H "Access-Control-Request-Method: POST" \
   -H "Access-Control-Request-Headers: content-type"
@@ -240,7 +258,7 @@ Aynı kural `…​.Web` ve diğer host projeleri için de geçerli.
 cd src/AbpDemo.DbMigrator && dotnet run
 
 # 2) Backend (OpenIddict + API + CORS) — KENDİ klasöründen
-cd src/AbpDemo.Web && dotnet run          # https://localhost:44360
+cd src/AbpDemo.Web && dotnet run          # https://localhost:44334
 
 # 3) Frontend
 cd /yol/benim-projem && npm run dev        # http://localhost:5173

@@ -9,6 +9,8 @@ export const env: AbpReactConfig = {
   silentRedirectUri: import.meta.env.VITE_SILENT_REDIRECT_URI as string,
   postLogoutUri: import.meta.env.VITE_POST_LOGOUT_URI as string,
   scope: import.meta.env.VITE_SCOPE as string,
+  // 'redirect' (default — ABP login page) or 'password' (in-SPA username/password form)
+  authMode: (import.meta.env.VITE_AUTH_MODE as 'redirect' | 'password' | undefined) ?? 'redirect',
 }
 
 export async function loadRuntimeConfig(): Promise<AbpReactConfig> {

@@ -1,5 +1,6 @@
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts'
 import { getConfig } from '../config/env'
+import { getAuthStrategy } from './strategy'
 
 let _userManager: UserManager | null = null
 
@@ -31,7 +32,8 @@ export function _setUserManagerForTests(instance: UserManager | null): void {
   _userManager = instance
 }
 
-export const getAccessToken = async () => (await getUserManager().getUser())?.access_token ?? null
+// Delegates to the active auth strategy (redirect → oidc user; password → ROPC).
+export const getAccessToken = async (): Promise<string | null> => getAuthStrategy().getAccessToken()
 
 // Synchronous logout guard (see original rationale): prevents ProtectedRoute from
 // re-logging-in during the sign-out navigation.
@@ -40,5 +42,12 @@ export const isSigningOut = () => _signingOut
 
 export async function signOut(): Promise<void> {
   _signingOut = true
-  await getUserManager().signoutRedirect()
+  try {
+    await getAuthStrategy().logout()
+  } finally {
+    // Redirect mode navigates away (page unloads); password mode does not. Either
+    // way, reset the guard so a failed/no-nav sign-out doesn't wedge the UI in the
+    // "signing out…" spinner forever.
+    _signingOut = false
+  }
 }

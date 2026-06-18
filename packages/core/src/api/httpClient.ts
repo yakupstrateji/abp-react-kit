@@ -1,6 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import { getConfig } from '../config/env'
-import { getAccessToken, getUserManager } from '../auth/userManager'
+import { getAccessToken } from '../auth/userManager'
+import { getAuthStrategy } from '../auth/strategy'
 import { parseAbpError } from './abpError'
 import { getCurrentCulture } from '../i18n/culture'
 
@@ -8,6 +9,31 @@ import { getCurrentCulture } from '../i18n/culture'
 export const axiosInstance = axios.create({})
 
 type RetryConfig = InternalAxiosRequestConfig & { __isRetry?: boolean }
+
+// Single-flight token renewal: concurrent 401s (common right after expiry) share
+// ONE renew() call instead of each firing its own, which would race refresh-token
+// rotation and spawn multiple redirects.
+let renewPromise: Promise<void> | null = null
+function renewOnce(): Promise<void> {
+  if (!renewPromise) {
+    renewPromise = getAuthStrategy().renew().finally(() => {
+      renewPromise = null
+    })
+  }
+  return renewPromise
+}
+
+// Likewise single-flight the recovery (redirect to IdP / clear session) so a burst
+// of failed renewals doesn't trigger it many times.
+let recoverPromise: Promise<void> | null = null
+function recoverOnce(): Promise<void> {
+  if (!recoverPromise) {
+    recoverPromise = getAuthStrategy().recoverFromRenewFailure().finally(() => {
+      recoverPromise = null
+    })
+  }
+  return recoverPromise
+}
 
 // Request interceptor: attach Bearer token + Accept-Language on every request.
 // Lives on the INSTANCE so both http() and the generated SDK client get it.
@@ -42,11 +68,11 @@ axiosInstance.interceptors.response.use(
     if (status === 401 && config && !config.__isRetry) {
       config.__isRetry = true
       try {
-        await getUserManager().signinSilent()
+        await renewOnce()
         // Re-run the request; the request interceptor attaches the fresh token.
         return await axiosInstance.request(config)
       } catch {
-        await getUserManager().signinRedirect()
+        await recoverOnce()
         return Promise.reject(parseAbpError(401, null))
       }
     }

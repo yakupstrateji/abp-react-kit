@@ -151,6 +151,24 @@ npm run dev
 
 Open http://localhost:5173, log in with your ABP credentials.
 
+#### Login mode (optional) — redirect vs in-SPA password form
+
+By default the SPA redirects to the ABP login page (OIDC Authorization Code + PKCE).
+Set `VITE_AUTH_MODE=password` to instead render an **in-SPA username/password form**
+(OAuth2 ROPC). This is opt-in and requires the backend client to allow the `Password`
+grant (see [`docs/BACKEND-KURULUM.md`](./docs/BACKEND-KURULUM.md)).
+
+```env
+VITE_AUTH_MODE=redirect   # default — ABP login page (Auth Code + PKCE)
+# VITE_AUTH_MODE=password  # in-SPA username/password form (ROPC)
+```
+
+> ⚠️ Password mode does **not** surface 2FA, external login, email confirmation, or the
+> rich lockout UX (those live on the ABP MVC login page), and the refresh token lives in
+> browser storage. Prefer `redirect` for anything internet-facing or multi-tenant SaaS;
+> use `password` only for trusted first-party/intranet apps. The same `useAuth()` API
+> backs both modes, so no other code changes.
+
 ### Step 6 — Re-skin via CSS tokens and Tailwind preset
 
 Edit `src/index.css`. Every color, radius, and sidebar measurement is a CSS custom property:
@@ -224,7 +242,7 @@ pnpm install
 # Build all packages (core tsc + template Vite build)
 pnpm -r build
 
-# Run all tests (core 2 tests + template 50 tests)
+# Run all tests (core + template suites)
 pnpm -r test
 
 # Start template dev server
@@ -256,7 +274,7 @@ The kit was previously runtime-verified (OIDC login, Users CRUD, re-skin) prior 
 
 What was verified statically (CI-equivalent):
 - `pnpm -r build` passes (core tsc + template Vite build)
-- `pnpm -r test` passes (core 2 tests + template 50 tests)
+- `pnpm -r test` passes (core + template test suites)
 - `pnpm --filter @strateji/template lint` — 0 errors (pre-existing warnings are noted below)
 - `cd packages/core && npm pack --dry-run` — tarball lists dist + src + README, excludes test files
 
