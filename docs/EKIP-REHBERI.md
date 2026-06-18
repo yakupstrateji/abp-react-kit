@@ -60,6 +60,10 @@ npm run dev
 
 > **Port 5173 önemlidir** — backend'deki `redirect_uri` bu portla eşleşmek zorunda. Dev server'ı her zaman 5173'te çalıştır.
 
+> **Backend'i bu SPA için nasıl hazırlarım?** Backend tarafında yapılması gerekenler (public/PKCE
+> OpenIddict client kaydı, callback + silent-renew redirect URI'leri, CORS, scope eşleşmesi, dev
+> sertifikası) kopyala-yapıştır örneklerle: **[`BACKEND-KURULUM.md`](./BACKEND-KURULUM.md)**.
+
 ---
 
 ## 4. `.env` nasıl doldurulur
@@ -79,7 +83,23 @@ VITE_SCOPE=openid profile email roles offline_access BenimApi
 - `VITE_CLIENT_ID` → backend'de tanımladığın public client'ın id'si
 - `VITE_SCOPE` → `openid profile email roles offline_access` + senin API scope'un
 
-> **Runtime override (opsiyonel):** `public/dynamic-env.json` ile build sonrası (Docker vb.) değerleri değiştirebilirsin. Anahtarları camelCase'tir: `apiUrl`, `clientId`, `redirectUri`, `silentRedirectUri`, `postLogoutUri`, `scope`.
+### Config katman önceliği (ÖNEMLİ — okuma sırası)
+
+Authority/clientId/scope değerleri şu sırayla okunur; **sonraki bir öncekini ezer:**
+
+| # | Katman | Ne zaman | Anahtarlar |
+|---|---|---|---|
+| 1 | `vite.config.ts` varsayılanları | her zaman (fallback) | `VITE_*` (`44334`, `SchollApp_React`) |
+| 2 | `.env` / `.env.local` | build-time | `VITE_*` |
+| 3 | **`public/dynamic-env.json`** | **runtime — hepsini ezer** | camelCase (`apiUrl`, `clientId`, …) |
+
+> ⚠️ **`dynamic-env.json` `.env`'i EZER.** `src/lib/env.ts` içindeki `loadRuntimeConfig()`, bu dosyayı runtime'da `fetch` edip `Object.assign(env, json)` ile build-time `VITE_*` değerlerinin **üzerine yazar.** Yani `.env`'i değiştirdiğin halde "neden değişmedi?" diyorsan, eski bir `dynamic-env.json` büyük olasılıkla onu eziyordur.
+>
+> **Bu kit artık dolu bir `dynamic-env.json` ile gelmez** → varsayılan olarak **`.env` tek doğruluk kaynağıdır.** (Dosya yoksa `fetch` 404 döner, `loadRuntimeConfig()` bunu `try/catch` ile tolere edip build-time değerlerini korur.)
+>
+> **Runtime override (opsiyonel — Docker vb.):** Build sonrası değer değiştirmek istersen `public/dynamic-env.json`'ı **kendin oluştur** (camelCase anahtarlar). Tek image ile çok ortam: dosyayı mount et, rebuild gerekmez. Ama unutma — varsa **`.env`'i ezer.**
+
+> **scope eşleşmesi:** `VITE_SCOPE` (veya `dynamic-env.json`'daki `scope`) içindeki API scope adı, **backend'inkiyle birebir aynı** olmalı (ABP'de genelde proje adı, örn. `AbpDemo`). Uyuşmazsa token reddedilir / 403 alırsın.
 
 ---
 

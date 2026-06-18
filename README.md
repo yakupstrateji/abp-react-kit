@@ -46,6 +46,8 @@ abp-react-kit/
         api/generated/     openapi-ts output — regenerate from your backend
         index.css          CSS custom-property tokens (--primary, --sidebar-*, ...)
   docs/
+    EKIP-REHBERI.md        🇹🇷 Team guide — scaffolding, .env, config priority, troubleshooting
+    BACKEND-KURULUM.md     🇹🇷 Backend setup for the SPA — OpenIddict client, CORS, scope, dev cert
     PUBLISHING.md          How to publish a new core version + CLI
 ```
 
@@ -99,6 +101,10 @@ This pulls `@yakupsogut/abp-react-core` from npm (no monorepo needed in your pro
 
 ### Step 3 — Point at your ABP backend
 
+> **Backend not ready for the SPA yet?** The backend needs a public/PKCE OpenIddict client,
+> `callback` + `silent-renew` redirect URIs, CORS for `http://localhost:5173`, and a matching API
+> scope. Copy-paste setup (Turkish): [`docs/BACKEND-KURULUM.md`](./docs/BACKEND-KURULUM.md).
+
 Set environment variables. There are **two separate mechanisms with different key schemas**:
 
 **Build-time** — `.env.local` (git-ignored), uses `VITE_*` names from `vite.config.ts`:
@@ -112,7 +118,7 @@ VITE_POST_LOGOUT_URI=http://localhost:5173/auth/logged-out
 VITE_SCOPE=openid profile email roles offline_access MyApi
 ```
 
-**Runtime override** — `public/dynamic-env.json` (camelCase keys, read at startup without a rebuild):
+**Runtime override (opt-in)** — `public/dynamic-env.json` (camelCase keys, read at startup without a rebuild). **Not shipped by default** — create it only when you need it (e.g. Docker):
 
 ```json
 {
@@ -125,7 +131,7 @@ VITE_SCOPE=openid profile email roles offline_access MyApi
 }
 ```
 
-`dynamic-env.json` values override `.env` at runtime — useful for Docker deployments where you can mount the file without rebuilding.
+> ⚠️ **It overrides `.env` at runtime.** If this file exists, its values win over your build-time `VITE_*` — `loadRuntimeConfig()` does `Object.assign(env, json)`. Useful for Docker (mount one image, swap config without rebuilding), but a common footgun: if you edited `.env` and "nothing changed", a stale `dynamic-env.json` is likely overriding it. The kit no longer ships a pre-filled one, so by default `.env` is the single source of truth.
 
 `src/lib/env.ts` reads these values and passes them to core via `configureClient(config)` in `src/main.tsx`. You own `env.ts` — extend it to add any extra env your project needs.
 

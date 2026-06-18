@@ -106,7 +106,7 @@ VITE_POST_LOGOUT_URI=http://localhost:5173/auth/logged-out
 VITE_SCOPE=openid profile email roles offline_access YourApi
 ```
 
-**Runtime override** — `public/dynamic-env.json` (camelCase keys, read at startup without a rebuild):
+**Runtime override (opt-in)** — `public/dynamic-env.json` (camelCase keys, read at startup without a rebuild). **Not shipped by default** — create it only when you need it (e.g. Docker):
 
 ```json
 {
@@ -119,7 +119,7 @@ VITE_SCOPE=openid profile email roles offline_access YourApi
 }
 ```
 
-`dynamic-env.json` values override `.env` at runtime — useful for Docker deployments where you can mount the file without rebuilding.
+> ⚠️ **It overrides `.env` at runtime.** If this file exists, its values win over build-time `VITE_*` (`loadRuntimeConfig()` does `Object.assign(env, json)`). Great for Docker, but a common footgun — if you edited `.env` and "nothing changed", a stale `dynamic-env.json` is the usual cause. The kit no longer ships one, so by default `.env` is the single source of truth.
 
 ### Regenerate the API client
 

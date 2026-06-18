@@ -1,8 +1,0 @@
-{
-  "apiUrl": "https://localhost:44334",
-  "clientId": "SchollApp_React",
-  "redirectUri": "http://localhost:5173/auth/callback",
-  "silentRedirectUri": "http://localhost:5173/auth/silent-renew",
-  "postLogoutUri": "http://localhost:5173/auth/logged-out",
-  "scope": "openid profile email roles offline_access SchollApp"
-}
