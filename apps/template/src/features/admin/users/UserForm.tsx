@@ -56,7 +56,7 @@ export function UserForm({ initialValues, assignableRoles, onSubmit, loading }: 
       className="flex flex-col gap-3"
     >
       <FormField
-        label={L('SchollApp::UserName', 'Kullanıcı Adı')}
+        label={L('UserName', 'Kullanıcı Adı')}
         registration={register('userName')}
         error={typedErrors.userName}
         type="text"
@@ -64,7 +64,7 @@ export function UserForm({ initialValues, assignableRoles, onSubmit, loading }: 
       />
 
       <FormField
-        label={L('SchollApp::Email', 'E-posta')}
+        label={L('Email', 'E-posta')}
         registration={register('email')}
         error={typedErrors.email}
         type="email"
@@ -72,38 +72,38 @@ export function UserForm({ initialValues, assignableRoles, onSubmit, loading }: 
       />
 
       <FormField
-        label={L('SchollApp::FirstName', 'Ad')}
+        label={L('FirstName', 'Ad')}
         registration={register('name')}
         error={typedErrors.name}
         type="text"
       />
 
       <FormField
-        label={L('SchollApp::LastName', 'Soyad')}
+        label={L('LastName', 'Soyad')}
         registration={register('surname')}
         error={typedErrors.surname}
         type="text"
       />
 
       <FormField
-        label={L('SchollApp::PhoneNumber', 'Telefon')}
+        label={L('PhoneNumber', 'Telefon')}
         registration={register('phoneNumber')}
         error={typedErrors.phoneNumber}
         type="tel"
       />
 
       <FormField
-        label={L('SchollApp::Password', 'Şifre')}
+        label={L('Password', 'Şifre')}
         registration={register('password')}
         error={typedErrors.password as FieldError | undefined}
         type="password"
         autoComplete="new-password"
-        placeholder={isEdit ? L('SchollApp::FillToChange', 'Değiştirmek için doldurun') : ''}
+        placeholder={isEdit ? L('FillToChange', 'Değiştirmek için doldurun') : ''}
       />
 
       {assignableRoles.length > 0 && (
         <fieldset className="flex flex-col gap-1">
-          <legend className="text-sm font-medium text-gray-700 mb-1">{L('SchollApp::Roles', 'Roller')}</legend>
+          <legend className="text-sm font-medium text-gray-700 mb-1">{L('Roles', 'Roller')}</legend>
           <Controller
             name="roleNames"
             control={control}

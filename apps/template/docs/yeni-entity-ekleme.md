@@ -4,9 +4,12 @@
 > `Class` slice'ları bu kalıbın referansıdır — yenisini eklerken birini kopyala,
 > isimleri değiştir.
 >
-> **İki repo:** Backend `C:\Users\Lenovo\Desktop\abp\Strateji.SchollApp` (ABP,
-> SQLite), Frontend `C:\Users\Lenovo\Desktop\abp\schollapp-spa` (Vite + React).
+> **İki repo:** Backend `C:\dev\Acme.BookStore` (ABP,
+> SQLite), Frontend `C:\dev\bookstore-react` (Vite + React).
 > Sıralama önemlidir: **Backend → migration → DbMigrator → codegen → Frontend.**
+>
+> _Proje adı (`Acme.BookStore`), frontend klasörü (`bookstore-react`) ve yollar (`C:\dev\…`)
+> birer örnektir — kendi proje adın ve yollarınla değiştir._
 
 Örnek olarak yeni bir **`Teacher` (Öğretmen)** entity'si ekliyoruz. Kendi
 entity'nde `Teacher`→kendi adın, `teachers`→çoğul anahtarın olacak.
@@ -18,10 +21,10 @@ entity'nde `Teacher`→kendi adın, `teachers`→çoğul anahtarın olacak.
 **Backend**
 - [ ] `Domain/Teachers/Teacher.cs` — `FullAuditedAggregateRoot<Guid>, IMultiTenant`
 - [ ] `Application.Contracts/Teachers/` — `TeacherDto`, `CreateUpdateTeacherDto`, `GetTeacherListDto`, `ITeacherAppService`
-- [ ] İzinler — `SchollAppPermissions.cs` + `SchollAppPermissionDefinitionProvider.cs`
+- [ ] İzinler — `BookStorePermissions.cs` + `BookStorePermissionDefinitionProvider.cs`
 - [ ] `Application/Teachers/TeacherAppService.cs` — `CrudAppService` + 4 policy + filtre
-- [ ] `SchollAppDbContext.cs` — `DbSet<Teacher>` + `builder.Entity<Teacher>(...)`
-- [ ] Lokalizasyon — `Domain.Shared/.../SchollApp/{en,tr,ar}.json`
+- [ ] `BookStoreDbContext.cs` — `DbSet<Teacher>` + `builder.Entity<Teacher>(...)`
+- [ ] Lokalizasyon — `Domain.Shared/.../BookStore/{en,tr,ar}.json`
 - [ ] `dotnet build` → `dotnet-ef migrations add Added_Teacher` → DbMigrator (exe, bin'den)
 
 **Frontend** (önce backend'i 44334'te başlat, sonra codegen)
@@ -41,7 +44,7 @@ entity'nde `Teacher`→kendi adın, `teachers`→çoğul anahtarın olacak.
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
-namespace Strateji.SchollApp.Teachers;
+namespace Acme.BookStore.Teachers;
 
 public class Teacher : FullAuditedAggregateRoot<Guid>, IMultiTenant
 {
@@ -59,7 +62,7 @@ public class Teacher : FullAuditedAggregateRoot<Guid>, IMultiTenant
 - `ITeacherAppService : ICrudAppService<TeacherDto, Guid, GetTeacherListDto, CreateUpdateTeacherDto>`
 
 ### 1.3 İzinler
-`SchollAppPermissions.cs` — `Students` bloğunu kopyala:
+`BookStorePermissions.cs` — `Students` bloğunu kopyala:
 ```csharp
 public static class Teachers
 {
@@ -69,7 +72,7 @@ public static class Teachers
     public const string Delete  = Default + ".Delete";
 }
 ```
-`SchollAppPermissionDefinitionProvider.cs` — aynı şekilde `Teachers` grubunu kaydet
+`BookStorePermissionDefinitionProvider.cs` — aynı şekilde `Teachers` grubunu kaydet
 (Default + Create/Edit/Delete child'ları, `L("Permission:Teachers")` ile).
 
 ### 1.4 AppService — `Application/Teachers/TeacherAppService.cs`
@@ -78,20 +81,20 @@ slice'ı runtime'da elle `MapToGetOutputDto` / `MapToEntityAsync` override'ları
 — aynısını yap (her yeni alanı iki yönde de map'le). Ctor'da 4 policy'i ata,
 `CreateFilteredQueryAsync`'te `Filter`'ı uygula.
 
-### 1.5 DbContext — `EntityFrameworkCore/SchollAppDbContext.cs`
+### 1.5 DbContext — `EntityFrameworkCore/BookStoreDbContext.cs`
 ```csharp
 public DbSet<Teacher> Teachers { get; set; }
 // OnModelCreating içinde:
 builder.Entity<Teacher>(b =>
 {
-    b.ToTable(SchollAppConsts.DbTablePrefix + "Teachers", SchollAppConsts.DbSchema);
+    b.ToTable(BookStoreConsts.DbTablePrefix + "Teachers", BookStoreConsts.DbSchema);
     b.ConfigureByConvention();
     b.Property(x => x.Name).IsRequired().HasMaxLength(64);
     b.Property(x => x.Branch).HasMaxLength(64);
 });
 ```
 
-### 1.6 Lokalizasyon — `Domain.Shared/Localization/SchollApp/{en,tr,ar}.json`
+### 1.6 Lokalizasyon — `Domain.Shared/Localization/BookStore/{en,tr,ar}.json`
 Her dosyaya: `Teachers`, `Menu:Teachers`, `Teacher`, `Branch`,
 `Permission:Teachers`(+`.Create/.Edit/.Delete`). (tr: Öğretmenler / Öğretmen / Branş.)
 
@@ -99,27 +102,27 @@ Her dosyaya: `Teachers`, `Menu:Teachers`, `Teacher`, `Branch`,
 > PowerShell. .NET `~/.dotnet` altında — env'i **her zaman** önce kur.
 ```powershell
 $d = "$env:USERPROFILE\.dotnet"; $env:DOTNET_ROOT=$d; $env:PATH="$d;$d\tools;$env:PATH"
-Set-Location 'C:\Users\Lenovo\Desktop\abp\Strateji.SchollApp'
+Set-Location 'C:\dev\Acme.BookStore'
 
 # 1) Derle (0 hata olmalı)
-& "$d\dotnet.exe" build "Strateji.SchollApp.slnx" -c Debug -v minimal
+& "$d\dotnet.exe" build "Acme.BookStore.slnx" -c Debug -v minimal
 
 # 2) Migration ekle — EntityFrameworkCore PROJESİNDEN çalıştır
-Set-Location 'src\Strateji.SchollApp.EntityFrameworkCore'
+Set-Location 'src\Acme.BookStore.EntityFrameworkCore'
 & "$d\tools\dotnet-ef.exe" migrations add Added_Teacher
 
 # 3) DbMigrator'ı derle ve EXE'yi KENDİ bin klasöründen çalıştır (aşağıdaki nota bak)
-Set-Location 'C:\Users\Lenovo\Desktop\abp\Strateji.SchollApp'
-& "$d\dotnet.exe" build "src\Strateji.SchollApp.DbMigrator\Strateji.SchollApp.DbMigrator.csproj" -c Debug -v minimal
-$bin = 'C:\Users\Lenovo\Desktop\abp\Strateji.SchollApp\src\Strateji.SchollApp.DbMigrator\bin\Debug\net10.0'
+Set-Location 'C:\dev\Acme.BookStore'
+& "$d\dotnet.exe" build "src\Acme.BookStore.DbMigrator\Acme.BookStore.DbMigrator.csproj" -c Debug -v minimal
+$bin = 'C:\dev\Acme.BookStore\src\Acme.BookStore.DbMigrator\bin\Debug\net10.0'
 Set-Location $bin
-& "$bin\Strateji.SchollApp.DbMigrator.exe"
+& "$bin\Acme.BookStore.DbMigrator.exe"
 ```
 > ⚠️ **DbMigrator'ı `dotnet run` ile solution kökünden çalıştırma.** Çalışma
 > dizini değişince SQLite dosya yolu/config bozulur ("no such table:
 > AbpPermissionGrants"). Daima derlenmiş **EXE'yi kendi `bin\Debug\net10.0`
 > dizininden** çalıştır. Backend'i durdurmayı unutma (DLL kilidi):
-> `Get-Process Strateji.SchollApp.Web -EA SilentlyContinue | Stop-Process -Force`.
+> `Get-Process Acme.BookStore.Web -EA SilentlyContinue | Stop-Process -Force`.
 
 ---
 
@@ -129,18 +132,18 @@ Set-Location $bin
 # Backend (ayrı pencere/arka plan) — 44334'te
 $d = "$env:USERPROFILE\.dotnet"; $env:DOTNET_ROOT=$d; $env:PATH="$d;$d\tools;$env:PATH"
 $env:ASPNETCORE_ENVIRONMENT='Development'; $env:ASPNETCORE_URLS='https://localhost:44334'
-Set-Location 'C:\Users\Lenovo\Desktop\abp\Strateji.SchollApp\src\Strateji.SchollApp.Web'
+Set-Location 'C:\dev\Acme.BookStore\src\Acme.BookStore.Web'
 & "$d\dotnet.exe" run --no-launch-profile
 
 # Backend ayağa kalkınca, frontend reposunda:
 $env:NODE_TLS_REJECT_UNAUTHORIZED='0'   # localhost self-signed sertifika için
-Set-Location 'C:\Users\Lenovo\Desktop\abp\schollapp-spa'
+Set-Location 'C:\dev\bookstore-react'
 pnpm openapi-ts
 ```
 Bu, `src/api/generated/`'i swagger'dan yeniden üretir. Üretilen isimler:
 - Fonksiyonlar (tekil controller adı): `getApiAppTeacher`, `postApiAppTeacher`,
   `putApiAppTeacherById`, `deleteApiAppTeacherById`
-- Tipler: `StratejiSchollAppTeachersTeacherDto`, `StratejiSchollAppTeachersCreateUpdateTeacherDto`
+- Tipler: `AcmeBookStoreTeachersTeacherDto`, `AcmeBookStoreTeachersCreateUpdateTeacherDto`
 
 > Üretilen `src/api/generated/` dosyalarını **elle düzenleme.**
 
@@ -180,7 +183,7 @@ export function useTeacherOptions() {
 ### 3.3 `TeacherForm.tsx` + `TeachersPage.tsx`
 `StudentForm` / `StudentsPage`'i kopyala. Sayfada `useCrud('teachers', ...)`,
 DataTable kolonları, filtre toolbar, Modal (create/edit, `key={editTarget?.id ?? 'new'}`),
-ConfirmDialog, ve butonları `usePermission('SchollApp.Teachers.Create'|'.Edit'|'.Delete')`
+ConfirmDialog, ve butonları `usePermission('BookStore.Teachers.Create'|'.Edit'|'.Delete')`
 ile gizle. Bir de `TeacherForm.test.tsx` (zorunlu-alan validasyonu) ekle.
 
 ### 3.4 Route — `src/routes.tsx`
@@ -193,7 +196,7 @@ const teachersRoute = createRoute({
   getParentRoute: () => adminLayoutRoute,
   path: '/teachers',
   component: () => (
-    <RequirePermission policy="SchollApp.Teachers">
+    <RequirePermission policy="BookStore.Teachers">
       <TeachersPage />
     </RequirePermission>
   ),
@@ -203,14 +206,14 @@ const teachersRoute = createRoute({
 
 ### 3.5 Menü — `src/layout/Sidebar.tsx`
 ```ts
-const canTeachers = usePermission('SchollApp.Teachers')
+const canTeachers = usePermission('BookStore.Teachers')
 // navItems içine:
-{ to: '/teachers', label: L('SchollApp::Menu:Teachers', 'Öğretmenler'), show: canTeachers },
+{ to: '/teachers', label: L('Menu:Teachers', 'Öğretmenler'), show: canTeachers },
 ```
 
 ### 3.6 Doğrula
 ```powershell
-Set-Location 'C:\Users\Lenovo\Desktop\abp\schollapp-spa'
+Set-Location 'C:\dev\bookstore-react'
 pnpm vitest run   # tüm testler yeşil
 pnpm build        # tsc + vite, 0 hata
 ```
@@ -265,9 +268,9 @@ Standalone CRUD'a ek olarak, bir entity'yi başka birine bağlamak için:
 | Belirti | Sebep / Çözüm |
 |---|---|
 | DbMigrator: `no such table: AbpPermissionGrants` | `dotnet run` ile kökten çalıştırılmış. EXE'yi **kendi bin dizininden** çalıştır. |
-| DbMigrator: `Format of the initialization string starting at index 0` | Bir tenant'ın bağlantı dizesi bozuk (örn. çıplak `BatmanScroll.db`). Geçerli format `Data Source=...`. Gerekirse `AbpTenantConnectionStrings` kaydını temizle. |
+| DbMigrator: `Format of the initialization string starting at index 0` | Bir tenant'ın bağlantı dizesi bozuk (örn. çıplak `BookStore.db`). Geçerli format `Data Source=...`. Gerekirse `AbpTenantConnectionStrings` kaydını temizle. |
 | `pnpm openapi-ts` TLS/sertifika hatası | `$env:NODE_TLS_REJECT_UNAUTHORIZED='0'` (yalnız localhost). |
-| Build "file in use" / DLL kilidi | `Strateji.SchollApp.Web` process'i açık. Migration/build'den önce durdur. |
+| Build "file in use" / DLL kilidi | `Acme.BookStore.Web` process'i açık. Migration/build'den önce durdur. |
 | Yeni kayıt dropdown'a gelmiyor (refresh gerekiyor) | Lookup yanlış anahtarla yazılmış. **Kural #2** — `useLookupOptions` kullan. |
 | `body: input as never` yazma ihtiyacı | Servisi Zod tipiyle tiplemişsin. Generated `*Dto` / `*Writable` tipleriyle tiple. |
 

@@ -38,7 +38,7 @@ export function RoleForm({ initialValues, onSubmit, loading }: RoleFormProps) {
       className="flex flex-col gap-3"
     >
       <FormField
-        label={L('SchollApp::RoleName', 'Ad')}
+        label={L('RoleName', 'Ad')}
         registration={register('name')}
         error={errors.name}
         type="text"
@@ -54,12 +54,12 @@ export function RoleForm({ initialValues, onSubmit, loading }: RoleFormProps) {
               id="role-isDefault"
               checked={field.value ?? false}
               onCheckedChange={(checked) => field.onChange(!!checked)}
-              aria-label={L('SchollApp::IsDefault', 'Varsayılan')}
+              aria-label={L('IsDefault', 'Varsayılan')}
             />
           )}
         />
         <Label htmlFor="role-isDefault" className="cursor-pointer">
-          {L('SchollApp::IsDefault', 'Varsayılan')}
+          {L('IsDefault', 'Varsayılan')}
         </Label>
       </div>
 
@@ -72,12 +72,12 @@ export function RoleForm({ initialValues, onSubmit, loading }: RoleFormProps) {
               id="role-isPublic"
               checked={field.value ?? false}
               onCheckedChange={(checked) => field.onChange(!!checked)}
-              aria-label={L('SchollApp::IsPublic', 'Genel')}
+              aria-label={L('IsPublic', 'Genel')}
             />
           )}
         />
         <Label htmlFor="role-isPublic" className="cursor-pointer">
-          {L('SchollApp::IsPublic', 'Genel')}
+          {L('IsPublic', 'Genel')}
         </Label>
       </div>
 

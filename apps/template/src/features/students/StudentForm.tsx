@@ -55,7 +55,7 @@ export function StudentForm({ initialValues, onSubmit, loading }: StudentFormPro
       className="flex flex-col gap-3"
     >
       <FormField
-        label={L('SchollApp::StudentNumber', 'Öğrenci Numarası')}
+        label={L('StudentNumber', 'Öğrenci Numarası')}
         registration={register('studentNumber')}
         error={errors.studentNumber}
         type="text"
@@ -63,21 +63,21 @@ export function StudentForm({ initialValues, onSubmit, loading }: StudentFormPro
       />
 
       <FormField
-        label={L('SchollApp::FirstName', 'Ad')}
+        label={L('FirstName', 'Ad')}
         registration={register('name')}
         error={errors.name}
         type="text"
       />
 
       <FormField
-        label={L('SchollApp::LastName', 'Soyad')}
+        label={L('LastName', 'Soyad')}
         registration={register('surname')}
         error={errors.surname}
         type="text"
       />
 
       <FormField
-        label={L('SchollApp::Email', 'E-posta')}
+        label={L('Email', 'E-posta')}
         registration={register('email')}
         error={errors.email}
         type="email"
@@ -85,21 +85,21 @@ export function StudentForm({ initialValues, onSubmit, loading }: StudentFormPro
       />
 
       <FormField
-        label={L('SchollApp::DateOfBirth', 'Doğum Tarihi')}
+        label={L('DateOfBirth', 'Doğum Tarihi')}
         registration={register('dateOfBirth')}
         error={errors.dateOfBirth}
         type="date"
       />
 
       <FormField
-        label={L('SchollApp::Classroom', 'Sınıf')}
+        label={L('Classroom', 'Sınıf')}
         registration={register('classroom')}
         error={errors.classroom}
         type="text"
       />
 
       <div className="flex flex-col gap-1">
-        <Label htmlFor="classId">{L('SchollApp::Class', 'Sınıf')}</Label>
+        <Label htmlFor="classId">{L('Class', 'Sınıf')}</Label>
         <Controller
           name="classId"
           control={control}
@@ -109,7 +109,7 @@ export function StudentForm({ initialValues, onSubmit, loading }: StudentFormPro
               onValueChange={(val) => field.onChange(val === '__none__' ? null : val)}
             >
               <SelectTrigger id="classId">
-                <SelectValue placeholder={L('SchollApp::Class', 'Sınıf seçin...')} />
+                <SelectValue placeholder={L('Class', 'Sınıf seçin...')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="__none__">— Sınıf yok —</SelectItem>
@@ -141,7 +141,7 @@ export function StudentForm({ initialValues, onSubmit, loading }: StudentFormPro
                 onCheckedChange={(checked) => field.onChange(!!checked)}
               />
               <Label htmlFor="isActive" className="cursor-pointer text-sm font-normal">
-                {L('SchollApp::IsActive', 'Aktif')}
+                {L('IsActive', 'Aktif')}
               </Label>
             </div>
           )}

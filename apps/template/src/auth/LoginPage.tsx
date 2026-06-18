@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { branding } from '@/app/branding'
 
-const TENANT_STORAGE_KEY = 'schollapp.tenant'
+const TENANT_STORAGE_KEY = 'abp-react.tenant'
 
 export function LoginPage() {
   const { loginToTenant } = useAuth()
@@ -43,13 +44,13 @@ export function LoginPage() {
       }>(`/api/abp/multi-tenancy/tenants/by-name/${encodeURIComponent(name)}`)
       const data = res.data
       if (!data.success || !data.tenantId) {
-        setError(L('SchollApp::TenantNotFound', 'Kiracı bulunamadı'))
+        setError(L('TenantNotFound', 'Kiracı bulunamadı'))
         return
       }
       localStorage.setItem(TENANT_STORAGE_KEY, name)
       await loginToTenant(data.tenantId)
     } catch {
-      setError(L('SchollApp::TenantNotFound', 'Kiracı bulunamadı'))
+      setError(L('TenantNotFound', 'Kiracı bulunamadı'))
     } finally {
       setIsLoading(false)
     }
@@ -66,20 +67,20 @@ export function LoginPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 p-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">SchollApp</CardTitle>
+          <CardTitle className="text-xl">{branding.appName}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <Label htmlFor="tenant-name">
-                {L('SchollApp::Tenant', 'Kiracı')}
+                {L('Tenant', 'Kiracı')}
               </Label>
               <Input
                 id="tenant-name"
                 type="text"
                 value={tenantName}
                 onChange={(e) => { setTenantName(e.target.value); setError(null) }}
-                placeholder={L('SchollApp::TenantPlaceholder', 'boş = Host')}
+                placeholder={L('TenantPlaceholder', 'boş = Host')}
                 autoComplete="organization"
                 disabled={isLoading}
               />
@@ -101,7 +102,7 @@ export function LoginPage() {
               disabled={isLoading}
               className="text-sm text-muted-foreground"
             >
-              {L('SchollApp::ContinueAsHost', 'Host olarak devam et')}
+              {L('ContinueAsHost', 'Host olarak devam et')}
             </Button>
           </div>
         </CardContent>

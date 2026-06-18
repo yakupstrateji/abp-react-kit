@@ -89,7 +89,7 @@ Authority/clientId/scope değerleri şu sırayla okunur; **sonraki bir öncekini
 
 | # | Katman | Ne zaman | Anahtarlar |
 |---|---|---|---|
-| 1 | `vite.config.ts` varsayılanları | her zaman (fallback) | `VITE_*` (`44334`, `SchollApp_React`) |
+| 1 | `vite.config.ts` varsayılanları | her zaman (fallback) | `VITE_*` (`44334`, `MyApp_React`) |
 | 2 | `.env` / `.env.local` | build-time | `VITE_*` |
 | 3 | **`public/dynamic-env.json`** | **runtime — hepsini ezer** | camelCase (`apiUrl`, `clientId`, …) |
 

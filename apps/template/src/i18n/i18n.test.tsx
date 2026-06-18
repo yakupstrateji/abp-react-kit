@@ -25,11 +25,11 @@ function makeWrapper(localization?: any) {
 describe('useL', () => {
   it('returns value from values when present', () => {
     const localization = {
-      defaultResourceName: 'SchollApp',
+      defaultResourceName: 'App',
       currentCulture: { name: 'en', cultureName: 'en', displayName: 'English', twoLetterIsoLanguageName: 'en' },
       languages: [],
       values: {
-        SchollApp: { Dashboard: 'Dashboard EN' },
+        App: { Dashboard: 'Dashboard EN' },
         AbpUi: { Save: 'Save' },
       },
     }
@@ -37,36 +37,54 @@ describe('useL', () => {
     const { result } = renderHook(() => useL(), { wrapper: makeWrapper(localization) })
     const L = result.current
 
-    expect(L('SchollApp::Dashboard', 'Gösterge Paneli')).toBe('Dashboard EN')
+    expect(L('App::Dashboard', 'Gösterge Paneli')).toBe('Dashboard EN')
     expect(L('AbpUi::Save', 'Kaydet')).toBe('Save')
+  })
+
+  it('resolves a bare key (no resource prefix) via the default resource namespace', () => {
+    const localization = {
+      defaultResourceName: 'App',
+      currentCulture: { name: 'en', cultureName: 'en', displayName: 'English', twoLetterIsoLanguageName: 'en' },
+      languages: [],
+      values: {
+        App: { Dashboard: 'Dashboard EN' },
+      },
+    }
+
+    const { result } = renderHook(() => useL(), { wrapper: makeWrapper(localization) })
+    const L = result.current
+
+    // The template references its own keys WITHOUT a resource prefix; they resolve
+    // under defaultResourceName ('App' here; the backend's resource name at runtime).
+    expect(L('Dashboard', 'Gösterge Paneli')).toBe('Dashboard EN')
   })
 
   it('returns fallback when key is absent from values', () => {
     const localization = {
-      defaultResourceName: 'SchollApp',
+      defaultResourceName: 'App',
       currentCulture: { name: 'en', cultureName: 'en', displayName: 'English', twoLetterIsoLanguageName: 'en' },
       languages: [],
-      values: { SchollApp: {} },
+      values: { App: {} },
     }
 
     const { result } = renderHook(() => useL(), { wrapper: makeWrapper(localization) })
     const L = result.current
 
-    expect(L('SchollApp::MissingKey', 'Türkçe metin')).toBe('Türkçe metin')
+    expect(L('App::MissingKey', 'Türkçe metin')).toBe('Türkçe metin')
   })
 
   it('returns key itself when no fallback and key missing', () => {
     const localization = {
-      defaultResourceName: 'SchollApp',
+      defaultResourceName: 'App',
       currentCulture: { name: 'en', cultureName: 'en', displayName: 'English', twoLetterIsoLanguageName: 'en' },
       languages: [],
-      values: { SchollApp: {} },
+      values: { App: {} },
     }
 
     const { result } = renderHook(() => useL(), { wrapper: makeWrapper(localization) })
     const L = result.current
 
-    expect(L('SchollApp::NoFallback')).toBe('SchollApp::NoFallback')
+    expect(L('App::NoFallback')).toBe('App::NoFallback')
   })
 
   it('is safe when used outside LocalizationProvider (no context)', () => {
@@ -84,7 +102,7 @@ describe('useL', () => {
     const { result } = renderHook(() => useL(), { wrapper: Wrapper })
     const L = result.current
 
-    expect(L('SchollApp::SomeKey', 'Türkçe')).toBe('Türkçe')
-    expect(L('SchollApp::NoFallback')).toBe('SchollApp::NoFallback')
+    expect(L('App::SomeKey', 'Türkçe')).toBe('Türkçe')
+    expect(L('App::NoFallback')).toBe('App::NoFallback')
   })
 })

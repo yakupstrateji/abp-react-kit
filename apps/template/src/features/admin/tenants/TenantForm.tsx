@@ -46,7 +46,7 @@ export function TenantForm({ initialValues, onSubmit, loading }: TenantFormProps
       className="flex flex-col gap-3"
     >
       <FormField
-        label={L('SchollApp::TenantName', 'Kiracı Adı')}
+        label={L('TenantName', 'Kiracı Adı')}
         registration={register('name')}
         error={errors.name}
         type="text"
@@ -56,7 +56,7 @@ export function TenantForm({ initialValues, onSubmit, loading }: TenantFormProps
       {!isEdit && (
         <>
           <FormField
-            label={L('SchollApp::AdminEmail', 'Yönetici E-postası')}
+            label={L('AdminEmail', 'Yönetici E-postası')}
             registration={register('adminEmailAddress' as keyof CreateTenantInput)}
             error={(errors as FieldErrors<CreateTenantInput>).adminEmailAddress}
             type="email"
@@ -64,7 +64,7 @@ export function TenantForm({ initialValues, onSubmit, loading }: TenantFormProps
           />
 
           <FormField
-            label={L('SchollApp::AdminPassword', 'Yönetici Şifresi')}
+            label={L('AdminPassword', 'Yönetici Şifresi')}
             registration={register('adminPassword' as keyof CreateTenantInput)}
             error={(errors as FieldErrors<CreateTenantInput>).adminPassword}
             type="password"

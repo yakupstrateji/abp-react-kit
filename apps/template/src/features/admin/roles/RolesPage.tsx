@@ -52,21 +52,21 @@ export function RolesPage() {
   const columns: Column<RoleRow>[] = [
     {
       key: 'name',
-      header: L('SchollApp::RoleName', 'Ad'),
+      header: L('RoleName', 'Ad'),
     },
     {
       key: 'isDefault',
-      header: L('SchollApp::IsDefault', 'Varsayılan'),
-      render: (row) => (row.isDefault ? L('SchollApp::Yes', 'Evet') : L('SchollApp::No', 'Hayır')),
+      header: L('IsDefault', 'Varsayılan'),
+      render: (row) => (row.isDefault ? L('Yes', 'Evet') : L('No', 'Hayır')),
     },
     {
       key: 'isPublic',
-      header: L('SchollApp::IsPublic', 'Genel'),
-      render: (row) => (row.isPublic ? L('SchollApp::Yes', 'Evet') : L('SchollApp::No', 'Hayır')),
+      header: L('IsPublic', 'Genel'),
+      render: (row) => (row.isPublic ? L('Yes', 'Evet') : L('No', 'Hayır')),
     },
     {
       key: 'actions',
-      header: L('SchollApp::Actions', 'İşlemler'),
+      header: L('Actions', 'İşlemler'),
       render: (row) => (
         <div className="flex items-center gap-2">
           {canUpdate && (
@@ -85,7 +85,7 @@ export function RolesPage() {
               variant="ghost"
               onClick={() => setPermTarget(row)}
             >
-              {L('SchollApp::Permissions', 'İzinler')}
+              {L('Permissions', 'İzinler')}
             </Button>
           )}
           {canDelete && (
@@ -139,7 +139,7 @@ export function RolesPage() {
     if (!permTarget?.name) return
     try {
       await updatePermissions('R', permTarget.name, changes)
-      toast.success(L('SchollApp::PermissionsUpdated', 'İzinler güncellendi'))
+      toast.success(L('PermissionsUpdated', 'İzinler güncellendi'))
       setPermTarget(null)
     } catch {
       // errors are handled by the caller / toast
@@ -170,11 +170,11 @@ export function RolesPage() {
   return (
     <>
       <CrudPage
-        title={L('SchollApp::Roles', 'Roller')}
+        title={L('Roles', 'Roller')}
         columns={columns}
         rows={roles}
         loading={list.isLoading}
-        empty={L('SchollApp::NoRolesFound', 'Rol bulunamadı.')}
+        empty={L('NoRolesFound', 'Rol bulunamadı.')}
         onCreate={canCreate ? () => { setEditTarget(null); setModalOpen(true) } : undefined}
         toolbar={toolbar}
         rowKey={(row) => row.id ?? ''}
@@ -184,7 +184,7 @@ export function RolesPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-4 py-2">
           <span className="text-sm text-gray-600">
-            {L('SchollApp::TotalRecords', 'Toplam')} {totalCount} {L('SchollApp::Records', 'kayıt')} — {L('SchollApp::Page', 'Sayfa')} {currentPage}/{totalPages}
+            {L('TotalRecords', 'Toplam')} {totalCount} {L('Records', 'kayıt')} — {L('Page', 'Sayfa')} {currentPage}/{totalPages}
           </span>
           <div className="flex items-center gap-2">
             <Button
@@ -192,14 +192,14 @@ export function RolesPage() {
               disabled={skip === 0}
               onClick={() => setSkip(Math.max(0, skip - PAGE_SIZE))}
             >
-              {L('SchollApp::Previous', '‹ Önceki')}
+              {L('Previous', '‹ Önceki')}
             </Button>
             <Button
               variant="ghost"
               disabled={currentPage >= totalPages}
               onClick={() => setSkip(skip + PAGE_SIZE)}
             >
-              {L('SchollApp::Next', 'Sonraki ›')}
+              {L('Next', 'Sonraki ›')}
             </Button>
           </div>
         </div>
@@ -209,7 +209,7 @@ export function RolesPage() {
       <Modal
         open={modalOpen}
         onClose={handleCloseModal}
-        title={editTarget ? L('SchollApp::EditRole', 'Rolü Düzenle') : L('SchollApp::NewRole', 'Yeni Rol')}
+        title={editTarget ? L('EditRole', 'Rolü Düzenle') : L('NewRole', 'Yeni Rol')}
       >
         <RoleForm
           key={editTarget?.id ?? 'new'}
@@ -232,10 +232,10 @@ export function RolesPage() {
       <Modal
         open={!!permTarget}
         onClose={() => setPermTarget(null)}
-        title={`${L('SchollApp::Permissions', 'İzinler')} — ${permTarget?.name ?? ''}`}
+        title={`${L('Permissions', 'İzinler')} — ${permTarget?.name ?? ''}`}
       >
         {permQuery.isLoading ? (
-          <Spinner label={L('SchollApp::Loading', 'Yükleniyor…')} />
+          <Spinner label={L('Loading', 'Yükleniyor…')} />
         ) : (
           <PermissionEditor
             groups={permQuery.data?.groups ?? []}
@@ -249,8 +249,8 @@ export function RolesPage() {
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
-        title={L('SchollApp::DeleteRole', 'Rolü Sil')}
-        message={`"${deleteTarget?.name ?? ''}" ${L('SchollApp::DeleteRoleConfirm', 'rolünü silmek istediğinizden emin misiniz?')}`}
+        title={L('DeleteRole', 'Rolü Sil')}
+        message={`"${deleteTarget?.name ?? ''}" ${L('DeleteRoleConfirm', 'rolünü silmek istediğinizden emin misiniz?')}`}
         loading={remove.isPending}
       />
     </>

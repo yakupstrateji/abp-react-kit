@@ -111,9 +111,9 @@ function EmailingTab() {
 
   const saveMutation = useMutation({
     mutationFn: updateEmailSettings,
-    onSuccess: () => toast.success(L('SchollApp::EmailSettingsSaved', 'E-posta ayarları kaydedildi')),
+    onSuccess: () => toast.success(L('EmailSettingsSaved', 'E-posta ayarları kaydedildi')),
     onError: (e: unknown) =>
-      toast.error(e instanceof AbpError ? e.message : L('SchollApp::OperationFailed', 'İşlem başarısız')),
+      toast.error(e instanceof AbpError ? e.message : L('OperationFailed', 'İşlem başarısız')),
   })
 
   // -- Send Test Email form --
@@ -133,13 +133,13 @@ function EmailingTab() {
 
   const testEmailMutation = useMutation({
     mutationFn: sendTestEmail,
-    onSuccess: () => toast.success(L('SchollApp::TestEmailSent', 'Test e-postası gönderildi')),
+    onSuccess: () => toast.success(L('TestEmailSent', 'Test e-postası gönderildi')),
     onError: (e: unknown) =>
-      toast.error(e instanceof AbpError ? e.message : L('SchollApp::OperationFailed', 'İşlem başarısız')),
+      toast.error(e instanceof AbpError ? e.message : L('OperationFailed', 'İşlem başarısız')),
   })
 
   if (isLoading) {
-    return <Spinner label={L('SchollApp::LoadingSettings', 'Ayarlar yükleniyor…')} />
+    return <Spinner label={L('LoadingSettings', 'Ayarlar yükleniyor…')} />
   }
 
   async function onSubmit(values: EmailSettingsInput) {
@@ -172,18 +172,18 @@ function EmailingTab() {
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         <fieldset className="flex flex-col gap-3 rounded border border-gray-200 p-4">
           <legend className="px-1 text-sm font-semibold text-gray-700">
-            {L('SchollApp::SenderInfo', 'Gönderen Bilgileri')}
+            {L('SenderInfo', 'Gönderen Bilgileri')}
           </legend>
 
           <FormField
-            label={L('SchollApp::SenderEmail', 'Gönderen E-posta Adresi')}
+            label={L('SenderEmail', 'Gönderen E-posta Adresi')}
             registration={register('defaultFromAddress')}
             error={errors.defaultFromAddress}
             type="email"
             autoComplete="off"
           />
           <FormField
-            label={L('SchollApp::SenderName', 'Gönderen Adı')}
+            label={L('SenderName', 'Gönderen Adı')}
             registration={register('defaultFromDisplayName')}
             error={errors.defaultFromDisplayName}
             type="text"
@@ -193,11 +193,11 @@ function EmailingTab() {
 
         <fieldset className="flex flex-col gap-3 rounded border border-gray-200 p-4">
           <legend className="px-1 text-sm font-semibold text-gray-700">
-            {L('SchollApp::SmtpServer', 'SMTP Sunucusu')}
+            {L('SmtpServer', 'SMTP Sunucusu')}
           </legend>
 
           <FormField
-            label={L('SchollApp::SmtpHost', 'SMTP Sunucusu')}
+            label={L('SmtpHost', 'SMTP Sunucusu')}
             registration={register('smtpHost')}
             error={errors.smtpHost}
             type="text"
@@ -205,7 +205,7 @@ function EmailingTab() {
             autoComplete="off"
           />
           <FormField
-            label={L('SchollApp::SmtpPort', 'SMTP Portu')}
+            label={L('SmtpPort', 'SMTP Portu')}
             registration={register('smtpPort')}
             error={errors.smtpPort}
             type="number"
@@ -213,21 +213,21 @@ function EmailingTab() {
             max={65535}
           />
           <FormField
-            label={L('SchollApp::SmtpUserName', 'Kullanıcı Adı')}
+            label={L('SmtpUserName', 'Kullanıcı Adı')}
             registration={register('smtpUserName')}
             error={errors.smtpUserName}
             type="text"
             autoComplete="off"
           />
           <FormField
-            label={L('SchollApp::Password', 'Şifre')}
+            label={L('Password', 'Şifre')}
             registration={register('smtpPassword')}
             error={errors.smtpPassword}
             type="password"
             autoComplete="new-password"
           />
           <FormField
-            label={L('SchollApp::SmtpDomain', 'Domain')}
+            label={L('SmtpDomain', 'Domain')}
             registration={register('smtpDomain')}
             error={errors.smtpDomain}
             type="text"
@@ -248,7 +248,7 @@ function EmailingTab() {
                 )}
               />
               <Label htmlFor="smtpEnableSsl" className="cursor-pointer">
-                {L('SchollApp::SmtpEnableSsl', 'SSL Etkin')}
+                {L('SmtpEnableSsl', 'SSL Etkin')}
               </Label>
             </div>
             <div className="flex items-center gap-2">
@@ -264,7 +264,7 @@ function EmailingTab() {
                 )}
               />
               <Label htmlFor="smtpUseDefaultCredentials" className="cursor-pointer">
-                {L('SchollApp::SmtpUseDefaultCredentials', 'Varsayılan Kimlik Bilgilerini Kullan')}
+                {L('SmtpUseDefaultCredentials', 'Varsayılan Kimlik Bilgilerini Kullan')}
               </Label>
             </div>
           </div>
@@ -280,7 +280,7 @@ function EmailingTab() {
       {/* Send test email section */}
       <section>
         <h3 className="text-sm font-semibold text-gray-700 mb-3">
-          {L('SchollApp::SendTestEmail', 'Test e-postası gönder')}
+          {L('SendTestEmail', 'Test e-postası gönder')}
         </h3>
         <form
           onSubmit={handleTest(onTestEmailSubmit)}
@@ -288,21 +288,21 @@ function EmailingTab() {
           className="flex flex-col gap-3 rounded border border-gray-200 p-4"
         >
           <FormField
-            label={L('SchollApp::TestEmailSender', 'Gönderen E-posta')}
+            label={L('TestEmailSender', 'Gönderen E-posta')}
             registration={regTest('senderEmailAddress')}
             error={testErrors.senderEmailAddress}
             type="email"
             autoComplete="off"
           />
           <FormField
-            label={L('SchollApp::TestEmailTarget', 'Hedef E-posta')}
+            label={L('TestEmailTarget', 'Hedef E-posta')}
             registration={regTest('targetEmailAddress')}
             error={testErrors.targetEmailAddress}
             type="email"
             autoComplete="off"
           />
           <FormField
-            label={L('SchollApp::TestEmailSubject', 'Konu')}
+            label={L('TestEmailSubject', 'Konu')}
             registration={regTest('subject')}
             error={testErrors.subject}
             type="text"
@@ -310,7 +310,7 @@ function EmailingTab() {
           />
           <div className="flex justify-end">
             <Button type="submit" variant="ghost" loading={testEmailMutation.isPending}>
-              {L('SchollApp::SendTestEmail', 'Test e-postası gönder')}
+              {L('SendTestEmail', 'Test e-postası gönder')}
             </Button>
           </div>
         </form>
@@ -342,20 +342,20 @@ function TimezoneTab() {
 
   const saveMutation = useMutation({
     mutationFn: (tz: string) => setTimezone(tz),
-    onSuccess: () => toast.success(L('SchollApp::TimezoneSaved', 'Zaman dilimi kaydedildi')),
+    onSuccess: () => toast.success(L('TimezoneSaved', 'Zaman dilimi kaydedildi')),
     onError: (e: unknown) =>
-      toast.error(e instanceof AbpError ? e.message : L('SchollApp::OperationFailed', 'İşlem başarısız')),
+      toast.error(e instanceof AbpError ? e.message : L('OperationFailed', 'İşlem başarısız')),
   })
 
   if (loadingCurrent || loadingList) {
-    return <Spinner label={L('SchollApp::Loading', 'Yükleniyor…')} />
+    return <Spinner label={L('Loading', 'Yükleniyor…')} />
   }
 
   return (
     <div className="flex flex-col gap-4 max-w-md">
       <div className="flex flex-col gap-1">
         <Label htmlFor="tz-select">
-          {L('SchollApp::Timezone', 'Zaman Dilimi')}
+          {L('Timezone', 'Zaman Dilimi')}
         </Label>
         <Select value={selected} onValueChange={setSelected}>
           <SelectTrigger id="tz-select">
@@ -394,10 +394,10 @@ export function SettingsPage() {
     return (
       <div className="p-6">
         <h1 className="text-xl font-semibold text-foreground mb-4">
-          {L('SchollApp::Settings', 'Ayarlar')}
+          {L('Settings', 'Ayarlar')}
         </h1>
         <p className="text-sm text-muted-foreground">
-          {L('SchollApp::NoPermission', 'Bu sayfayı görüntüleme yetkiniz yok.')}
+          {L('NoPermission', 'Bu sayfayı görüntüleme yetkiniz yok.')}
         </p>
       </div>
     )
@@ -406,16 +406,16 @@ export function SettingsPage() {
   return (
     <div className="p-6 max-w-2xl">
       <h1 className="text-xl font-semibold text-foreground mb-6">
-        {L('SchollApp::Settings', 'Ayarlar')}
+        {L('Settings', 'Ayarlar')}
       </h1>
 
       <Tabs defaultValue="emailing">
         <TabsList className="mb-6">
           <TabsTrigger value="emailing">
-            {L('SchollApp::Tab:Emailing', 'E-posta')}
+            {L('Tab:Emailing', 'E-posta')}
           </TabsTrigger>
           <TabsTrigger value="timezone">
-            {L('SchollApp::Tab:Timezone', 'Zaman Dilimi')}
+            {L('Tab:Timezone', 'Zaman Dilimi')}
           </TabsTrigger>
         </TabsList>
         <TabsContent value="emailing">

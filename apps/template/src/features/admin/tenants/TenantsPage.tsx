@@ -72,11 +72,11 @@ export function TenantsPage() {
   const columns: Column<TenantRow>[] = [
     {
       key: 'name',
-      header: L('SchollApp::TenantName', 'Ad'),
+      header: L('TenantName', 'Ad'),
     },
     {
       key: 'actions',
-      header: L('SchollApp::Actions', 'İşlemler'),
+      header: L('Actions', 'İşlemler'),
       render: (row) => (
         <div className="flex items-center gap-2">
           {canUpdate && (
@@ -95,7 +95,7 @@ export function TenantsPage() {
               variant="ghost"
               onClick={() => setFeatureTarget(row)}
             >
-              {L('SchollApp::Features', 'Özellikler')}
+              {L('Features', 'Özellikler')}
             </Button>
           )}
           {canManageConnectionStrings && (
@@ -103,7 +103,7 @@ export function TenantsPage() {
               variant="ghost"
               onClick={() => setConnStrTarget(row)}
             >
-              {L('SchollApp::ConnectionString', 'Bağlantı dizesi')}
+              {L('ConnectionString', 'Bağlantı dizesi')}
             </Button>
           )}
           {canDelete && (
@@ -162,7 +162,7 @@ export function TenantsPage() {
       } else {
         await deleteConnectionString(connStrTarget.id)
       }
-      toast.success(L('SchollApp::ConnectionStringSaved', 'Bağlantı dizesi kaydedildi'))
+      toast.success(L('ConnectionStringSaved', 'Bağlantı dizesi kaydedildi'))
       await queryClient.invalidateQueries({ queryKey: ['tenant-connection-string', connStrTarget.id] })
       setConnStrTarget(null)
     } catch {
@@ -196,11 +196,11 @@ export function TenantsPage() {
   return (
     <>
       <CrudPage
-        title={L('SchollApp::Tenants', 'Kiracılar')}
+        title={L('Tenants', 'Kiracılar')}
         columns={columns}
         rows={tenants}
         loading={list.isLoading}
-        empty={L('SchollApp::NoTenantsFound', 'Kiracı bulunamadı.')}
+        empty={L('NoTenantsFound', 'Kiracı bulunamadı.')}
         onCreate={canCreate ? () => { setEditTarget(null); setModalOpen(true) } : undefined}
         toolbar={toolbar}
         rowKey={(row) => row.id ?? ''}
@@ -210,7 +210,7 @@ export function TenantsPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-4 py-2">
           <span className="text-sm text-gray-600">
-            {L('SchollApp::TotalRecords', 'Toplam')} {totalCount} {L('SchollApp::Records', 'kayıt')} — {L('SchollApp::Page', 'Sayfa')} {currentPage}/{totalPages}
+            {L('TotalRecords', 'Toplam')} {totalCount} {L('Records', 'kayıt')} — {L('Page', 'Sayfa')} {currentPage}/{totalPages}
           </span>
           <div className="flex items-center gap-2">
             <Button
@@ -218,14 +218,14 @@ export function TenantsPage() {
               disabled={skip === 0}
               onClick={() => setSkip(Math.max(0, skip - PAGE_SIZE))}
             >
-              {L('SchollApp::Previous', '‹ Önceki')}
+              {L('Previous', '‹ Önceki')}
             </Button>
             <Button
               variant="ghost"
               disabled={currentPage >= totalPages}
               onClick={() => setSkip(skip + PAGE_SIZE)}
             >
-              {L('SchollApp::Next', 'Sonraki ›')}
+              {L('Next', 'Sonraki ›')}
             </Button>
           </div>
         </div>
@@ -235,7 +235,7 @@ export function TenantsPage() {
       <Modal
         open={modalOpen}
         onClose={handleCloseModal}
-        title={editTarget ? L('SchollApp::EditTenant', 'Kiracıyı Düzenle') : L('SchollApp::NewTenant', 'Yeni Kiracı')}
+        title={editTarget ? L('EditTenant', 'Kiracıyı Düzenle') : L('NewTenant', 'Yeni Kiracı')}
       >
         <TenantForm
           key={editTarget?.id ?? 'new'}
@@ -258,8 +258,8 @@ export function TenantsPage() {
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
-        title={L('SchollApp::DeleteTenant', 'Kiracıyı Sil')}
-        message={`"${deleteTarget?.name ?? ''}" ${L('SchollApp::DeleteTenantConfirm', 'kiracısını silmek istediğinizden emin misiniz?')}`}
+        title={L('DeleteTenant', 'Kiracıyı Sil')}
+        message={`"${deleteTarget?.name ?? ''}" ${L('DeleteTenantConfirm', 'kiracısını silmek istediğinizden emin misiniz?')}`}
         loading={remove.isPending}
       />
 
@@ -277,20 +277,20 @@ export function TenantsPage() {
       <Modal
         open={!!connStrTarget}
         onClose={() => setConnStrTarget(null)}
-        title={`${L('SchollApp::ConnectionString', 'Bağlantı dizesi')} — ${connStrTarget?.name ?? ''}`}
+        title={`${L('ConnectionString', 'Bağlantı dizesi')} — ${connStrTarget?.name ?? ''}`}
       >
         {connStrQuery.isLoading ? (
-          <Spinner label={L('SchollApp::Loading', 'Yükleniyor…')} />
+          <Spinner label={L('Loading', 'Yükleniyor…')} />
         ) : (
           <div className="flex flex-col gap-4">
             <p className="text-sm text-gray-600">
-              {L('SchollApp::ConnectionStringHint', 'Boş bırakırsanız kiracı host veritabanını kullanır.')}
+              {L('ConnectionStringHint', 'Boş bırakırsanız kiracı host veritabanını kullanır.')}
             </p>
             <Input
               type="text"
               value={connStrValue}
               onChange={(e) => setConnStrValue(e.target.value)}
-              placeholder={L('SchollApp::ConnectionStringPlaceholder', 'Bağlantı dizesini girin…')}
+              placeholder={L('ConnectionStringPlaceholder', 'Bağlantı dizesini girin…')}
               disabled={connStrSaving}
             />
             <div className="flex justify-end gap-2">

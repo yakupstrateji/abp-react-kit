@@ -7,6 +7,6 @@ export interface Branding {
 }
 
 export const branding: Branding = {
-  appName: 'SchollApp',
+  appName: 'My App',
   toasterTheme: 'light',
 }

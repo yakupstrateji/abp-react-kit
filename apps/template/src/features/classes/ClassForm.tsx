@@ -39,7 +39,7 @@ export function ClassForm({ initialValues, onSubmit, loading }: ClassFormProps) 
       className="flex flex-col gap-3"
     >
       <FormField
-        label={L('SchollApp::Class', 'Sınıf Adı')}
+        label={L('Class', 'Sınıf Adı')}
         registration={register('name')}
         error={errors.name}
         type="text"
@@ -47,7 +47,7 @@ export function ClassForm({ initialValues, onSubmit, loading }: ClassFormProps) 
       />
 
       <FormField
-        label={L('SchollApp::Level', 'Seviye')}
+        label={L('Level', 'Seviye')}
         registration={register('level')}
         error={errors.level}
         type="text"
@@ -66,7 +66,7 @@ export function ClassForm({ initialValues, onSubmit, loading }: ClassFormProps) 
                 onCheckedChange={(checked) => field.onChange(!!checked)}
               />
               <Label htmlFor="classIsActive" className="cursor-pointer text-sm font-normal">
-                {L('SchollApp::IsActive', 'Aktif')}
+                {L('IsActive', 'Aktif')}
               </Label>
             </div>
           )}

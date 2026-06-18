@@ -21,8 +21,8 @@ export function Header() {
   const navigate = useNavigate()
 
   const tenantLabel = currentTenant?.name
-    ? `${L('SchollApp::Tenant', 'Kiracı')}: ${currentTenant.name}`
-    : L('SchollApp::Host', 'Host')
+    ? `${L('Tenant', 'Kiracı')}: ${currentTenant.name}`
+    : L('Host', 'Host')
 
   const displayName = currentUser?.name ?? currentUser?.userName ?? ''
 
@@ -45,14 +45,14 @@ export function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onSelect={() => void navigate({ to: '/profile' as string })}>
-                {L('SchollApp::MyProfile', 'Profil')}
+                {L('MyProfile', 'Profil')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onSelect={() => void logout()}
                 className="text-destructive focus:text-destructive"
               >
-                {L('SchollApp::Logout', 'Çıkış')}
+                {L('Logout', 'Çıkış')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

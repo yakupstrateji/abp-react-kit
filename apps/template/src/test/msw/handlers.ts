@@ -21,7 +21,7 @@ export const handlers = [
         },
       },
       localization: {
-        defaultResourceName: 'SchollApp',
+        defaultResourceName: 'App',
         currentCulture: { name: 'tr', cultureName: 'tr', displayName: 'Türkçe', twoLetterIsoLanguageName: 'tr' },
         languages: [
           { cultureName: 'tr', uiCultureName: 'tr', displayName: 'Türkçe', twoLetterIsoLanguageName: 'tr' },

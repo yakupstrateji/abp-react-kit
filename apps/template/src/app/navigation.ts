@@ -19,12 +19,12 @@ export interface NavEntry {
 }
 
 export const navigation: NavEntry[] = [
-  { path: '/', labelKey: 'SchollApp::Menu:Dashboard', fallbackLabel: 'Dashboard', component: DashboardPage, exact: true },
-  { path: '/students', labelKey: 'SchollApp::Menu:Students', fallbackLabel: 'Öğrenciler', component: StudentsPage },
-  { path: '/classes', labelKey: 'SchollApp::Menu:Classes', fallbackLabel: 'Sınıflar', component: ClassesPage },
-  { path: '/admin/users', labelKey: 'SchollApp::Menu:Users', fallbackLabel: 'Kullanıcılar', permission: 'AbpIdentity.Users', component: UsersPage },
-  { path: '/admin/roles', labelKey: 'SchollApp::Menu:Roles', fallbackLabel: 'Roller', permission: 'AbpIdentity.Roles', component: RolesPage },
-  { path: '/admin/tenants', labelKey: 'SchollApp::Menu:Tenants', fallbackLabel: 'Kiracılar', permission: 'AbpTenantManagement.Tenants', component: TenantsPage },
-  { path: '/admin/settings', labelKey: 'SchollApp::Menu:Settings', fallbackLabel: 'Ayarlar', permission: 'SettingManagement.Emailing', component: SettingsPage },
-  { path: '/profile', labelKey: 'SchollApp::MyProfile', fallbackLabel: 'Profil', component: ProfilePage, showInMenu: false },
+  { path: '/', labelKey: 'Menu:Dashboard', fallbackLabel: 'Dashboard', component: DashboardPage, exact: true },
+  { path: '/students', labelKey: 'Menu:Students', fallbackLabel: 'Öğrenciler', component: StudentsPage },
+  { path: '/classes', labelKey: 'Menu:Classes', fallbackLabel: 'Sınıflar', component: ClassesPage },
+  { path: '/admin/users', labelKey: 'Menu:Users', fallbackLabel: 'Kullanıcılar', permission: 'AbpIdentity.Users', component: UsersPage },
+  { path: '/admin/roles', labelKey: 'Menu:Roles', fallbackLabel: 'Roller', permission: 'AbpIdentity.Roles', component: RolesPage },
+  { path: '/admin/tenants', labelKey: 'Menu:Tenants', fallbackLabel: 'Kiracılar', permission: 'AbpTenantManagement.Tenants', component: TenantsPage },
+  { path: '/admin/settings', labelKey: 'Menu:Settings', fallbackLabel: 'Ayarlar', permission: 'SettingManagement.Emailing', component: SettingsPage },
+  { path: '/profile', labelKey: 'MyProfile', fallbackLabel: 'Profil', component: ProfilePage, showInMenu: false },
 ]

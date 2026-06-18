@@ -32,7 +32,7 @@ export function mount(): void {
             fallback={<Spinner label="Yükleniyor…" />}
             onError={() => toast.error('Uygulama yapılandırması yüklenemedi')}
           >
-            <LocalizationProvider defaultResourceName="SchollApp">
+            <LocalizationProvider defaultResourceName="App">
               <RouterProvider router={router} />
               <Toaster richColors position="top-right" theme={branding.toasterTheme} />
             </LocalizationProvider>

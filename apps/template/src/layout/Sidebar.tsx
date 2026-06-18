@@ -20,7 +20,7 @@ export function Sidebar() {
   return (
     <nav className="flex h-full w-56 flex-col gap-1 border-e border-sidebar-border bg-sidebar p-4">
       <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-sidebar-muted-foreground">
-        {L('SchollApp::Menu', 'Menü')}
+        {L('Menu', 'Menü')}
       </p>
       {navigation
         .filter((e) => e.showInMenu !== false)

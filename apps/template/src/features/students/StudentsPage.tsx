@@ -44,30 +44,30 @@ export function StudentsPage() {
   const columns: Column<StudentRow>[] = [
     {
       key: 'studentNumber',
-      header: L('SchollApp::StudentNumber', 'Öğrenci No'),
+      header: L('StudentNumber', 'Öğrenci No'),
     },
     {
       key: 'name',
-      header: L('SchollApp::FirstName', 'Ad'),
+      header: L('FirstName', 'Ad'),
     },
     {
       key: 'surname',
-      header: L('SchollApp::LastName', 'Soyad'),
+      header: L('LastName', 'Soyad'),
     },
     {
       key: 'classroom',
-      header: L('SchollApp::Classroom', 'Sınıf'),
+      header: L('Classroom', 'Sınıf'),
     },
     {
       key: 'classId',
-      header: L('SchollApp::Class', 'Sınıf (FK)'),
+      header: L('Class', 'Sınıf (FK)'),
       render: (row) => (
         <span>{row.classId ? (classNameMap[row.classId as string] ?? row.classId) : '—'}</span>
       ),
     },
     {
       key: 'isActive',
-      header: L('SchollApp::IsActive', 'Aktif'),
+      header: L('IsActive', 'Aktif'),
       render: (row) => (
         <span className={row.isActive ? 'text-green-600' : 'text-gray-400'}>
           {row.isActive ? '✓' : '✗'}
@@ -76,7 +76,7 @@ export function StudentsPage() {
     },
     {
       key: 'actions',
-      header: L('SchollApp::Actions', 'İşlemler'),
+      header: L('Actions', 'İşlemler'),
       render: (row) => (
         <div className="flex items-center gap-2">
           {canEdit && (
@@ -165,11 +165,11 @@ export function StudentsPage() {
   return (
     <>
       <CrudPage
-        title={L('SchollApp::Students', 'Öğrenciler')}
+        title={L('Students', 'Öğrenciler')}
         columns={columns}
         rows={students}
         loading={list.isLoading}
-        empty={L('SchollApp::NoStudentsFound', 'Öğrenci bulunamadı.')}
+        empty={L('NoStudentsFound', 'Öğrenci bulunamadı.')}
         onCreate={canCreate ? () => { setEditTarget(null); setModalOpen(true) } : undefined}
         toolbar={toolbar}
         rowKey={(row) => row.id ?? ''}
@@ -179,7 +179,7 @@ export function StudentsPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-4 py-2">
           <span className="text-sm text-gray-600">
-            {L('SchollApp::TotalRecords', 'Toplam')} {totalCount} {L('SchollApp::Records', 'kayıt')} — {L('SchollApp::Page', 'Sayfa')} {currentPage}/{totalPages}
+            {L('TotalRecords', 'Toplam')} {totalCount} {L('Records', 'kayıt')} — {L('Page', 'Sayfa')} {currentPage}/{totalPages}
           </span>
           <div className="flex items-center gap-2">
             <Button
@@ -187,14 +187,14 @@ export function StudentsPage() {
               disabled={skip === 0}
               onClick={() => setSkip(Math.max(0, skip - PAGE_SIZE))}
             >
-              {L('SchollApp::Previous', '‹ Önceki')}
+              {L('Previous', '‹ Önceki')}
             </Button>
             <Button
               variant="ghost"
               disabled={currentPage >= totalPages}
               onClick={() => setSkip(skip + PAGE_SIZE)}
             >
-              {L('SchollApp::Next', 'Sonraki ›')}
+              {L('Next', 'Sonraki ›')}
             </Button>
           </div>
         </div>
@@ -206,8 +206,8 @@ export function StudentsPage() {
         onClose={handleCloseModal}
         title={
           editTarget
-            ? L('SchollApp::EditStudent', 'Öğrenciyi Düzenle')
-            : L('SchollApp::NewStudent', 'Yeni Öğrenci')
+            ? L('EditStudent', 'Öğrenciyi Düzenle')
+            : L('NewStudent', 'Yeni Öğrenci')
         }
       >
         <StudentForm
@@ -223,8 +223,8 @@ export function StudentsPage() {
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
-        title={L('SchollApp::DeleteStudent', 'Öğrenciyi Sil')}
-        message={`"${deleteTarget?.name ?? ''} ${deleteTarget?.surname ?? ''}" ${L('SchollApp::DeleteStudentConfirm', 'öğrencisini silmek istediğinizden emin misiniz?')}`}
+        title={L('DeleteStudent', 'Öğrenciyi Sil')}
+        message={`"${deleteTarget?.name ?? ''} ${deleteTarget?.surname ?? ''}" ${L('DeleteStudentConfirm', 'öğrencisini silmek istediğinizden emin misiniz?')}`}
         loading={remove.isPending}
       />
     </>

@@ -176,7 +176,7 @@ backend API scope:  AbpDemo
 frontend .env:      VITE_SCOPE=openid profile email roles offline_access AbpDemo
 ```
 
-> Uyuşmazsa (örn. kit varsayılanı `SchollApp` kalmışsa) token reddedilir / 403 alırsın.
+> Uyuşmazsa (örn. kit varsayılanı `MyApp` kalmışsa) token reddedilir / 403 alırsın.
 
 ---
 

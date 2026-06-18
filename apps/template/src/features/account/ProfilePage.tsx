@@ -51,10 +51,10 @@ export function ProfilePage() {
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['my-profile'] })
       void qc.invalidateQueries({ queryKey: ['app-config'] })
-      toast.success(L('SchollApp::ProfileSaved', 'Profil kaydedildi'))
+      toast.success(L('ProfileSaved', 'Profil kaydedildi'))
     },
     onError: (e: unknown) =>
-      toast.error(e instanceof AbpError ? e.message : L('SchollApp::OperationFailed', 'İşlem başarısız')),
+      toast.error(e instanceof AbpError ? e.message : L('OperationFailed', 'İşlem başarısız')),
   })
 
   async function onProfileSubmit(values: ProfileInput) {
@@ -83,16 +83,16 @@ export function ProfilePage() {
       changePassword({ currentPassword: values.currentPassword, newPassword: values.newPassword }),
     onSuccess: () => {
       resetPwd()
-      toast.success(L('SchollApp::PasswordChanged', 'Şifre değiştirildi'))
+      toast.success(L('PasswordChanged', 'Şifre değiştirildi'))
     },
     onError: (e: unknown) =>
-      toast.error(e instanceof AbpError ? e.message : L('SchollApp::OperationFailed', 'İşlem başarısız')),
+      toast.error(e instanceof AbpError ? e.message : L('OperationFailed', 'İşlem başarısız')),
   })
 
   if (isLoading) {
     return (
       <div className="p-6">
-        <Spinner label={L('SchollApp::Loading', 'Yükleniyor…')} />
+        <Spinner label={L('Loading', 'Yükleniyor…')} />
       </div>
     )
   }
@@ -100,45 +100,45 @@ export function ProfilePage() {
   return (
     <div className="p-6 max-w-2xl flex flex-col gap-8">
       <h1 className="text-xl font-semibold text-gray-800">
-        {L('SchollApp::MyProfile', 'Hesabım')}
+        {L('MyProfile', 'Hesabım')}
       </h1>
 
       {/* Profile info section */}
       <section>
         <h2 className="text-base font-semibold text-gray-700 mb-4">
-          {L('SchollApp::ProfileInfo', 'Profil bilgileri')}
+          {L('ProfileInfo', 'Profil bilgileri')}
         </h2>
         <form onSubmit={handleProfile(onProfileSubmit)} noValidate className="flex flex-col gap-4">
           <FormField
-            label={L('SchollApp::UserName', 'Kullanıcı Adı')}
+            label={L('UserName', 'Kullanıcı Adı')}
             registration={regProfile('userName')}
             error={profileErrors.userName}
             type="text"
             autoComplete="username"
           />
           <FormField
-            label={L('SchollApp::Email', 'E-posta')}
+            label={L('Email', 'E-posta')}
             registration={regProfile('email')}
             error={profileErrors.email}
             type="email"
             autoComplete="email"
           />
           <FormField
-            label={L('SchollApp::Name', 'Ad')}
+            label={L('Name', 'Ad')}
             registration={regProfile('name')}
             error={profileErrors.name}
             type="text"
             autoComplete="given-name"
           />
           <FormField
-            label={L('SchollApp::Surname', 'Soyad')}
+            label={L('Surname', 'Soyad')}
             registration={regProfile('surname')}
             error={profileErrors.surname}
             type="text"
             autoComplete="family-name"
           />
           <FormField
-            label={L('SchollApp::PhoneNumber', 'Telefon Numarası')}
+            label={L('PhoneNumber', 'Telefon Numarası')}
             registration={regProfile('phoneNumber')}
             error={profileErrors.phoneNumber}
             type="tel"
@@ -155,25 +155,25 @@ export function ProfilePage() {
       {/* Change password section */}
       <section>
         <h2 className="text-base font-semibold text-gray-700 mb-4">
-          {L('SchollApp::ChangePassword', 'Şifre değiştir')}
+          {L('ChangePassword', 'Şifre değiştir')}
         </h2>
         <form onSubmit={handlePwd((v) => void pwdMutation.mutateAsync(v))} noValidate className="flex flex-col gap-4">
           <FormField
-            label={L('SchollApp::CurrentPassword', 'Mevcut Şifre')}
+            label={L('CurrentPassword', 'Mevcut Şifre')}
             registration={regPwd('currentPassword')}
             error={pwdErrors.currentPassword}
             type="password"
             autoComplete="current-password"
           />
           <FormField
-            label={L('SchollApp::NewPassword', 'Yeni Şifre')}
+            label={L('NewPassword', 'Yeni Şifre')}
             registration={regPwd('newPassword')}
             error={pwdErrors.newPassword}
             type="password"
             autoComplete="new-password"
           />
           <FormField
-            label={L('SchollApp::NewPasswordConfirm', 'Yeni Şifre (Tekrar)')}
+            label={L('NewPasswordConfirm', 'Yeni Şifre (Tekrar)')}
             registration={regPwd('newPasswordConfirm')}
             error={pwdErrors.newPasswordConfirm}
             type="password"
@@ -181,7 +181,7 @@ export function ProfilePage() {
           />
           <div className="flex justify-end">
             <Button type="submit" variant="primary" loading={pwdMutation.isPending}>
-              {L('SchollApp::ChangePassword', 'Şifre Değiştir')}
+              {L('ChangePassword', 'Şifre Değiştir')}
             </Button>
           </div>
         </form>

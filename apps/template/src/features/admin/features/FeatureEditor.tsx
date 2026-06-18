@@ -191,12 +191,12 @@ function FeatureEditorInner({ groups, tenantId, onClose }: FeatureEditorInnerPro
     setSaving(true)
     try {
       await updateFeatures(tenantId, delta)
-      toast.success(L('SchollApp::FeaturesUpdated', 'Özellikler güncellendi'))
+      toast.success(L('FeaturesUpdated', 'Özellikler güncellendi'))
       // Refresh original to current after successful save
       setOriginal(new Map(current))
       onClose()
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : L('SchollApp::FeaturesSaveFailed', 'Özellikler kaydedilemedi')
+      const msg = e instanceof Error ? e.message : L('FeaturesSaveFailed', 'Özellikler kaydedilemedi')
       toast.error(msg)
     } finally {
       setSaving(false)
@@ -257,11 +257,11 @@ export function FeatureEditor({ tenantId, tenantName, open, onClose }: FeatureEd
   })
 
   return (
-    <Modal open={open} onClose={onClose} title={`${L('SchollApp::Features', 'Özellikler')} — ${tenantName}`}>
+    <Modal open={open} onClose={onClose} title={`${L('Features', 'Özellikler')} — ${tenantName}`}>
       {query.isLoading ? (
-        <Spinner label={L('SchollApp::Loading', 'Yükleniyor…')} />
+        <Spinner label={L('Loading', 'Yükleniyor…')} />
       ) : query.isError ? (
-        <p className="text-sm text-red-600">{L('SchollApp::FeaturesLoadFailed', 'Özellikler yüklenemedi.')}</p>
+        <p className="text-sm text-red-600">{L('FeaturesLoadFailed', 'Özellikler yüklenemedi.')}</p>
       ) : (
         <FeatureEditorInner
           groups={query.data?.groups ?? []}

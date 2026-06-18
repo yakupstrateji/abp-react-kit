@@ -14,15 +14,15 @@ export function DashboardPage() {
 
   return (
     <div className="p-6 space-y-4">
-      <h1 className="text-2xl font-bold">{L('SchollApp::Dashboard', 'Dashboard')}</h1>
+      <h1 className="text-2xl font-bold">{L('Dashboard', 'Dashboard')}</h1>
       {currentUser && (
         <p className="text-gray-600">
-          {L('SchollApp::Welcome', 'Hoş geldiniz')},{' '}
+          {L('Welcome', 'Hoş geldiniz')},{' '}
           <span className="font-semibold">{currentUser.name ?? currentUser.userName}</span>
         </p>
       )}
       <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm max-w-xs">
-        <h2 className="text-sm font-medium text-gray-500">{L('SchollApp::TotalUsers', 'Toplam Kullanıcı')}</h2>
+        <h2 className="text-sm font-medium text-gray-500">{L('TotalUsers', 'Toplam Kullanıcı')}</h2>
         {isLoading ? (
           <Spinner />
         ) : (

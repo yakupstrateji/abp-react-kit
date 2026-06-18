@@ -246,7 +246,7 @@ The full OIDC login flow, admin CRUD pages, language switcher, and CSS re-skin r
 To verify manually:
 
 1. Trust the dev cert: `dotnet dev-certs https --trust`
-2. Start the backend: run `Strateji.SchollApp.Web` (https://localhost:44334)
+2. Start your ABP backend (its `*.Web` / `*.HttpApi.Host` project), e.g. at https://localhost:44334
 3. Start the frontend: `pnpm --filter @strateji/template dev`
 4. Open http://localhost:5173 — login with `admin` / `1q2w3E*`
 5. Exercise: dashboard, Users admin CRUD, language switcher, logout
@@ -262,7 +262,7 @@ What was verified statically (CI-equivalent):
 
 ### Pre-existing lint warnings (~25 remaining after ignoring generated files)
 
-The template carries ~25 lint warnings from the original SchollApp SPA source. These are NOT introduced by the kit refactor:
+The template carries ~25 lint warnings carried over from the original SPA source. These are NOT introduced by the kit refactor:
 
 - `@typescript-eslint/no-explicit-any` in test files (`httpClient.test.ts`, `i18n.test.tsx`, `usePermission.test.tsx`) and `TenantForm.tsx`
 - `react-refresh/only-export-components` in `components/ui/Button.tsx` and `badge.tsx` (shadcn pattern)

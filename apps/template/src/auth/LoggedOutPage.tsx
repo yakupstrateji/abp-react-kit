@@ -19,12 +19,12 @@ export function LoggedOutPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 p-4">
       <Card className="w-full max-w-sm text-center">
         <CardHeader>
-          <CardTitle>{L('SchollApp::LoggedOut', 'Çıkış yapıldı')}</CardTitle>
+          <CardTitle>{L('LoggedOut', 'Çıkış yapıldı')}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-4">
-          <p className="text-sm text-muted-foreground">{L('SchollApp::SessionEnded', 'Oturumunuz sonlandırıldı.')}</p>
+          <p className="text-sm text-muted-foreground">{L('SessionEnded', 'Oturumunuz sonlandırıldı.')}</p>
           <Button onClick={() => void navigate({ to: '/login', replace: true })}>
-            {L('SchollApp::LoginAgain', 'Tekrar giriş yap')}
+            {L('LoginAgain', 'Tekrar giriş yap')}
           </Button>
         </CardContent>
       </Card>

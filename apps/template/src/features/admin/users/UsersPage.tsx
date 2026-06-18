@@ -63,15 +63,15 @@ export function UsersPage() {
   const columns: Column<UserRow>[] = [
     {
       key: 'userName',
-      header: L('SchollApp::UserName', 'Kullanıcı Adı'),
+      header: L('UserName', 'Kullanıcı Adı'),
     },
     {
       key: 'email',
-      header: L('SchollApp::Email', 'E-posta'),
+      header: L('Email', 'E-posta'),
     },
     {
       key: 'name',
-      header: L('SchollApp::FullName', 'Ad Soyad'),
+      header: L('FullName', 'Ad Soyad'),
       render: (row) => {
         const parts = [row.name, row.surname].filter(Boolean)
         return parts.length ? parts.join(' ') : '—'
@@ -79,12 +79,12 @@ export function UsersPage() {
     },
     {
       key: 'isActive',
-      header: L('SchollApp::Active', 'Aktif'),
-      render: (row) => (row.isActive ? L('SchollApp::Yes', 'Evet') : L('SchollApp::No', 'Hayır')),
+      header: L('Active', 'Aktif'),
+      render: (row) => (row.isActive ? L('Yes', 'Evet') : L('No', 'Hayır')),
     },
     {
       key: 'actions',
-      header: L('SchollApp::Actions', 'İşlemler'),
+      header: L('Actions', 'İşlemler'),
       render: (row) => (
         <div className="flex items-center gap-2">
           {canUpdate && (
@@ -103,7 +103,7 @@ export function UsersPage() {
               variant="ghost"
               onClick={() => setPermTarget(row)}
             >
-              {L('SchollApp::Permissions', 'İzinler')}
+              {L('Permissions', 'İzinler')}
             </Button>
           )}
           {canDelete && (
@@ -147,7 +147,7 @@ export function UsersPage() {
     if (!permTarget?.id) return
     try {
       await updatePermissions('U', permTarget.id, changes)
-      toast.success(L('SchollApp::PermissionsUpdated', 'İzinler güncellendi'))
+      toast.success(L('PermissionsUpdated', 'İzinler güncellendi'))
       setPermTarget(null)
     } catch {
       // errors are handled by the caller / toast
@@ -178,11 +178,11 @@ export function UsersPage() {
   return (
     <>
       <CrudPage
-        title={L('SchollApp::Users', 'Kullanıcılar')}
+        title={L('Users', 'Kullanıcılar')}
         columns={columns}
         rows={users}
         loading={list.isLoading}
-        empty={L('SchollApp::NoUsersFound', 'Kullanıcı bulunamadı.')}
+        empty={L('NoUsersFound', 'Kullanıcı bulunamadı.')}
         onCreate={canCreate ? () => { setEditTarget(null); setModalOpen(true) } : undefined}
         toolbar={toolbar}
         rowKey={(row) => row.id ?? ''}
@@ -192,7 +192,7 @@ export function UsersPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-4 py-2">
           <span className="text-sm text-gray-600">
-            {L('SchollApp::TotalRecords', 'Toplam')} {totalCount} {L('SchollApp::Records', 'kayıt')} — {L('SchollApp::Page', 'Sayfa')} {currentPage}/{totalPages}
+            {L('TotalRecords', 'Toplam')} {totalCount} {L('Records', 'kayıt')} — {L('Page', 'Sayfa')} {currentPage}/{totalPages}
           </span>
           <div className="flex items-center gap-2">
             <Button
@@ -200,14 +200,14 @@ export function UsersPage() {
               disabled={skip === 0}
               onClick={() => setSkip(Math.max(0, skip - PAGE_SIZE))}
             >
-              {L('SchollApp::Previous', '‹ Önceki')}
+              {L('Previous', '‹ Önceki')}
             </Button>
             <Button
               variant="ghost"
               disabled={currentPage >= totalPages}
               onClick={() => setSkip(skip + PAGE_SIZE)}
             >
-              {L('SchollApp::Next', 'Sonraki ›')}
+              {L('Next', 'Sonraki ›')}
             </Button>
           </div>
         </div>
@@ -217,7 +217,7 @@ export function UsersPage() {
       <Modal
         open={modalOpen}
         onClose={handleCloseModal}
-        title={editTarget ? L('SchollApp::EditUser', 'Kullanıcıyı Düzenle') : L('SchollApp::NewUser', 'Yeni Kullanıcı')}
+        title={editTarget ? L('EditUser', 'Kullanıcıyı Düzenle') : L('NewUser', 'Yeni Kullanıcı')}
       >
         <UserForm
           key={editTarget?.id ?? 'new'}
@@ -246,8 +246,8 @@ export function UsersPage() {
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
-        title={L('SchollApp::DeleteUser', 'Kullanıcıyı Sil')}
-        message={`"${deleteTarget?.userName ?? ''}" ${L('SchollApp::DeleteUserConfirm', 'kullanıcısını silmek istediğinizden emin misiniz?')}`}
+        title={L('DeleteUser', 'Kullanıcıyı Sil')}
+        message={`"${deleteTarget?.userName ?? ''}" ${L('DeleteUserConfirm', 'kullanıcısını silmek istediğinizden emin misiniz?')}`}
         loading={remove.isPending}
       />
 
@@ -255,10 +255,10 @@ export function UsersPage() {
       <Modal
         open={!!permTarget}
         onClose={() => setPermTarget(null)}
-        title={`${L('SchollApp::Permissions', 'İzinler')} — ${permTarget?.userName ?? ''}`}
+        title={`${L('Permissions', 'İzinler')} — ${permTarget?.userName ?? ''}`}
       >
         {userPermQuery.isLoading ? (
-          <Spinner label={L('SchollApp::Loading', 'Yükleniyor…')} />
+          <Spinner label={L('Loading', 'Yükleniyor…')} />
         ) : (
           <PermissionEditor
             groups={userPermQuery.data?.groups ?? []}

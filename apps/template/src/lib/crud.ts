@@ -12,10 +12,10 @@ export function useCrud<TItem, TCreate, TUpdate>(
   return useCoreCrud(key, service, params, {
     notify: { success: (m) => toast.success(m), error: (m) => toast.error(m) },
     messages: {
-      created: L('SchollApp::Created', 'Eklendi'),
-      updated: L('SchollApp::Updated', 'Güncellendi'),
-      deleted: L('SchollApp::Deleted', 'Silindi'),
-      failed: L('SchollApp::OperationFailed', 'İşlem başarısız'),
+      created: L('Created', 'Eklendi'),
+      updated: L('Updated', 'Güncellendi'),
+      deleted: L('Deleted', 'Silindi'),
+      failed: L('OperationFailed', 'İşlem başarısız'),
     },
   })
 }

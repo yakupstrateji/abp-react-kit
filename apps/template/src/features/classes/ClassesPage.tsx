@@ -39,16 +39,16 @@ export function ClassesPage() {
   const columns: Column<ClassRow>[] = [
     {
       key: 'name',
-      header: L('SchollApp::Class', 'Sınıf Adı'),
+      header: L('Class', 'Sınıf Adı'),
     },
     {
       key: 'level',
-      header: L('SchollApp::Level', 'Seviye'),
+      header: L('Level', 'Seviye'),
       render: (row) => <span>{row.level ?? '—'}</span>,
     },
     {
       key: 'isActive',
-      header: L('SchollApp::IsActive', 'Aktif'),
+      header: L('IsActive', 'Aktif'),
       render: (row) => (
         <span className={row.isActive ? 'text-green-600' : 'text-gray-400'}>
           {row.isActive ? '✓' : '✗'}
@@ -57,7 +57,7 @@ export function ClassesPage() {
     },
     {
       key: 'actions',
-      header: L('SchollApp::Actions', 'İşlemler'),
+      header: L('Actions', 'İşlemler'),
       render: (row) => (
         <div className="flex items-center gap-2">
           {canEdit && (
@@ -141,11 +141,11 @@ export function ClassesPage() {
   return (
     <>
       <CrudPage
-        title={L('SchollApp::Classes', 'Sınıflar')}
+        title={L('Classes', 'Sınıflar')}
         columns={columns}
         rows={classes}
         loading={list.isLoading}
-        empty={L('SchollApp::NoClassesFound', 'Sınıf bulunamadı.')}
+        empty={L('NoClassesFound', 'Sınıf bulunamadı.')}
         onCreate={canCreate ? () => { setEditTarget(null); setModalOpen(true) } : undefined}
         toolbar={toolbar}
         rowKey={(row) => row.id ?? ''}
@@ -155,7 +155,7 @@ export function ClassesPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-4 py-2">
           <span className="text-sm text-gray-600">
-            {L('SchollApp::TotalRecords', 'Toplam')} {totalCount} {L('SchollApp::Records', 'kayıt')} — {L('SchollApp::Page', 'Sayfa')} {currentPage}/{totalPages}
+            {L('TotalRecords', 'Toplam')} {totalCount} {L('Records', 'kayıt')} — {L('Page', 'Sayfa')} {currentPage}/{totalPages}
           </span>
           <div className="flex items-center gap-2">
             <Button
@@ -163,14 +163,14 @@ export function ClassesPage() {
               disabled={skip === 0}
               onClick={() => setSkip(Math.max(0, skip - PAGE_SIZE))}
             >
-              {L('SchollApp::Previous', '‹ Önceki')}
+              {L('Previous', '‹ Önceki')}
             </Button>
             <Button
               variant="ghost"
               disabled={currentPage >= totalPages}
               onClick={() => setSkip(skip + PAGE_SIZE)}
             >
-              {L('SchollApp::Next', 'Sonraki ›')}
+              {L('Next', 'Sonraki ›')}
             </Button>
           </div>
         </div>
@@ -182,8 +182,8 @@ export function ClassesPage() {
         onClose={handleCloseModal}
         title={
           editTarget
-            ? L('SchollApp::EditClass', 'Sınıfı Düzenle')
-            : L('SchollApp::NewClass', 'Yeni Sınıf')
+            ? L('EditClass', 'Sınıfı Düzenle')
+            : L('NewClass', 'Yeni Sınıf')
         }
       >
         <ClassForm
@@ -199,8 +199,8 @@ export function ClassesPage() {
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
-        title={L('SchollApp::DeleteClass', 'Sınıfı Sil')}
-        message={`"${deleteTarget?.name ?? ''}" ${L('SchollApp::DeleteClassConfirm', 'sınıfını silmek istediğinizden emin misiniz?')}`}
+        title={L('DeleteClass', 'Sınıfı Sil')}
+        message={`"${deleteTarget?.name ?? ''}" ${L('DeleteClassConfirm', 'sınıfını silmek istediğinizden emin misiniz?')}`}
         loading={remove.isPending}
       />
     </>

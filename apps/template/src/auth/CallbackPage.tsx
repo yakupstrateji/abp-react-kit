@@ -12,5 +12,5 @@ export function CallbackPage() {
       .then(() => navigate({ to: '/', replace: true }))
       .catch(() => navigate({ to: '/', replace: true }))
   }, [navigate])
-  return <Spinner label={L('SchollApp::SigningIn', 'Giriş tamamlanıyor…')} />
+  return <Spinner label={L('SigningIn', 'Giriş tamamlanıyor…')} />
 }
