@@ -2,7 +2,8 @@
 import degit from 'degit'
 import { execSync } from 'node:child_process'
 import { existsSync, readFileSync, writeFileSync, readdirSync } from 'node:fs'
-import { join, basename } from 'node:path'
+import { join, basename, resolve } from 'node:path'
+import { homedir } from 'node:os'
 import { createInterface } from 'node:readline/promises'
 import { stdin, stdout } from 'node:process'
 
@@ -63,25 +64,28 @@ try {
 // The template resolves bare keys (Menu:Users, UserName, …) against the backend's
 // default localization resource. Fresh backends don't define them, so the UI stays
 // in the Turkish fallback in every language. Offer to add the missing keys.
-let backendPath = backendArg
-if (!backendPath && stdin.isTTY) {
-  const rl = createInterface({ input: stdin, output: stdout })
-  const ans = (
-    await rl.question(
-      '\nABP backend proje yolu (UI çevirilerini backend localization resource\'una\n' +
-        'eklemek için; boş bırak = atla): ',
-    )
-  ).trim()
-  rl.close()
-  if (ans) backendPath = ans
+const rl = stdin.isTTY ? createInterface({ input: stdin, output: stdout }) : null
+let backendPath = backendArg ? normalizeBackendPath(backendArg) : null
+if (!backendPath && rl) {
+  const ans = await rl.question(
+    '\nABP backend proje yolu (UI çevirilerini backend localization resource\'una\n' +
+      'eklemek için; boş bırak = atla): ',
+  )
+  if (ans.trim()) backendPath = normalizeBackendPath(ans)
 }
 if (backendPath) {
   try {
-    syncBackendLocalization(dir, backendPath)
+    await syncBackendLocalization(dir, backendPath, rl)
   } catch (e) {
-    console.warn(`  Localization sync atlandı: ${e.message}`)
+    warnSkip(`Localization sync hatası: ${e.message}`)
   }
+} else if (!rl && !backendArg) {
+  console.log(
+    '\n(i) UI çevirilerini backend\'e otomatik eklemek için --backend <abp-backend-yolu> ver,\n' +
+      '    ya da apps/template/docs/backend-localization/ altındaki en/tr.json\'u backend resource\'una elle ekle.',
+  )
 }
+if (rl) rl.close()
 
 console.log(`
 Done. Next steps:
@@ -96,35 +100,75 @@ Done. Next steps:
 // Localization sync helpers
 // ---------------------------------------------------------------------------
 
+/** Trim, strip surrounding quotes, expand a leading ~, resolve to an absolute path. */
+function normalizeBackendPath(p) {
+  let s = String(p).trim().replace(/^['"]|['"]$/g, '').trim()
+  if (s === '~') s = homedir()
+  else if (s.startsWith('~/') || s.startsWith('~\\')) s = join(homedir(), s.slice(2))
+  return resolve(s)
+}
+
+/** Loud, can't-miss skip/warning so localization issues aren't silent. */
+function warnSkip(msg) {
+  console.warn(`\n  ⚠️  ${msg}`)
+  console.warn(
+    '     UI çevirileri eklenmedi. Backend resource\'una elle eklemek için:\n' +
+      '     apps/template/docs/backend-localization/{en,tr}.json → backend\'in Localization/<Resource>/ klasörüne merge et.',
+  )
+}
+
 /**
  * Merge the template's reference localization keys (docs/backend-localization/*.json)
- * into the ABP backend's app localization resource — adding only keys that the
+ * into the ABP backend's DEFAULT app localization resource — adding only keys the
  * backend is missing, never overwriting existing values.
  */
-function syncBackendLocalization(targetDir, backend) {
-  if (!existsSync(backend)) throw new Error(`backend yolu bulunamadı: ${backend}`)
+async function syncBackendLocalization(targetDir, backend, rl) {
+  if (!existsSync(backend)) {
+    warnSkip(`backend yolu bulunamadı: ${backend}`)
+    return
+  }
 
   const refDir = join(targetDir, 'docs', 'backend-localization')
   const refs = ['en', 'tr']
     .map((c) => ({ culture: c, path: join(refDir, `${c}.json`) }))
     .filter((r) => existsSync(r.path))
   if (!refs.length) {
-    console.log('  Referans localization dosyaları bulunamadı, atlanıyor.')
+    warnSkip('referans localization dosyaları bulunamadı (docs/backend-localization).')
     return
   }
 
-  const candidates = findResourceDirs(backend)
+  let candidates = findResourceDirs(backend)
   if (!candidates.length) {
-    console.log(`  ${backend} altında uygulama localization resource'u bulunamadı, atlanıyor.`)
-    console.log('  (Beklenen: src/<Proje>.Domain.Shared/Localization/<Resource>/)')
+    warnSkip(`${backend} altında uygulama localization resource'u bulunamadı.`)
+    console.warn("     (Beklenen: src/<Proje>.Domain.Shared/Localization/<Resource>/)")
     return
   }
-  const resourceDir = candidates[0]
-  console.log(`\nLocalization resource: ${resourceDir}`)
-  if (candidates.length > 1) {
-    console.log(`  (İlki kullanılıyor. Diğer adaylar: ${candidates.slice(1).join(', ')})`)
+
+  // Rank: the app's DEFAULT resource lives in *.Domain.Shared and is usually named
+  // after the project — prefer those so we don't sync a test/secondary resource.
+  const projectName = basename(backend).replace(/[^a-z0-9]/gi, '')
+  candidates = candidates
+    .map((d) => {
+      let score = 0
+      if (/Domain\.Shared/i.test(d)) score += 100
+      if (projectName && new RegExp(projectName, 'i').test(basename(d))) score += 50
+      return { dir: d, score }
+    })
+    .sort((a, b) => b.score - a.score)
+    .map((x) => x.dir)
+
+  let resourceDir = candidates[0]
+  if (candidates.length > 1 && rl) {
+    console.log('\nBirden fazla localization resource bulundu:')
+    candidates.forEach((d, i) => console.log(`  [${i + 1}] ${d}`))
+    const pick = (await rl.question(`Hangisi uygulamanın DEFAULT resource'u? [1-${candidates.length}, varsayılan 1]: `)).trim()
+    const idx = Number.parseInt(pick, 10)
+    if (Number.isInteger(idx) && idx >= 1 && idx <= candidates.length) resourceDir = candidates[idx - 1]
+  } else if (candidates.length > 1) {
+    console.log(`  (Birden fazla resource var; ${resourceDir} seçildi. Diğerleri: ${candidates.slice(1).join(', ')})`)
   }
 
+  console.log(`\nLocalization resource: ${resourceDir}`)
   let touched = false
   for (const ref of refs) {
     const refTexts = JSON.parse(readFileSync(ref.path, 'utf8')).texts || {}
@@ -150,8 +194,12 @@ function syncBackendLocalization(targetDir, backend) {
   }
 
   if (touched) {
-    console.log("  ✓ Backend localization güncellendi. Embedded resource olduğu için backend'i")
-    console.log('    yeniden DERLE + BAŞLAT (dotnet build), sonra SPA dilini değiştirip doğrula.')
+    console.log('\n  ┌────────────────────────────────────────────────────────────────┐')
+    console.log('  │  ✓ Backend localization güncellendi.                            │')
+    console.log('  │  ⚠ ZORUNLU: .json embedded resource → backend\'i YENİDEN DERLE   │')
+    console.log('  │    + BAŞLAT (dotnet build, sonra host\'u yeniden çalıştır),      │')
+    console.log('  │    yoksa eski çeviriler servis edilmeye devam eder.             │')
+    console.log('  └────────────────────────────────────────────────────────────────┘')
   } else {
     console.log('  Backend zaten tüm anahtarlara sahip — değişiklik yok.')
   }
@@ -178,8 +226,10 @@ function findResourceDirs(root) {
       if (!e.isDirectory() || SKIP.has(e.name)) continue
       const full = join(d, e.name)
       if (isLocalization) {
-        // e is a resource folder; record if it has json culture files and isn't framework
-        if (/^(Abp|Volo|Microsoft|System)/i.test(e.name)) continue
+        // NOTE: do NOT filter by an "Abp"/"Volo" name prefix — the app's own
+        // resource is frequently named "AbpDemo", "AbpReact", … (starts with Abp).
+        // Framework resources ship in NuGet packages, not in the source tree, so
+        // any resource folder found here under the backend source IS an app resource.
         let hasJson = false
         try {
           hasJson = readdirSync(full).some((f) => f.endsWith('.json'))

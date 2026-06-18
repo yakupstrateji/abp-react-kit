@@ -1,6 +1,6 @@
 {
   "name": "@yakupsogut/create-abp-react",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "bin": { "create-abp-react": "bin/create-abp-react.js" },
   "files": ["bin"],
