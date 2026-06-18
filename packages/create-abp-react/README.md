@@ -15,6 +15,26 @@ This will:
 2. Set the project name in `package.json`
 3. Copy `.env.example` → `.env` (edit it with your ABP backend URL and OIDC client details)
 4. Run `git init` and create an initial commit
+5. **Optionally sync UI localization keys into your ABP backend** (see below)
+
+## Backend localization sync (optional)
+
+The template's UI labels (menu, titles, form fields) are resolved via ABP
+localization using bare keys (`Menu:Users`, `UserName`, …) against your backend's
+default resource. If those keys aren't defined in your backend, the UI stays in the
+Turkish fallback in every language.
+
+The CLI can add the missing keys for you. It prompts for your ABP backend path
+(press Enter to skip), or pass it non-interactively:
+
+```bash
+npx @yakupsogut/create-abp-react my-app --backend /path/to/MyAbpBackend
+```
+
+It finds your app's localization resource (`…/Localization/<Resource>/`), and for
+each culture file it has (`en.json`, `tr.json`) **adds only the keys your backend is
+missing** — existing values are never overwritten. The `.json` files are embedded
+resources, so **rebuild + restart your backend** afterwards.
 
 ## After scaffolding
 
