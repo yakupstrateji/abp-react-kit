@@ -98,7 +98,7 @@ export function LocalizationProvider({
  *
  * Key format accepted:
  *   'AbpUi::Save'          → namespace AbpUi,  i18next key Save
- *   'Dashboard'            → namespace Default (defaultNS), i18next key Dashboard
+ *   'Menu:Users'           → backend's default resource (e.g. SchollApp), key Menu:Users
  *   'MyApp::Dashboard'     → namespace MyApp, i18next key Dashboard
  *
  * Provider-safe: when no resources are loaded for the key, returns fallback ?? key,
@@ -107,11 +107,19 @@ export function LocalizationProvider({
 export function useL(): (key: string, fallback?: string) => string {
   // useTranslation binds to the i18nInstance provided by I18nextProvider.
   const { t } = useTranslation(undefined, { i18n: i18nInstance })
+  // The backend's default resource name (e.g. "SchollApp"). Read from context so
+  // it stays live across language switches / app-config refetches.
+  const appConfig = useContext(AppConfigContext)
+  const defaultResource = appConfig?.localization?.defaultResourceName
 
   return (key: string, fallback?: string): string => {
-    // i18next uses nsSeparator '::' so 'AbpUi::Save' automatically resolves
-    // to namespace 'AbpUi' and key 'Save'.
-    const result = t(key, { defaultValue: fallback ?? key })
+    // 'AbpUi::Save' carries its own namespace (nsSeparator '::'). A bare key like
+    // 'Menu:Users' must be resolved against the app's default resource namespace
+    // explicitly — relying on i18next's defaultNS is unreliable because a
+    // component's t() may have been bound before the default namespace was known.
+    const opts: { defaultValue: string; ns?: string } = { defaultValue: fallback ?? key }
+    if (defaultResource && !key.includes('::')) opts.ns = defaultResource
+    const result = t(key, opts)
 
     // If the resolved value equals the raw key (i18next returned it unchanged
     // because the key is missing), and a fallback was provided, return the fallback.
