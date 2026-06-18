@@ -44,7 +44,12 @@ npm run dev
 #   → http://localhost:5173
 ```
 
-`npm create @yakupsogut/abp-react ...` komutu şunları yapar: template'i GitHub'dan indirir → proje adını ayarlar → `.env.example`'ı `.env`'e kopyalar → `git init` eder.
+`npm create @yakupsogut/abp-react ...` komutu şunları yapar: template'i GitHub'dan indirir → proje adını ayarlar → `.env.example`'ı `.env`'e kopyalar → `git init` eder → **(opsiyonel)** ABP backend yolunu sorar ve arayüz çevirilerini backend'e ekler (bkz. **7.4**).
+
+> Çevirileri kurulum sırasında otomatik eklemek için backend yolunu da verebilirsin:
+> ```bash
+> npx @yakupsogut/create-abp-react@latest benim-projem --backend /yol/AbpBackend
+> ```
 
 ---
 
@@ -178,6 +183,23 @@ export const branding: Branding = {
   permission: 'Benim.Raporlar', component: ReportsPage }
 ```
 
+### 7.4 Çoklu dil / menü çevirileri (ÖNEMLİ)
+
+Arayüz etiketleri (menü, başlık, form alanları) **ABP localization** ile, ön eksiz anahtarlar (`Menu:Users`, `UserName`, …) üzerinden **backend'in default localization resource'una** karşı çözülür. Bu anahtarlar backend'inde **tanımlı değilse**, dil ne olursa olsun **Türkçe fallback** görünür (yalnızca ABP'nin kendi `AbpUi::…` metinleri çevrilir). Taze bir ABP backend'inde bu anahtarlar **yoktur** → en sık "dil değiştiriyorum menü Türkçe kalıyor" sebebi budur.
+
+**Çözüm — anahtarları backend'e ekle.** Kit, template'in kullandığı tüm UI anahtarlarının `en`/`tr` karşılıklarını ABP formatında taşır: `docs/backend-localization/{en,tr}.json`.
+
+- **CLI ile otomatik (önerilen):** proje oluştururken backend yolunu ver →
+  ```bash
+  npx @yakupsogut/create-abp-react@latest benim-projem --backend /yol/AbpBackend
+  ```
+  CLI, backend'in `…/Localization/<Resource>/` klasörünü bulur ve **eksik anahtarları** ekler (mevcutları **bozmaz**). Argümansız çalıştırırsan kurulumda yolu **sorar** (boş = atla).
+- **Elle:** `docs/backend-localization/{en,tr}.json` içindeki `texts`'i, backend resource'unun `en.json`/`tr.json` `texts`'ine merge et.
+
+> ⚠️ **ZORUNLU adım:** Bu `.json`'lar ABP'de **embedded resource**'tur — anahtarları ekledikten sonra backend'i **yeniden derle + başlat** (`dotnet build`, sonra host'u yeniden çalıştır), yoksa eski çeviriler servis edilmeye devam eder. Sonra SPA'yı yenile → dili değiştir → menü de çevrilir.
+
+> Başka dil eklemek için backend resource'una aynı anahtarlarla `<culture>.json` ekle (örn. `ar.json`).
+
 ---
 
 ## 8. Hazır gelen özellikler
@@ -231,6 +253,7 @@ npm run openapi-ts     # API client'ı backend'den yeniden üret
 | Sorun | Çözüm |
 |---|---|
 | **Login redirect olmuyor / 400** | Dev server **5173**'te mi? Backend'de `redirect_uri = http://localhost:5173/auth/callback` kayıtlı mı? `.env`'deki `VITE_CLIENT_ID`/`VITE_API_URL` doğru mu? |
+| **Dil değiştirince menü/başlıklar Türkçe kalıyor** | UI anahtarları backend localization resource'unda yok. **Bkz. 7.4** — `--backend` ile veya elle ekle, **sonra backend'i yeniden derle/başlat**. (ABP butonları (Kaydet/Sil) çevriliyor ama menü çevrilmiyorsa kesin budur.) |
 | **`openapi-ts` "fetch failed"** | Backend çalışıyor mu (Swagger açık mı)? Self-signed sertifika otomatik tolere edilir; yine de olmuyorsa `VITE_API_URL` doğru mu kontrol et. |
 | **Tarayıcıda cert uyarısı** | ABP dev sertifikasını güven: `dotnet dev-certs https --trust` |
 | **`npm warn Unknown project config "link-workspace-packages"`** | Bu fix'ten önce oluşturulmuş eski projelerde olur; `.npmrc`'yi sil. Yeni `npm create @yakupsogut/abp-react` projelerinde yoktur. |
