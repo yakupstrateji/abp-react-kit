@@ -78,6 +78,7 @@ VITE_REDIRECT_URI=http://localhost:5173/auth/callback
 VITE_SILENT_REDIRECT_URI=http://localhost:5173/auth/silent-renew
 VITE_POST_LOGOUT_URI=http://localhost:5173/auth/logged-out
 VITE_SCOPE=openid profile email roles offline_access BenimApi
+VITE_AUTH_MODE=redirect
 ```
 
 - `VITE_API_URL` → ABP backend'inin kök URL'i
