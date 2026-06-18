@@ -1,6 +1,7 @@
 import { createContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { User } from 'oidc-client-ts'
-import { getUserManager, signOut } from './userManager'
+import { signOut } from './userManager'
+import { getAuthStrategy } from './strategy'
 
 export interface AuthContextValue {
   user: User | null
@@ -8,6 +9,8 @@ export interface AuthContextValue {
   isLoading: boolean
   login: () => Promise<void>
   loginToTenant: (tenantId?: string) => Promise<void>
+  /** Username/password login (password auth mode). Rejects in redirect mode. */
+  loginWithPassword: (username: string, password: string, tenantId?: string) => Promise<void>
   logout: () => Promise<void>
 }
 export const AuthContext = createContext<AuthContextValue | null>(null)
@@ -17,26 +20,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const userManager = getUserManager()
-    userManager.getUser().then((u) => { setUser(u && !u.expired ? u : null); setIsLoading(false) })
-    const onLoaded = (u: User) => setUser(u)
-    const onUnloaded = () => setUser(null)
-    userManager.events.addUserLoaded(onLoaded)
-    userManager.events.addUserUnloaded(onUnloaded)
-    return () => { userManager.events.removeUserLoaded(onLoaded); userManager.events.removeUserUnloaded(onUnloaded) }
+    const strategy = getAuthStrategy()
+    const apply = (u: User | null) => setUser(u && !u.expired ? u : null)
+    // Subscribe first so a renew triggered by getUser() can't emit before we listen.
+    const unsubscribe = strategy.subscribe(apply)
+    strategy.getUser().then((u) => {
+      apply(u)
+      setIsLoading(false)
+    })
+    return () => unsubscribe()
   }, [])
 
-  const value = useMemo<AuthContextValue>(() => ({
-    user,
-    isAuthenticated: !!user,
-    isLoading,
-    loginToTenant: (tenantId?: string) =>
-      tenantId
-        ? getUserManager().signinRedirect({ extraQueryParams: { __tenant: tenantId } })
-        : getUserManager().signinRedirect(),
-    login: () => getUserManager().signinRedirect(),
-    logout: () => signOut(),
-  }), [user, isLoading])
+  const value = useMemo<AuthContextValue>(
+    () => ({
+      user,
+      isAuthenticated: !!user && !user.expired,
+      isLoading,
+      loginToTenant: (tenantId?: string) => getAuthStrategy().login(tenantId),
+      login: () => getAuthStrategy().login(),
+      loginWithPassword: (username: string, password: string, tenantId?: string) =>
+        getAuthStrategy().passwordLogin(username, password, tenantId),
+      logout: () => signOut(),
+    }),
+    [user, isLoading],
+  )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

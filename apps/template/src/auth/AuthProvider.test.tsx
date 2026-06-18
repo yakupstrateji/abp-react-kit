@@ -16,6 +16,10 @@ vi.mock('oidc-client-ts', () => {
     addUserUnloaded: vi.fn(),
     removeUserLoaded: vi.fn(),
     removeUserUnloaded: vi.fn(),
+    addAccessTokenExpired: vi.fn(),
+    addSilentRenewError: vi.fn(),
+    removeAccessTokenExpired: vi.fn(),
+    removeSilentRenewError: vi.fn(),
   }
   const mockInstance = {
     getUser: vi.fn(),
@@ -81,6 +85,18 @@ describe('AuthProvider', () => {
     // Retrieve the callback registered with addUserUnloaded and invoke it
     const onUnloaded = mockUserManager.events.addUserUnloaded.mock.calls[0][0]
     act(() => onUnloaded())
+    await waitFor(() => expect(screen.getByText('out')).toBeInTheDocument())
+  })
+
+  it('transitions in→out when the access token expires', async () => {
+    // Regression: a failed/expired silent renew must clear the authenticated state
+    // instead of leaving stale "in" UI until the next 401.
+    mockUserManager.getUser.mockResolvedValue({ access_token: 't', profile: { sub: '1' }, expired: false })
+    render(<AuthProvider><Probe /></AuthProvider>)
+    await waitFor(() => expect(screen.getByText('in')).toBeInTheDocument())
+
+    const onExpired = mockUserManager.events.addAccessTokenExpired.mock.calls[0][0]
+    act(() => onExpired())
     await waitFor(() => expect(screen.getByText('out')).toBeInTheDocument())
   })
 })

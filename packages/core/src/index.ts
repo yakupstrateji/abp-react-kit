@@ -1,9 +1,11 @@
 // Public API yüzeyi — sonraki görevler buraya export ekler.
-export { configureClient, getConfig } from './config/env'
+export { configureClient, getConfig, getAuthMode } from './config/env'
 export type { AbpReactConfig } from './config/env'
 export { AbpError, parseAbpError } from './api/abpError'
 export { getCurrentCulture, setCurrentCulture } from './i18n/culture'
 export { getUserManager, getAccessToken, isSigningOut, signOut } from './auth/userManager'
+export { getAuthStrategy } from './auth/strategy'
+export type { AuthStrategy } from './auth/strategy'
 export { AuthProvider, AuthContext } from './auth/AuthProvider'
 export type { AuthContextValue } from './auth/AuthProvider'
 export { useAuth } from './auth/useAuth'
