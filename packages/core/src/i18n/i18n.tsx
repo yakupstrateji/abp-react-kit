@@ -1,4 +1,4 @@
-import { useEffect, useContext, type ReactNode } from 'react'
+import { useEffect, useContext, useMemo, type ReactNode } from 'react'
 import i18next from 'i18next'
 import { I18nextProvider, useTranslation, initReactI18next } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
@@ -47,12 +47,18 @@ export function LocalizationProvider({
   const appConfig = useContext(AppConfigContext)
   const loc = appConfig?.localization
 
-  const value: LocalizationData = loc ?? {
-    defaultResourceName,
-    currentCulture: { name: 'tr', cultureName: 'tr', displayName: 'Türkçe', twoLetterIsoLanguageName: 'tr' },
-    languages: [],
-    values: {},
-  }
+  // Memoize so the fallback object (used pre-auth, when loc is undefined) keeps a
+  // stable identity across renders; otherwise the effects below re-run every render.
+  const value: LocalizationData = useMemo(
+    () =>
+      loc ?? {
+        defaultResourceName,
+        currentCulture: { name: 'tr', cultureName: 'tr', displayName: 'Türkçe', twoLetterIsoLanguageName: 'tr' },
+        languages: [],
+        values: {},
+      },
+    [loc, defaultResourceName],
+  )
 
   useEffect(() => {
     i18nInstance.setDefaultNamespace(value.defaultResourceName || defaultResourceName)

@@ -2,3 +2,8 @@ node_modules
 dist
 *.tsbuildinfo
 .env.local
+
+# Stale standalone lockfile left over from the template scaffold. The monorepo
+# uses the root pnpm-lock.yaml; consumers who degit the template generate their
+# own lock. (Root .gitignore is not shipped to degit'd consumers.)
+apps/template/pnpm-lock.yaml

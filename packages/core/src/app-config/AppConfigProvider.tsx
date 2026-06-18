@@ -4,14 +4,14 @@ import { fetchAppConfig } from './appConfig'
 import type { AppConfig } from './appConfig'
 import { useAuth } from '../auth/useAuth'
 
-interface AppConfigCtx {
+export interface AppConfigContextValue {
   currentUser: AppConfig['currentUser'] | undefined
   currentTenant: { id: string | null; name: string | null } | null
   grantedPolicies: Record<string, boolean>
   isLoading: boolean
   localization?: AppConfig['localization']
 }
-export const AppConfigContext = createContext<AppConfigCtx | null>(null)
+export const AppConfigContext = createContext<AppConfigContextValue | null>(null)
 
 export function AppConfigProvider({
   children,

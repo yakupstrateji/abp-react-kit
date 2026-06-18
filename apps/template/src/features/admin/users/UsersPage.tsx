@@ -127,7 +127,11 @@ export function UsersPage() {
   async function handleSubmit(data: CreateUserInput | UpdateUserInput) {
     try {
       if (editTarget?.id) {
-        await update.mutateAsync({ id: editTarget.id, input: data as UpdateUserInput })
+        // Drop the password field when left blank so we don't send an empty
+        // string (which would otherwise attempt to reset the password).
+        const { password, ...rest } = data as UpdateUserInput
+        const input: UpdateUserInput = password ? { ...rest, password } : rest
+        await update.mutateAsync({ id: editTarget.id, input })
       } else {
         await create.mutateAsync(data as CreateUserInput)
       }
@@ -219,26 +223,33 @@ export function UsersPage() {
         onClose={handleCloseModal}
         title={editTarget ? L('EditUser', 'Kullanıcıyı Düzenle') : L('NewUser', 'Yeni Kullanıcı')}
       >
-        <UserForm
-          key={editTarget?.id ?? 'new'}
-          initialValues={
-            editTarget
-              ? {
-                  id: editTarget.id,
-                  userName: editTarget.userName ?? '',
-                  email: editTarget.email ?? '',
-                  name: editTarget.name ?? '',
-                  surname: editTarget.surname ?? '',
-                  phoneNumber: editTarget.phoneNumber ?? '',
-                  roleNames: editRolesQuery.data ?? [],
-                  concurrencyStamp: editTarget.concurrencyStamp ?? undefined,
-                }
-              : undefined
-          }
-          assignableRoles={rolesQuery.data ?? []}
-          onSubmit={handleSubmit}
-          loading={create.isPending || update.isPending || editRolesQuery.isLoading}
-        />
+        {editTarget && editRolesQuery.isLoading ? (
+          // Wait for the user's current roles before mounting the form, otherwise
+          // react-hook-form initializes roleNames to [] and a save would strip
+          // every role (defaultValues are read once, at mount).
+          <Spinner label={L('Loading', 'Yükleniyor…')} />
+        ) : (
+          <UserForm
+            key={editTarget?.id ?? 'new'}
+            initialValues={
+              editTarget
+                ? {
+                    id: editTarget.id,
+                    userName: editTarget.userName ?? '',
+                    email: editTarget.email ?? '',
+                    name: editTarget.name ?? '',
+                    surname: editTarget.surname ?? '',
+                    phoneNumber: editTarget.phoneNumber ?? '',
+                    roleNames: editRolesQuery.data ?? [],
+                    concurrencyStamp: editTarget.concurrencyStamp ?? undefined,
+                  }
+                : undefined
+            }
+            assignableRoles={rolesQuery.data ?? []}
+            onSubmit={handleSubmit}
+            loading={create.isPending || update.isPending}
+          />
+        )}
       </Modal>
 
       {/* Delete Confirm */}
